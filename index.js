@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 // Author: Arnold Andreasson, info@mellifica.se
-// Copyright (c) 2007-2016 Arnold Andreasson 
+// Copyright (c) 2007-2016 Arnold Andreasson
 // License: MIT License as follows:
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,10 +22,10 @@
 // THE SOFTWARE.
 
 // =============================================================================
-// Converts latitude and longitude between: 
+// Converts latitude and longitude between:
 // - DD, Decimal degree.
 // - DM, Degree/minute.
-// - DMS, Degree/minute/second.  
+// - DMS, Degree/minute/second.
 // Accepts most input formats. Parser implemented in regexp.
 //
 // Converts from input format.
@@ -307,7 +307,7 @@ const lngToDms = (value) => {
 }
 
 // Author: Arnold Andreasson, info@mellifica.se
-// Copyright (c) 2007-2016 Arnold Andreasson 
+// Copyright (c) 2007-2016 Arnold Andreasson
 // License: MIT License as follows:
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -329,30 +329,32 @@ const lngToDms = (value) => {
 // THE SOFTWARE.
 
 // =============================================================================
-// Javascript-implementation of "Gauss Conformal Projection 
+// Javascript-implementation of "Gauss Conformal Projection
 // (Transverse Mercator), Krügers Formulas".
-// - Parameters for SWEREF99 lat-long to/from RT90 and SWEREF99 
+// - Parameters for SWEREF99 lat-long to/from RT90 and SWEREF99
 //   coordinates (RT90 and SWEREF99 are used in Swedish maps).
 // Source: http://www.lantmateriet.se/geodesi/
 
-let axis = null // Semi-major axis of the ellipsoid.
-let flattening = null // Flattening of the ellipsoid.
-let centralMeridian = null // Central meridian for the projection.
-let latOfOrigin = null // Latitude of origin.
-let scale = null // Scale on central meridian.
-let falseNorthing = null // Offset for origo.
-let falseEasting = null // Offset for origo.
+const params = {
+  axis: null, // Semi-major axis of the ellipsoid.
+  flattening: null, // Flattening of the ellipsoid.
+  centralMeridian: null, // Central meridian for the projection.
+  latOfOrigin: null, // Latitude of origin.
+  scale: null, // Scale on central meridian.
+  falseNorthing: null, // Offset for origo.
+  falseEasting: null // Offset for origo.
+}
+
 // Parameters for RT90 and SWEREF99TM.
 // Note: Parameters for RT90 are choosen to eliminate the differences between Bessel and
 // GRS80-ellipsoides. Bessel-variants should only be used if lat/long are given as RT90-lat/long
 // based on the Bessel ellipsoide (from old maps). Parameter: projection (string). Must match
 // if-statement.
-
 const grs80Params = () => {
-  axis = 6378137.0 // GRS 80.
-  flattening = 1.0 / 298.257222101 // GRS 80.
-  centralMeridian = null
-  latOfOrigin = 0.0
+  params.axis = 6378137.0 // GRS 80.
+  params.flattening = 1.0 / 298.257222101 // GRS 80.
+  params.centralMeridian = null
+  params.latOfOrigin = 0.0
 }
 
 const swedishParams = (projection) => {
@@ -360,161 +362,161 @@ const swedishParams = (projection) => {
     case 'rt90_7.5_gon_v':
       {
         grs80Params()
-        centralMeridian = 11.0 + 18.375 / 60.0
-        scale = 1.000006000000
-        falseNorthing = -667.282
-        falseEasting = 1500025.141
+        params.centralMeridian = 11.0 + 18.375 / 60.0
+        params.scale = 1.000006000000
+        params.falseNorthing = -667.282
+        params.falseEasting = 1500025.141
         break
       }
     case 'rt90_5.0_gon_v':
       {
         grs80Params()
-        centralMeridian = 13.0 + 33.376 / 60.0
-        scale = 1.000005800000
-        falseNorthing = -667.130
-        falseEasting = 1500044.695
+        params.centralMeridian = 13.0 + 33.376 / 60.0
+        params.scale = 1.000005800000
+        params.falseNorthing = -667.130
+        params.falseEasting = 1500044.695
         break
       }
     case 'rt90_2.5_gon_v':
       {
         grs80Params()
-        centralMeridian = 15.0 + 48.0 / 60.0 + 22.624306 / 3600.0
-        scale = 1.00000561024
-        falseNorthing = -667.711
-        falseEasting = 1500064.274
+        params.centralMeridian = 15.0 + 48.0 / 60.0 + 22.624306 / 3600.0
+        params.scale = 1.00000561024
+        params.falseNorthing = -667.711
+        params.falseEasting = 1500064.274
         break
       }
     case 'rt90_0.0_gon_v':
       {
         grs80Params()
-        centralMeridian = 18.0 + 3.378 / 60.0
-        scale = 1.000005400000
-        falseNorthing = -668.844
-        falseEasting = 1500083.521
+        params.centralMeridian = 18.0 + 3.378 / 60.0
+        params.scale = 1.000005400000
+        params.falseNorthing = -668.844
+        params.falseEasting = 1500083.521
         break
       }
     case 'rt90_2.5_gon_o':
       {
         grs80Params()
-        centralMeridian = 20.0 + 18.379 / 60.0
-        scale = 1.000005200000
-        falseNorthing = -670.706
-        falseEasting = 1500102.765
+        params.centralMeridian = 20.0 + 18.379 / 60.0
+        params.scale = 1.000005200000
+        params.falseNorthing = -670.706
+        params.falseEasting = 1500102.765
         break
       }
     case 'rt90_5.0_gon_o':
       {
         grs80Params()
-        centralMeridian = 22.0 + 33.380 / 60.0
-        scale = 1.000004900000
-        falseNorthing = -672.557
-        falseEasting = 1500121.846
+        params.centralMeridian = 22.0 + 33.380 / 60.0
+        params.scale = 1.000004900000
+        params.falseNorthing = -672.557
+        params.falseEasting = 1500121.846
         break
       }
     case 'bessel_rt90_7.5_gon_v':
       {
         besselParams()
-        centralMeridian = 11.0 + 18.0 / 60.0 + 29.8 / 3600.0
+        params.centralMeridian = 11.0 + 18.0 / 60.0 + 29.8 / 3600.0
         break
       }
     case 'bessel_rt90_5.0_gon_v':
       {
         besselParams()
-        centralMeridian = 13.0 + 33.0 / 60.0 + 29.8 / 3600.0
+        params.centralMeridian = 13.0 + 33.0 / 60.0 + 29.8 / 3600.0
         break
       }
     case 'bessel_rt90_2.5_gon_v':
       {
         besselParams()
-        centralMeridian = 15.0 + 48.0 / 60.0 + 29.8 / 3600.0
+        params.centralMeridian = 15.0 + 48.0 / 60.0 + 29.8 / 3600.0
         break
       }
     case 'bessel_rt90_0.0_gon_v':
       {
         besselParams()
-        centralMeridian = 18.0 + 3.0 / 60.0 + 29.8 / 3600.0
+        params.centralMeridian = 18.0 + 3.0 / 60.0 + 29.8 / 3600.0
         break
       }
     case 'bessel_rt90_2.5_gon_o':
       {
         besselParams()
-        centralMeridian = 20.0 + 18.0 / 60.0 + 29.8 / 3600.0
+        params.centralMeridian = 20.0 + 18.0 / 60.0 + 29.8 / 3600.0
         break
       }
     case 'bessel_rt90_5.0_gon_o':
       {
         besselParams()
-        centralMeridian = 22.0 + 33.0 / 60.0 + 29.8 / 3600.0
+        params.centralMeridian = 22.0 + 33.0 / 60.0 + 29.8 / 3600.0
         break
       }
     case 'sweref_99_tm':
       {
         sweref99Params()
-        centralMeridian = 15.00
-        latOfOrigin = 0.0
-        scale = 0.9996
-        falseNorthing = 0.0
-        falseEasting = 500000.0
+        params.centralMeridian = 15.00
+        params.latOfOrigin = 0.0
+        params.scale = 0.9996
+        params.falseNorthing = 0.0
+        params.falseEasting = 500000.0
         break
       }
     case 'sweref_99_1200':
       {
         sweref99Params()
-        centralMeridian = 12.00
+        params.centralMeridian = 12.00
         break
       }
     case 'sweref_99_1330':
       {
         sweref99Params()
-        centralMeridian = 13.50
+        params.centralMeridian = 13.50
         break
       }
     case 'sweref_99_1500':
       {
         sweref99Params()
-        centralMeridian = 15.00
+        params.centralMeridian = 15.00
         break
       }
     case 'sweref_99_1630':
       {
         sweref99Params()
-        centralMeridian = 16.50
+        params.centralMeridian = 16.50
         break
       }
     case 'sweref_99_1800':
       {
         sweref99Params()
-        centralMeridian = 18.00
+        params.centralMeridian = 18.00
         break
       }
     case 'sweref_99_1415':
       {
         sweref99Params()
-        centralMeridian = 14.25
+        params.centralMeridian = 14.25
         break
       }
     case 'sweref_99_1545':
       {
         sweref99Params()
-        centralMeridian = 15.75
+        params.centralMeridian = 15.75
         break
       }
     case 'sweref_99_1715':
       {
         sweref99Params()
-        centralMeridian = 17.25
+        params.centralMeridian = 17.25
         break
       }
     case 'sweref_99_1845':
       {
         sweref99Params()
-        centralMeridian = 18.75
+        params.centralMeridian = 18.75
         break
       }
     case 'sweref_99_2015':
       {
         sweref99Params()
-        centralMeridian = 20.25
+        params.centralMeridian = 20.25
         break
       }
     case 'sweref_99_2145':
@@ -525,59 +527,59 @@ const swedishParams = (projection) => {
     case 'sweref_99_2315':
       {
         sweref99Params()
-        centralMeridian = 23.25
+        params.centralMeridian = 23.25
         break
       }
  // Test-case: Lat: 66 0'0', lon: 24 0'0'. X:1135809.413803 Y:555304.016555.
     case 'test_case':
       {
-        axis = 6378137.0
-        flattening = 1.0 / 298.257222101
-        centralMeridian = 13.0 + 35.0 / 60.0 + 7.692000 / 3600.0
-        latOfOrigin = 0.0
-        scale = 1.000002540000
-        falseNorthing = -6226307.8640
-        falseEasting = 84182.8790
+        params.axis = 6378137.0
+        params.flattening = 1.0 / 298.257222101
+        params.centralMeridian = 13.0 + 35.0 / 60.0 + 7.692000 / 3600.0
+        params.latOfOrigin = 0.0
+        params.scale = 1.000002540000
+        params.falseNorthing = -6226307.8640
+        params.falseEasting = 84182.8790
         break
       }
     default:
       {
-        centralMeridian = null
+        params.centralMeridian = null
       }
   }
 }
 
 // Sets of default parameters.
 const besselParams = () => {
-  axis = 6377397.155 // Bessel 1841.
-  flattening = 1.0 / 299.1528128 // Bessel 1841.
-  centralMeridian = null
-  latOfOrigin = 0.0
-  scale = 1.0
-  falseNorthing = 0.0
-  falseEasting = 1500000.0
+  params.axis = 6377397.155 // Bessel 1841.
+  params.flattening = 1.0 / 299.1528128 // Bessel 1841.
+  params.centralMeridian = null
+  params.latOfOrigin = 0.0
+  params.scale = 1.0
+  params.falseNorthing = 0.0
+  params.falseEasting = 1500000.0
 }
 
 const sweref99Params = () => {
-  axis = 6378137.0 // const 80.
-  flattening = 1.0 / 298.257222101 // GRS 80.
-  centralMeridian = null
-  latOfOrigin = 0.0
-  scale = 1.0
-  falseNorthing = 0.0
-  falseEasting = 150000.0
+  params.axis = 6378137.0 // const 80.
+  params.flattening = 1.0 / 298.257222101 // GRS 80.
+  params.centralMeridian = null
+  params.latOfOrigin = 0.0
+  params.scale = 1.0
+  params.falseNorthing = 0.0
+  params.falseEasting = 150000.0
 }
 
 // Conversion from geodetic coordinates to grid coordinates.
 const geodeticToGrid = (latitude, longitude) => {
   let xY = new Array(2)
-  if (centralMeridian === null) {
+  if (params.centralMeridian === null) {
     return xY
   }
   // Prepare ellipsoid-based stuff.
-  let e2 = flattening * (2.0 - flattening)
-  let n = flattening / (2.0 - flattening)
-  let aRoof = axis / (1.0 + n) * (1.0 + n * n / 4.0 + n * n * n * n / 64.0)
+  let e2 = params.flattening * (2.0 - params.flattening)
+  let n = params.flattening / (2.0 - params.flattening)
+  let aRoof = params.axis / (1.0 + n) * (1.0 + n * n / 4.0 + n * n * n * n / 64.0)
   let A = e2
   let B = (5.0 * e2 * e2 - e2 * e2 * e2) / 6.0
   let C = (104.0 * e2 * e2 * e2 - 45.0 * e2 * e2 * e2 * e2) / 120.0
@@ -590,19 +592,19 @@ const geodeticToGrid = (latitude, longitude) => {
   let degToRad = Math.PI / 180.0
   let phi = latitude * degToRad
   let lambda = longitude * degToRad
-  let lambdaZero = centralMeridian * degToRad
+  let lambdaZero = params.centralMeridian * degToRad
   let phiStar = phi - Math.sin(phi) * Math.cos(phi) * (
     A + B * Math.pow(Math.sin(phi), 2) + C * Math.pow(Math.sin(phi), 4) + D * Math.pow(Math.sin(phi), 6)
   )
   let deltaLambda = lambda - lambdaZero
   let xiPrim = Math.atan(Math.tan(phiStar) / Math.cos(deltaLambda))
-  let etaPrim = mathAtanh(Math.cos(phiStar) * Math.sin(deltaLambda))
-  let x = scale * aRoof * (
-    xiPrim + beta1 * Math.sin(2.0 * xiPrim) * mathCosh(2.0 * etaPrim) + beta2 * Math.sin(4.0 * xiPrim) * mathCosh(4.0 * etaPrim) + beta3 * Math.sin(6.0 * xiPrim) * mathCosh(6.0 * etaPrim) + beta4 * Math.sin(8.0 * xiPrim) * mathCosh(8.0 * etaPrim)
-  ) + falseNorthing
-  let y = scale * aRoof * (
-    etaPrim + beta1 * Math.cos(2.0 * xiPrim) * mathSinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * mathSinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * mathSinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * mathSinh(8.0 * etaPrim)
-  ) + falseEasting
+  let etaPrim = Math.atanh(Math.cos(phiStar) * Math.sin(deltaLambda))
+  let x = params.scale * aRoof * (
+    xiPrim + beta1 * Math.sin(2.0 * xiPrim) * Math.cosh(2.0 * etaPrim) + beta2 * Math.sin(4.0 * xiPrim) * Math.cosh(4.0 * etaPrim) + beta3 * Math.sin(6.0 * xiPrim) * Math.cosh(6.0 * etaPrim) + beta4 * Math.sin(8.0 * xiPrim) * Math.cosh(8.0 * etaPrim)
+  ) + params.falseNorthing
+  let y = params.scale * aRoof * (
+    etaPrim + beta1 * Math.cos(2.0 * xiPrim) * Math.sinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * Math.sinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * Math.sinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * Math.sinh(8.0 * etaPrim)
+  ) + params.falseEasting
   xY[0] = Math.round(x * 1000.0) / 1000.0
   xY[1] = Math.round(y * 1000.0) / 1000.0
   // xY[0] = x; xY[1] = y;
@@ -612,13 +614,13 @@ const geodeticToGrid = (latitude, longitude) => {
 // Conversion from grid coordinates to geodetic coordinates.
 const gridToGeodetic = (x, y) => {
   let latLon = new Array(2)
-  if (centralMeridian === null) {
+  if (params.centralMeridian === null) {
     return latLon
   }
   // Prepare ellipsoid-based stuff.
-  let e2 = flattening * (2.0 - flattening)
-  let n = flattening / (2.0 - flattening)
-  let aRoof = axis / (1.0 + n) * (1.0 + n * n / 4.0 + n * n * n * n / 64.0)
+  let e2 = params.flattening * (2.0 - params.flattening)
+  let n = params.flattening / (2.0 - params.flattening)
+  let aRoof = params.axis / (1.0 + n) * (1.0 + n * n / 4.0 + n * n * n * n / 64.0)
   let delta1 = n / 2.0 - 2.0 * n * n / 3.0 + 37.0 * n * n * n / 96.0 - n * n * n * n / 360.0
   let delta2 = n * n / 48.0 + n * n * n / 15.0 - 437.0 * n * n * n * n / 1440.0
   let delta3 = 17.0 * n * n * n / 480.0 - 37 * n * n * n * n / 840.0
@@ -629,21 +631,21 @@ const gridToGeodetic = (x, y) => {
   let Dstar = -(4279.0 * e2 * e2 * e2 * e2) / 1260.0
   // Convert.
   let degToRad = Math.PI / 180
-  let lambdaZero = centralMeridian * degToRad
-  let xi = (x - falseNorthing) / (scale * aRoof)
-  let eta = (y - falseEasting) / (scale * aRoof)
-  let xiPrim = xi - delta1 * Math.sin(2.0 * xi) * mathCosh(2.0 * eta) - delta2 * Math.sin(4.0 * xi) * mathCosh(
+  let lambdaZero = params.centralMeridian * degToRad
+  let xi = (x - params.falseNorthing) / (params.scale * aRoof)
+  let eta = (y - params.falseEasting) / (params.scale * aRoof)
+  let xiPrim = xi - delta1 * Math.sin(2.0 * xi) * Math.cosh(2.0 * eta) - delta2 * Math.sin(4.0 * xi) * Math.cosh(
     4.0 * eta
-  ) - delta3 * Math.sin(6.0 * xi) * mathCosh(6.0 * eta) - delta4 * Math.sin(8.0 * xi) * mathCosh(
+  ) - delta3 * Math.sin(6.0 * xi) * Math.cosh(6.0 * eta) - delta4 * Math.sin(8.0 * xi) * Math.cosh(
     8.0 * eta
   )
-  let etaPrim = eta - delta1 * Math.cos(2.0 * xi) * mathSinh(2.0 * eta) - delta2 * Math.cos(
+  let etaPrim = eta - delta1 * Math.cos(2.0 * xi) * Math.sinh(2.0 * eta) - delta2 * Math.cos(
     4.0 * xi
-  ) * mathSinh(4.0 * eta) - delta3 * Math.cos(6.0 * xi) * mathSinh(6.0 * eta) - delta4 * Math.cos(
+  ) * Math.sinh(4.0 * eta) - delta3 * Math.cos(6.0 * xi) * Math.sinh(6.0 * eta) - delta4 * Math.cos(
     8.0 * xi
-  ) * mathSinh(8.0 * eta)
-  let phiStar = Math.asin(Math.sin(xiPrim) / mathCosh(etaPrim))
-  let deltaLambda = Math.atan(mathSinh(etaPrim) / Math.cos(xiPrim))
+  ) * Math.sinh(8.0 * eta)
+  let phiStar = Math.asin(Math.sin(xiPrim) / Math.cosh(etaPrim))
+  let deltaLambda = Math.atan(Math.sinh(etaPrim) / Math.cos(xiPrim))
   let lonRadian = lambdaZero + deltaLambda
   let latRadian = phiStar + Math.sin(phiStar) * Math.cos(phiStar) * (
     Astar + Bstar * Math.pow(Math.sin(phiStar), 2) + Cstar * Math.pow(Math.sin(phiStar), 4) + Dstar * Math.pow(Math.sin(phiStar), 6)
@@ -653,15 +655,18 @@ const gridToGeodetic = (x, y) => {
   return latLon
 }
 
-// Missing functions in the Math library.
-const mathSinh = (value) => {
-  return 0.5 * (Math.exp(value) - Math.exp(-value))
+// Math polyfills
+
+Math.sinh = Math.sinh || function (x) {
+  let y = Math.exp(x)
+  return (y - 1 / y) / 2
 }
 
-const mathCosh = (value) => {
-  return 0.5 * (Math.exp(value) + Math.exp(-value))
+Math.cosh = Math.cosh || function (x) {
+  let y = Math.exp(x)
+  return (y + 1 / y) / 2
 }
 
-const mathAtanh = (value) => {
-  return 0.5 * Math.log((1.0 + value) / (1.0 - value))
+Math.atanh = Math.atanh || function (x) {
+  return Math.log((1 + x) / (1 - x)) / 2
 }
