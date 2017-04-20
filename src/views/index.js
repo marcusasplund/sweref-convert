@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import {h} from 'hyperapp'
-import {TodoMain} from './todo-main'
+import {UploadView} from './upload-view'
 
 export const view = (state, actions) =>
-  <TodoMain state={state} actions={actions} />
+  <UploadView actions={actions} state={state} />

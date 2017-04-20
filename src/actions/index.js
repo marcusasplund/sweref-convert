@@ -1,26 +1,18 @@
-import {addTodo} from './add-todo'
-import {removeTodo} from './remove-todo'
-import {toggleTodo} from './toggle-todo'
-import {editTodo} from './edit-todo'
+import {default as Papa} from 'papaparse'
+
+const parseCSV = (state, e) => {
+  let file = e.target.files[0]
+  Papa.parse(file, {
+    worker: true,
+    step: function (results) {
+      state.rows.push(results.data)
+      console.log(state)
+    }
+  })
+}
 
 export const actions = {
-  add: state => ({
-    input: '',
-    todos: addTodo(state)
-  }),
-  input: (state, {value}) => ({
-    input: value
-  }),
-  remove: (state, e) => ({
-    todos: removeTodo(state, e)
-  }),
-  toggle: (state, e) => ({
-    todos: toggleTodo(state, e)
-  }),
-  edit: (state, e) => ({
-    todos: editTodo(state, e)
-  }),
-  editEnter: (state, e) => {
-    e.target.blur()
+  parse: (state, e) => {
+    parseCSV(state, e)
   }
 }

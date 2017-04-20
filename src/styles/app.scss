@@ -36,6 +36,12 @@ button {
 header {
   padding-top: 5rem;
 }
+input[type=file].hidden {
+  visibility: hidden;
+}
+.file-label {
+  width: 15rem;
+}
 [contenteditable]:focus {
   outline: 0px solid transparent;
   border: 1px solid #9b4dca;
