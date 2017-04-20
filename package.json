@@ -1,0 +1,45 @@
+{
+  "name": "sweref-convert",
+  "version": "0.0.1",
+  "author": "Marcus Asplund <marcus@greatname.se> (@marcusasplund)",
+  "license": "MIT",
+  "scripts": {
+    "build": "fly build release",
+    "start": "fly watch",
+    "preserve": "npm run build",
+    "serve": "serve release -s -p 4000"
+  },
+  "main": "src/app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/marcusasplund/sweref-convert.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marcusasplund/sweref-convert/issues"
+  },
+  "homepage": "https://github.com/marcusasplund/sweref-convert#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "fly": "^2.0.5",
+    "fly-autoprefixer": "^1.1.0",
+    "fly-clear": "^1.0.1",
+    "fly-concat": "^1.2.0",
+    "fly-esnext": "^2.0.1",
+    "fly-htmlmin": "^2.1.0",
+    "fly-precache": "^2.1.0",
+    "fly-rev": "^2.2.1",
+    "fly-rollup": "^2.1.0",
+    "fly-sass": "^2.1.0",
+    "fly-uglify": "^2.1.1",
+    "fly-watch": "^1.1.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "serve": "^5.1.2"
+  },
+  "dependencies": {
+    "hyperapp": "^0.8.1"
+  }
+}
