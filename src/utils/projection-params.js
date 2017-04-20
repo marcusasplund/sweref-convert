@@ -241,6 +241,7 @@ const swedishParams = (projection) => {
         params.centralMeridian = null
       }
   }
+  return params
 }
 
 // Sets of default parameters.
