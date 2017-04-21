@@ -1,13 +1,13 @@
 {
   "dir": "ltr",
   "lang": "en",
-  "name": "HyperApp ToDo",
+  "name": "SwerefRT90 Convert",
   "scope": "/",
   "display": "fullscreen",
   "start_url": "/",
-  "short_name": "ToDo",
+  "short_name": "SweConv",
   "theme_color": "white",
-  "description": "simple crud todo app",
+  "description": "Converts SWEREF and RT90 to lat, lng",
   "orientation": "portrait",
   "background_color": "white",
   "icons": [{

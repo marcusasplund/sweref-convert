@@ -40,7 +40,10 @@ export async function js (fly) {
   await fly.source('src/app/index.js').rollup({
     rollup: {
       plugins: [
-        require('rollup-plugin-buble')({jsx: 'h'}),
+        require('rollup-plugin-buble')({
+          jsx: 'h',
+          objectAssign: 'Object.assign'
+        }),
         require('rollup-plugin-commonjs')(),
         require('rollup-plugin-replace')({
           'process.env.NODE_ENV': JSON.stringify(isWatching ? 'development' : 'production')
