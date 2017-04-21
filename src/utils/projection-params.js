@@ -317,6 +317,7 @@ const testCase = () => {
   return {...defaultParams, ...spec}
 }
 
+// example usage: swedishParams['rt9075gonV']()
 const swedishParams = {
   rt9075gonV: rt9075gonV,
   rt9050gonV: rt9050gonV,
