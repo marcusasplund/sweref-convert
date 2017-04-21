@@ -301,7 +301,7 @@ const sweref992315 = () => {
   }
   return {...defaultParams, ...base, ...spec}
 }
-// Test should return:
+// Conversion calculation with testCase params should return:
 // Lat: 66 0'0", lon: 24 0'0".
 // X:1135809.413803 Y:555304.016555.
 const testCase = () => {
