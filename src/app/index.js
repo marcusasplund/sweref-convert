@@ -1,17 +1,12 @@
 import {app} from 'hyperapp'
 import {actions} from '../actions/'
-import {state} from './state'
-import {root} from './root'
-import {view} from '../views/'
 import {events} from '../events/'
-// import {registerWorker} from './register-worker'
+import {state} from './state'
+import {view} from '../views/'
 
 app({
   actions,
+  events,
   state,
-  root,
-  view,
-  events
+  view
 })
-
-// registerWorker()

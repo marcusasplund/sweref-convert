@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import {h} from 'hyperapp'
+import {StateDisplay} from '../views/state-display'
 
 export const UploadView = ({state, actions}) =>
   <div class='container'>
@@ -12,6 +13,8 @@ export const UploadView = ({state, actions}) =>
       type='file' />
     </label>
     {
-      JSON.stringify(state, null, 2)
+      state.rows
+        .map(row => <p>{JSON.stringify(row)}</p>)
     }
+    <StateDisplay state={state} />
   </div>
