@@ -341,7 +341,7 @@ const swedishParams = {
   sweref992015: sweref992015,
   sweref992145: sweref992145,
   sweref992315: sweref992315,
-  testcase: testCase
+  testCase: testCase
 }
 
 export {swedishParams}
