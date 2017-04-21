@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
-// Author: Arnold Andreasson, info@mellifica.se
-// Copyright (c) 2007-2016 Arnold Andreasson
+// Author: Marcus Asplund
+// Copyright (c) 2017 Marcus Asplund, marcus@greatname.se
 // License: MIT License as follows:
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,8 +23,10 @@
 // THE SOFTWARE.
 
 // =============================================================================
+// ES2015-implementation of
 // Javascript-implementation of "Gauss Conformal Projection
 // (Transverse Mercator), Krügers Formulas".
+// by Arnold Andreasson, info@mellifica.se
 // - Parameters for SWEREF99 lat-long to/from RT90 and SWEREF99
 //   coordinates (RT90 and SWEREF99 are used in Swedish maps).
 // Source: http://www.lantmateriet.se/geodesi/
