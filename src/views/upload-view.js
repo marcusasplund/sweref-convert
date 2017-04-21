@@ -12,9 +12,6 @@ export const UploadView = ({state, actions}) =>
       id='files'
       type='file' />
     </label>
-    {
-      state.rows
-        .map(row => <p>{JSON.stringify(row)}</p>)
-    }
+
     <StateDisplay state={state} />
   </div>

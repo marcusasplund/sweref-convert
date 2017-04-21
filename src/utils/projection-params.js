@@ -46,305 +46,201 @@ const defaultParams = {
 // GRS80-ellipsoides. Bessel-variants should only be used if lat/long are given as RT90-lat/long
 // based on the Bessel ellipsoide (from old maps). Parameter: projection (string). Must match
 // if-statement.
-const grs80Params = () => {
-  return {
-    axis: 6378137.0, // GRS 80.
-    flattening: 1.0 / 298.257222101, // GRS 80.
-    centralMeridian: null,
-    latOfOrigin: 0.0
-  }
+const grs80Params = {
+  axis: 6378137.0, // GRS 80.
+  flattening: 1.0 / 298.257222101, // GRS 80.
+  centralMeridian: null,
+  latOfOrigin: 0.0
 }
 
 // Sets of default parameters.
-const besselParams = () => {
-  return {
-    axis: 6377397.155, // Bessel 1841.
-    flattening: 1.0 / 299.1528128, // Bessel 1841.
-    centralMeridian: null,
-    latOfOrigin: 0.0,
-    scale: 1.0,
-    falseNorthing: 0.0,
-    falseEasting: 1500000.0
-  }
+const besselParams = {
+  axis: 6377397.155, // Bessel 1841.
+  flattening: 1.0 / 299.1528128, // Bessel 1841.
+  centralMeridian: null,
+  latOfOrigin: 0.0,
+  scale: 1.0,
+  falseNorthing: 0.0,
+  falseEasting: 1500000.0
 }
 
-const sweref99Params = () => {
-  return {
-    axis: 6378137.0, // const 80.
-    flattening: 1.0 / 298.257222101, // GRS 80.
-    centralMeridian: null,
-    latOfOrigin: 0.0,
-    scale: 1.0,
-    falseNorthing: 0.0,
-    falseEasting: 150000.0
-  }
+const sweref99Params = {
+  axis: 6378137.0, // const 80.
+  flattening: 1.0 / 298.257222101, // GRS 80.
+  centralMeridian: null,
+  latOfOrigin: 0.0,
+  scale: 1.0,
+  falseNorthing: 0.0,
+  falseEasting: 150000.0
 }
 
-const rt9075gonV = () => {
-  let base = grs80Params()
-  let spec = {
-    centralMeridian: 11.0 + 18.375 / 60.0,
-    scale: 1.000006000000,
-    falseNorthing: -667.282,
-    falseEasting: 1500025.141
-  }
-  return {...defaultParams, ...base, ...spec}
+const rt9075gonV = {
+  centralMeridian: 11.0 + 18.375 / 60.0,
+  scale: 1.000006000000,
+  falseNorthing: -667.282,
+  falseEasting: 1500025.141
 }
 
-const rt9050gonV = () => {
-  let base = grs80Params()
-  let spec = {
-    centralMeridian: 13.0 + 33.376 / 60.0,
-    scale: 1.000005800000,
-    falseNorthing: -667.130,
-    falseEasting: 1500044.695
-  }
-  return {...defaultParams, ...base, ...spec}
+const rt9050gonV = {
+  centralMeridian: 13.0 + 33.376 / 60.0,
+  scale: 1.000005800000,
+  falseNorthing: -667.130,
+  falseEasting: 1500044.695
 }
 
-const rt9025gonV = () => {
-  let base = grs80Params()
-  let spec = {
-    centralMeridian: 15.0 + 48.0 / 60.0 + 22.624306 / 3600.0,
-    scale: 1.00000561024,
-    falseNorthing: -667.711,
-    falseEasting: 1500064.274
-  }
-  return {...defaultParams, ...base, ...spec}
+const rt9025gonV = {
+  centralMeridian: 15.0 + 48.0 / 60.0 + 22.624306 / 3600.0,
+  scale: 1.00000561024,
+  falseNorthing: -667.711,
+  falseEasting: 1500064.274
 }
 
-const rt9000gonV = () => {
-  let base = grs80Params()
-  let spec = {
-    centralMeridian: 18.0 + 3.378 / 60.0,
-    scale: 1.000005400000,
-    falseNorthing: -668.844,
-    falseEasting: 1500083.521
-  }
-  return {...defaultParams, ...base, ...spec}
+const rt9000gonV = {
+  centralMeridian: 18.0 + 3.378 / 60.0,
+  scale: 1.000005400000,
+  falseNorthing: -668.844,
+  falseEasting: 1500083.521
 }
 
-const rt9025gonO = () => {
-  let base = grs80Params()
-  let spec = {
-    centralMeridian: 20.0 + 18.379 / 60.0,
-    scale: 1.000005200000,
-    falseNorthing: -670.706,
-    falseEasting: 1500102.765
-  }
-  return {...defaultParams, ...base, ...spec}
+const rt9025gonO = {
+  centralMeridian: 20.0 + 18.379 / 60.0,
+  scale: 1.000005200000,
+  falseNorthing: -670.706,
+  falseEasting: 1500102.765
 }
 
-const rt9050gonO = () => {
-  let base = grs80Params()
-  let spec = {
-    centralMeridian: 22.0 + 33.380 / 60.0,
-    scale: 1.000004900000,
-    falseNorthing: -672.557,
-    falseEasting: 1500121.846
-  }
-  return {...defaultParams, ...base, ...spec}
+const rt9050gonO = {
+  centralMeridian: 22.0 + 33.380 / 60.0,
+  scale: 1.000004900000,
+  falseNorthing: -672.557,
+  falseEasting: 1500121.846
 }
 
-const besselRt9075gonV = () => {
-  let base = besselParams()
-  let spec = {
-    centralMeridian: 11.0 + 18.0 / 60.0 + 29.8 / 3600.0
-  }
-  return {...defaultParams, ...base, ...spec}
+const besselRt9075gonV = {
+  centralMeridian: 11.0 + 18.0 / 60.0 + 29.8 / 3600.0
 }
 
-const besselRt9050gonV = () => {
-  let base = besselParams()
-  let spec = {
-    centralMeridian: 13.0 + 33.0 / 60.0 + 29.8 / 3600.0
-  }
-  return {...defaultParams, ...base, ...spec}
+const besselRt9050gonV = {
+  centralMeridian: 13.0 + 33.0 / 60.0 + 29.8 / 3600.0
 }
 
-const besselRt9025gonV = () => {
-  let base = besselParams()
-  let spec = {
-    centralMeridian: 15.0 + 48.0 / 60.0 + 29.8 / 3600.0
-  }
-  return {...defaultParams, ...base, ...spec}
+const besselRt9025gonV = {
+  centralMeridian: 15.0 + 48.0 / 60.0 + 29.8 / 3600.0
 }
 
-const besselRt9000gonV = () => {
-  let base = besselParams()
-  let spec = {
-    centralMeridian: 18.0 + 3.0 / 60.0 + 29.8 / 3600.0
-  }
-  return {...defaultParams, ...base, ...spec}
+const besselRt9000gonV = {
+  centralMeridian: 18.0 + 3.0 / 60.0 + 29.8 / 3600.0
 }
 
-const besselRt9025gonO = () => {
-  let base = besselParams()
-  let spec = {
-    centralMeridian: 20.0 + 18.0 / 60.0 + 29.8 / 3600.0
-  }
-  return {...defaultParams, ...base, ...spec}
+const besselRt9025gonO = {
+  centralMeridian: 20.0 + 18.0 / 60.0 + 29.8 / 3600.0
 }
 
-const besselRt9050gonO = () => {
-  let base = besselParams()
-  let spec = {
-    centralMeridian: 22.0 + 33.0 / 60.0 + 29.8 / 3600.0
-  }
-  return {...defaultParams, ...base, ...spec}
+const besselRt9050gonO = {
+  centralMeridian: 22.0 + 33.0 / 60.0 + 29.8 / 3600.0
 }
 
-const sweref99tm = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 15.00,
-    latOfOrigin: 0.0,
-    scale: 0.9996,
-    falseNorthing: 0.0,
-    falseEasting: 500000.0
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref99tm = {
+  centralMeridian: 15.00,
+  latOfOrigin: 0.0,
+  scale: 0.9996,
+  falseNorthing: 0.0,
+  falseEasting: 500000.0
 }
 
-const sweref991200 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 12.00
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991200 = {
+  centralMeridian: 12.00
 }
 
-const sweref991330 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 13.50
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991330 = {
+  centralMeridian: 13.50
 }
 
-const sweref991500 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 15.00
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991500 = {
+  centralMeridian: 15.00
 }
 
-const sweref991630 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 16.50
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991630 = {
+  centralMeridian: 16.50
 }
 
-const sweref991800 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 18.00
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991800 = {
+  centralMeridian: 18.00
 }
 
-const sweref991415 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 14.25
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991415 = {
+  centralMeridian: 14.25
 }
 
-const sweref991545 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 15.75
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991545 = {
+  centralMeridian: 15.75
 }
 
-const sweref991715 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 17.25
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991715 = {
+  centralMeridian: 17.25
 }
 
-const sweref991845 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 18.75
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref991845 = {
+  centralMeridian: 18.75
 }
 
-const sweref992015 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 20.25
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref992015 = {
+  centralMeridian: 20.25
 }
 
-const sweref992145 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 21.75
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref992145 = {
+  centralMeridian: 21.75
 }
 
-const sweref992315 = () => {
-  let base = sweref99Params()
-  let spec = {
-    centralMeridian: 23.25
-  }
-  return {...defaultParams, ...base, ...spec}
+const sweref992315 = {
+  centralMeridian: 23.25
 }
+
 // Conversion calculation with testCase params should return:
 // Lat: 66 0'0", lon: 24 0'0".
 // X:1135809.413803 Y:555304.016555.
-const testCase = () => {
-  let spec = {
-    axis: 6378137.0,
-    flattening: 1.0 / 298.257222101,
-    centralMeridian: 13.0 + 35.0 / 60.0 + 7.692000 / 3600.0,
-    latOfOrigin: 0.0,
-    scale: 1.000002540000,
-    falseNorthing: -6226307.8640,
-    falseEasting: 84182.8790
-  }
-  return {...defaultParams, ...spec}
+const testCase = {
+  axis: 6378137.0,
+  flattening: 1.0 / 298.257222101,
+  centralMeridian: 13.0 + 35.0 / 60.0 + 7.692000 / 3600.0,
+  latOfOrigin: 0.0,
+  scale: 1.000002540000,
+  falseNorthing: -6226307.8640,
+  falseEasting: 84182.8790
 }
 
-// example usage: swedishParams['rt9075gonV']()
-const swedishParams = {
-  rt9075gonV: rt9075gonV,
-  rt9050gonV: rt9050gonV,
-  rt9025gonV: rt9025gonV,
-  rt9000gonV: rt9000gonV,
-  rt9025gonO: rt9025gonO,
-  rt9050gonO: rt9050gonO,
-  besselRt9075gonV: besselRt9075gonV,
-  besselRt9050gonV: besselRt9050gonV,
-  besselRt9025gonV: besselRt9025gonV,
-  besselRt9000gonV: besselRt9000gonV,
-  besselRt9025gonO: besselRt9025gonO,
-  besselRt9050gonO: besselRt9050gonO,
-  sweref99tm: sweref99tm,
-  sweref991200: sweref991200,
-  sweref991330: sweref991330,
-  sweref991500: sweref991500,
-  sweref991630: sweref991630,
-  sweref991800: sweref991800,
-  sweref991415: sweref991415,
-  sweref991545: sweref991545,
-  sweref991715: sweref991715,
-  sweref991845: sweref991845,
-  sweref992015: sweref992015,
-  sweref992145: sweref992145,
-  sweref992315: sweref992315,
+const params = {
+  rt9075gonV: {...grs80Params, ...rt9075gonV},
+  rt9050gonV: {...grs80Params, ...rt9050gonV},
+  rt9025gonV: {...grs80Params, ...rt9025gonV},
+  rt9000gonV: {...grs80Params, ...rt9000gonV},
+  rt9025gonO: {...grs80Params, ...rt9025gonO},
+  rt9050gonO: {...grs80Params, ...rt9050gonO},
+  besselRt9075gonV: {...besselParams, ...besselRt9075gonV},
+  besselRt9050gonV: {...besselParams, ...besselRt9050gonV},
+  besselRt9025gonV: {...besselParams, ...besselRt9025gonV},
+  besselRt9000gonV: {...besselParams, ...besselRt9000gonV},
+  besselRt9025gonO: {...besselParams, ...besselRt9025gonO},
+  besselRt9050gonO: {...besselParams, ...besselRt9050gonO},
+  sweref99tm: {...sweref99Params, ...sweref99tm},
+  sweref991200: {...sweref99Params, ...sweref991200},
+  sweref991330: {...sweref99Params, ...sweref991330},
+  sweref991500: {...sweref99Params, ...sweref991500},
+  sweref991630: {...sweref99Params, ...sweref991630},
+  sweref991800: {...sweref99Params, ...sweref991800},
+  sweref991415: {...sweref99Params, ...sweref991415},
+  sweref991545: {...sweref99Params, ...sweref991545},
+  sweref991715: {...sweref99Params, ...sweref991715},
+  sweref991845: {...sweref99Params, ...sweref991845},
+  sweref992015: {...sweref99Params, ...sweref992015},
+  sweref992145: {...sweref99Params, ...sweref992145},
+  sweref992315: {...sweref99Params, ...sweref992315},
   testCase: testCase
 }
 
-export {swedishParams}
+// example usage: projectionParams('rt9075gonV')
+const projectionParams = (projection) => {
+  return {...defaultParams, ...params[projection]}
+}
+
+export {projectionParams}
