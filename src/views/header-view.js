@@ -19,7 +19,6 @@ export const HeaderView = ({state, actions}) =>
         {
           state.swerefs.map(ref =>
             <option value={ref.value}>{ref.text}</option>)
-
         }
       </select>
     </label>
@@ -28,7 +27,6 @@ export const HeaderView = ({state, actions}) =>
         {
           state.rt90s.map(ref =>
             <option value={ref.value}>{ref.text}</option>)
-
         }
       </select>
     </label>

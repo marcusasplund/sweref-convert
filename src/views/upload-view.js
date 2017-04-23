@@ -13,18 +13,22 @@ export const UploadView = ({state, actions}) =>
   <div class='container'>
     <label for='files' class='button file-label'>Ladda upp .csv
     <input
-      onChange={e => actions.parse(e)}
+      onChange={e => actions.parseFile(e)}
       accept='.csv'
       class='hidden'
       id='files'
       type='file' />
     </label>
     {' '}
-    <a href={dataToCsvURI(state.rows)} download='convert.csv' target='_blank' class='button'>
+    <a disabled={state.rows.length < 1} href={dataToCsvURI(state.rows)} download='convert.csv' target='_blank' class='button'>
       Ladda ned konverterad .csv
     </a>
     <table>
       <TableHead state={state} />
       <TableBody state={state} />
     </table>
+    <textarea
+      onInput={e => actions.parseString(e)}
+      placeholder='Klistra in tabell'>
+    </textarea>
   </div>
