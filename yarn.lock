@@ -978,7 +978,7 @@ fly-htmlmin@^2.1.0:
   dependencies:
     html-minifier "^3.1.0"
 
-fly-precache@^2.1.0:
+fly-precache:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/fly-precache/-/fly-precache-2.1.0.tgz#5261d3b16571e45fee4344d8bdac3e821c83c54c"
   dependencies:

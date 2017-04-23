@@ -89,7 +89,7 @@ export async function release (fly) {
     ignores: ['.html', '.png', '.svg', '.ico', '.json', '.txt', '.ttf', '.otf', '.woff', '.woff2']
   }).revManifest({dest: releaseTarget, trim: target}).revReplace().target(releaseTarget)
   await fly.source(`${releaseTarget}/*.html`).htmlmin().target(releaseTarget)
-//  await fly.serial(['cache'])
+  await fly.serial(['cache'])
 }
 
 export async function watch (fly) {

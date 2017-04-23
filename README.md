@@ -1,5 +1,9 @@
 # sweref-convert
 
+ES2015 port of http://latlong.mellifica.se
+
+For batch conversion of RT 90 and SWEREF 99 coords to lat, lng
+
 ## wip!!
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/marcusasplund/sweref-convert.svg)](https://greenkeeper.io/)
@@ -11,6 +15,8 @@
 
 
 ## [demo](https://pap.as/sweref/)
+
+Offline support with service worker
 
 
 ## installation
