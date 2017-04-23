@@ -16,7 +16,7 @@ const src = {
 }
 
 export async function cache (fly) {
-  await fly.source('release/**/*.{js,html,css,png,jpg,gif,woff,woff2}')
+  await fly.source('release/**/*.{js,html,css,png,jpg,gif,woff,woff2,json}')
     .precache({
       cacheId: 'sweref-convert',
       stripPrefix: 'release/'
@@ -86,7 +86,7 @@ export async function release (fly) {
     }
   }).target(target)
   await fly.source(`${target}/**/*`).rev({
-    ignores: ['.html', '.png', '.svg', '.ico', '.json', '.txt', '.ttf', '.otf', '.woff', '.woff2']
+    ignores: ['.html', '.png', '.svg', '.ico', '.json', '.xml', '.txt', '.ttf', '.otf', '.woff', '.woff2']
   }).revManifest({dest: releaseTarget, trim: target}).revReplace().target(releaseTarget)
   await fly.source(`${releaseTarget}/*.html`).htmlmin().target(releaseTarget)
   await fly.serial(['cache'])
@@ -101,7 +101,7 @@ export async function watch (fly) {
   // start server
   browserSync({
     server: target,
-    logPrefix: 'hyperapp',
+    logPrefix: 'sweref-convert',
     port: process.env.PORT || 4000,
     middleware: [
       require('connect-history-api-fallback')()

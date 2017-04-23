@@ -29,6 +29,6 @@ export const UploadView = ({state, actions}) =>
     </table>
     <textarea
       onInput={e => actions.parseString(e)}
-      placeholder='Klistra in tabell'>
+      placeholder='Klistra in tabell med två kolumner X o Y eller N o E'>
     </textarea>
   </div>
