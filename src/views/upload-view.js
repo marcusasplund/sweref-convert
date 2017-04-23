@@ -6,7 +6,7 @@ import {TableBody} from '../views/table-body'
 
 export const UploadView = ({state, actions}) =>
   <div class='container'>
-    <label for='files' class='button file-label'>upload .csv
+    <label for='files' class='button file-label'>Ladda upp .csv
     <input
       onChange={e => actions.parse(e)}
       accept='.csv'

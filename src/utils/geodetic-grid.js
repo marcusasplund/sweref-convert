@@ -1,3 +1,4 @@
+import './math-polyfills'
 /* eslint-disable no-unused-vars */
 
 // Author: Arnold Andreasson, info@mellifica.se

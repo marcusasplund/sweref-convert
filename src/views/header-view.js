@@ -3,16 +3,18 @@ import {h} from 'hyperapp'
 
 export const HeaderView = ({state, actions}) =>
   <header>
-    <h2>batch convert SWEREF99 o RT90 to lat, lng</h2>
+    <h2>Konvertera från SWEREF99 o RT90 till lat, lng</h2>
+    <p>Välj projektion på ursprungsdatan o ladda upp ett .csv med två kolumner där den första är X eller N o den andra är Y eller E</p>
+    <p>Du kan ladda ned ett exempel på hur ursprungsdatan bör se ut <a download='rt90.csv' target='_blank' href='https://pap.as/sweref/rt90.csv'>här</a>. </p>
     <label>
-      SWEREF
       <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='sweref' checked={state.swerefSelected} />
+      SWEREF 99 TM etc
     </label>
     <label>
       <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='rt90' />
-      RT90
+       RT 90
     </label>
-    <label> select sweref projection
+    <label> Välj SWEREF 99 projektion:
       <select value={state.selectedParam} onChange={actions.setSelectedParam} disabled={!state.swerefSelected}>
         {
           state.swerefs.map(ref =>
@@ -21,7 +23,7 @@ export const HeaderView = ({state, actions}) =>
         }
       </select>
     </label>
-    <label> select rt90 projection
+    <label> Välj RT 90 projektion:
       <select value={state.selectedParam} onchange={actions.setSelectedParam} disabled={state.swerefSelected}>
         {
           state.rt90s.map(ref =>
