@@ -1,5 +1,51 @@
 # sweref-convert
 
-## wip
+## wip!!
 
-## [demo](https://pap.as/sweref/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/marcusasplund/sweref-convert.svg)](https://greenkeeper.io/)
+[![GitHub issues](https://img.shields.io/github/issues/marcusasplund/sweref-convert.svg)](https://github.com/marcusasplund/sweref-convert/issues)
+[![Build status](https://travis-ci.org/marcusasplund/sweref-convert.svg?branch=master)](https://travis-ci.org/marcusasplund/hyperapp-todo)
+[![dependencies](https://david-dm.org/marcusasplund/sweref-convert.svg)](https://david-dm.org/marcusasplund/sweref-convert)
+
+[![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
+
+[demo](https://pap.as/sweref/)
+
+
+## installation
+
+````bash
+    $ git clone https://github.com/marcusasplund/sweref-convert.git
+
+    $ cd hyperapp-todo-simple
+
+    $ yarn OR $ npm install
+
+    $ npm start
+````
+
+Open up application at http://localhost:4000/ in browser
+
+## build a release
+
+````bash
+    $ npm run build
+
+````
+This will generate a release directory with your minified/rev'd assets.
+
+
+## serve static
+
+````bash
+    $ npm run serve
+
+````
+
+This will use serve to statically serve your app from the release directory.
+
+## Credits
+
+All geodetic conversion calculations are taken from https://github.com/arnoldandreasson/latlong_mellifica_se
+The rollup and fly config is based on https://github.com/tzellman/hyperapp-boilerplate
