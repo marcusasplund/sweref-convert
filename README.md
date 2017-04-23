@@ -2,4 +2,4 @@
 
 ## wip
 
-## (demo)[https://pap.as/sweref/]
+## [demo](https://pap.as/sweref/)
