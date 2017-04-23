@@ -1,4 +1,4 @@
 export const events = {
-  update: (state) =>
+  update: (state, actions, data) =>
     state
 }

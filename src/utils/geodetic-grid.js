@@ -25,15 +25,18 @@
 // =============================================================================
 // Javascript-implementation of "Gauss Conformal Projection
 // (Transverse Mercator), Krügers Formulas".
-// - Parameters for SWEREF99 lat-long to/from RT90 and SWEREF99
+// - Parameters for SWEREF99 lat-lngg to/from RT90 and SWEREF99
 //   coordinates (RT90 and SWEREF99 are used in Swedish maps).
 // Source: http://www.lantmateriet.se/geodesi/
 
 // Conversion from geodetic coordinates to grid coordinates.
-const geodeticToGrid = (latitude, longitude, params) => {
-  let xY = new Array(2)
+const geodeticToGrid = (latitude, lnggitude, params) => {
+  let coords = {
+    x: null,
+    y: null
+  }
   if (params.centralMeridian === null) {
-    return xY
+    return coords
   }
   // Prepare ellipsoid-based stuff.
   let e2 = params.flattening * (2.0 - params.flattening)
@@ -50,7 +53,7 @@ const geodeticToGrid = (latitude, longitude, params) => {
   // Convert.
   let degToRad = Math.PI / 180.0
   let phi = latitude * degToRad
-  let lambda = longitude * degToRad
+  let lambda = lnggitude * degToRad
   let lambdaZero = params.centralMeridian * degToRad
   let phiStar = phi - Math.sin(phi) * Math.cos(phi) * (
     A + B * Math.pow(Math.sin(phi), 2) + C * Math.pow(Math.sin(phi), 4) + D * Math.pow(Math.sin(phi), 6)
@@ -64,17 +67,21 @@ const geodeticToGrid = (latitude, longitude, params) => {
   let y = params.scale * aRoof * (
     etaPrim + beta1 * Math.cos(2.0 * xiPrim) * Math.sinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * Math.sinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * Math.sinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * Math.sinh(8.0 * etaPrim)
   ) + params.falseEasting
-  xY[0] = Math.round(x * 1000.0) / 1000.0
-  xY[1] = Math.round(y * 1000.0) / 1000.0
-  // xY[0] = x; xY[1] = y;
-  return xY
+  coords = {
+    x: Math.round(x * 1000.0) / 1000.0,
+    y: Math.round(y * 1000.0) / 1000.0
+  }
+  return coords
 }
 
 // Conversion from grid coordinates to geodetic coordinates.
 const gridToGeodetic = (x, y, params) => {
-  let latLon = new Array(2)
+  let coords = {
+    lat: null,
+    lng: null
+  }
   if (params.centralMeridian === null) {
-    return latLon
+    return coords
   }
   // Prepare ellipsoid-based stuff.
   let e2 = params.flattening * (2.0 - params.flattening)
@@ -105,13 +112,15 @@ const gridToGeodetic = (x, y, params) => {
   ) * Math.sinh(8.0 * eta)
   let phiStar = Math.asin(Math.sin(xiPrim) / Math.cosh(etaPrim))
   let deltaLambda = Math.atan(Math.sinh(etaPrim) / Math.cos(xiPrim))
-  let lonRadian = lambdaZero + deltaLambda
+  let lngRadian = lambdaZero + deltaLambda
   let latRadian = phiStar + Math.sin(phiStar) * Math.cos(phiStar) * (
     Astar + Bstar * Math.pow(Math.sin(phiStar), 2) + Cstar * Math.pow(Math.sin(phiStar), 4) + Dstar * Math.pow(Math.sin(phiStar), 6)
   )
-  latLon[0] = latRadian * 180.0 / Math.PI
-  latLon[1] = lonRadian * 180.0 / Math.PI
-  return latLon
+  coords = {
+    lat: latRadian * 180.0 / Math.PI,
+    lng: lngRadian * 180.0 / Math.PI
+  }
+  return coords
 }
 
 export {geodeticToGrid, gridToGeodetic}

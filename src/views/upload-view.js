@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import {h} from 'hyperapp'
 import {StateDisplay} from '../views/state-display'
+import {TableHead} from '../views/table-head'
+import {TableBody} from '../views/table-body'
 
 export const UploadView = ({state, actions}) =>
   <div class='container'>
@@ -12,6 +14,10 @@ export const UploadView = ({state, actions}) =>
       id='files'
       type='file' />
     </label>
-
-    <StateDisplay state={state} />
+    {
+      <table>
+        <TableHead state={state} />
+        <TableBody state={state} />
+      </table>
+    }
   </div>
