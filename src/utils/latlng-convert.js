@@ -59,6 +59,7 @@ const latFromDd = (value) => {
   }
   return latitude
 }
+
 const lngFromDd = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E') // Note: ö=Öst for swedish users.
@@ -87,6 +88,7 @@ const lngFromDd = (value) => {
   }
   return longitude
 }
+
 const latFromDm = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
@@ -120,6 +122,7 @@ const latFromDm = (value) => {
   }
   return latitude
 }
+
 const lngFromDm = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E')
@@ -153,6 +156,7 @@ const lngFromDm = (value) => {
   }
   return longitude
 }
+
 const latFromDms = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
@@ -189,6 +193,7 @@ const latFromDms = (value) => {
   }
   return latitude
 }
+
 const lngFromDms = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E')
@@ -225,18 +230,21 @@ const lngFromDms = (value) => {
   }
   return longitude
 }
+
 const latToDd = (value) => {
   if (value === null) {
     return ''
   }
   return value.toFixed(6) // Round.
 }
+
 const lngToDd = (value) => {
   if (value === null) {
     return ''
   }
   return value.toFixed(6) // Round.
 }
+
 const latToDm = (value) => {
   if (value === null) {
     return ''
@@ -254,6 +262,7 @@ const latToDm = (value) => {
     ).toFixed(4) + '\u2032 '
   }
 }
+
 const lngToDm = (value) => {
   if (value === null) {
     return ''
@@ -271,6 +280,7 @@ const lngToDm = (value) => {
     ).toFixed(4) + '\u2032 '
   }
 }
+
 const latToDms = (value) => {
   if (value === null) {
     return ''
@@ -289,6 +299,7 @@ const latToDms = (value) => {
     ).toFixed(2) + '\u2033 '
   }
 }
+
 const lngToDms = (value) => {
   if (value === null) {
     return ''
