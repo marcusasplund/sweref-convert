@@ -8,7 +8,7 @@ export const InfoText = () =>
   Du kan välja mellan att konvertera till eller från SWEREF/RT90 och WGS84/lat,lng{' '}
   Du kan ladda ned ett exempel på hur ursprungsdatan kan se ut{' '}
     <a download='rt90.csv' target='_blank' href='https://pap.as/sweref/rt90.csv'>här</a>.{' '}
-  Beräkningsalgoritmerna kommer från <a href='https://latlong.mellifica.se'>latlong.mellifica.se</a>{' '}
+  Beräkningsalgoritmerna kommer från <a href='http://latlong.mellifica.se'>latlong.mellifica.se</a>{' '}
   där finns lite mer info. Källkoden till denna app hittar ni{' '}
     <a href='https://github.com/marcusasplund/sweref-convert'>här</a>
   </p>
