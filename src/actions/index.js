@@ -2,6 +2,7 @@ import {default as Papa} from 'papaparse'
 import {gridToGeodetic} from '../utils/geodetic-grid'
 import {projectionParams} from '../utils/projection-params'
 import {latToDms, lngToDms} from '../utils/latlng-convert'
+import {download} from '../utils/download'
 
 let rows = []
 
@@ -57,6 +58,11 @@ const parseCSVFile = (state, e, actions) => {
   })
 }
 
+const downloadCSVFile = (e) => {
+  e.preventDefault()
+  download(Papa.unparse(rows), 'converted.csv', 'text/csv')
+}
+
 export const actions = {
   // set selected projection type
   setSwerefSelected: (state, e) => ({
@@ -78,5 +84,7 @@ export const actions = {
   // update state with parsed rows
   updateRows: (state) => ({
     rows: rows
-  })
+  }),
+  downloadCSV: (state, e, actions) =>
+    downloadCSVFile(e)
 }
