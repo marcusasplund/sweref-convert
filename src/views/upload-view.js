@@ -14,7 +14,7 @@ export const UploadView = ({state, actions}) =>
       type='file' />
     </label>
     {' '}
-    <button onClick={e => actions.downloadCSV(e)} class='button'>
+    <button disabled={state.rows && state.rows.length < 1} onClick={e => actions.downloadCSV(e)} class='button'>
       Ladda ned konverterad csv
     </button>
     <table>
