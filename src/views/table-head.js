@@ -5,10 +5,10 @@ export const TableHead = ({state}) =>
   <thead>
     <tr>
       <th>
-        {state.swerefSelected ? 'X' : 'N' }
+        {state.swerefSelected ? 'N' : 'X' }
       </th>
       <th>
-        {state.swerefSelected ? 'Y' : 'E' }
+        {state.swerefSelected ? 'E' : 'Y' }
       </th>
       <th>
         lat
