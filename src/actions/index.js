@@ -58,6 +58,23 @@ const parseCSVFile = (state, e, actions) => {
   })
 }
 
+const parseCSVRemote = (state, e, actions) => {
+  // clear old result
+  rows = []
+  actions.updateRows()
+  // parse uploaded file row by row
+  let url = e.target.value
+  Papa.parse(url, {
+    download: true,
+    header: true,
+    worker: true,
+    step: (results) =>
+      refreshRows(state, actions, results),
+    complete: () =>
+      actions.updateRows()
+  })
+}
+
 const downloadCSVFile = (e) => {
   e.preventDefault()
   download(Papa.unparse(rows), 'converted.csv', 'text/csv')
@@ -81,10 +98,17 @@ export const actions = {
   parseString: (state, e, actions) => {
     parseCSVString(state, e, actions)
   },
+  // parse csv string
+  parseRemote: (state, e, actions) => {
+    parseCSVRemote(state, e, actions)
+  },
   // update state with parsed rows
   updateRows: (state) => ({
     rows: rows
   }),
   downloadCSV: (state, e, actions) =>
-    downloadCSVFile(e)
+    downloadCSVFile(e),
+  toggleInfo: (state, e, actions) => ({
+    showInfo: !state.showInfo
+  })
 }

@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 import {h} from 'hyperapp'
-import {StateDisplay} from '../views/state-display'
-import {TableHead} from '../views/table-head'
-import {TableBody} from '../views/table-body'
+import {TableHead} from './table-head'
+import {TableBody} from './table-body'
 
 export const UploadView = ({state, actions}) =>
   <div>
@@ -22,8 +21,11 @@ export const UploadView = ({state, actions}) =>
       <TableHead state={state} />
       <TableBody state={state} />
     </table>
+    <input
+      type='text'
+      onInput={e => actions.parseRemote(e)}
+      placeholder='Klistra in url till fil' />
     <textarea
       onInput={e => actions.parseString(e)}
-      placeholder='Klistra in tabell med två kolumner X o Y eller N o E'>
-    </textarea>
+      placeholder='Klistra in tabell med två kolumner X o Y eller N o E' />
   </div>

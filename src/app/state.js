@@ -2,6 +2,7 @@
 export const state = {
   rows: [],
   swerefSelected: false,
+  showInfo: true,
   selectedParam: 'rt9025gonV',
   swerefs: [{
     value: 'sweref99tm',
