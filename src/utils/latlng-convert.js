@@ -36,21 +36,21 @@ const latFromDd = (value) => {
   value = value.replace(/[N]/gi, 'N')
   value = value.replace(/[S]/gi, 'S')
   let result = value.match(/^\s*([NS\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([NS]?)\s*$/)
-  if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
+  if (result) {
+    if (result[2]) {
       latitude = parseFloat(result[2])
     }
-    if ((result[3] !== '') && (result[3] !== null) && (result[3].replace(',', '.') !== '.')) {
+    if (result[3] && (result[3].replace(',', '.') !== '.')) {
       latitude += parseFloat(result[3].replace(',', '.'))
     }
     if (latitude > 90) {
       latitude = null
       return latitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'S') || (result[1] === '-'))) {
+    if (result[1] && ((result[1] === 'S') || (result[1] === '-'))) {
       latitude *= -1
     } else {
-      if ((result[4] !== '') && (result[4] !== null) && ((result[4] === 'S'))) {
+      if (result[4] && ((result[4] === 'S'))) {
         latitude *= -1
       }
     }
@@ -66,20 +66,20 @@ const lngFromDd = (value) => {
   value = value.replace(/[WV]/gi, 'W') // Note: v=Väst for swedish users.
   let result = value.match(/^\s*([EW\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([EW]?)\s*$/)
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
+    if (result[2]) {
       longitude = parseFloat(result[2])
     }
-    if ((result[3] !== '') && (result[3] !== null) && (result[3].replace(',', '.') !== '.')) {
+    if (result[3] && (result[3].replace(',', '.') !== '.')) {
       longitude += parseFloat(result[3].replace(',', '.'))
     }
     if (longitude > 180) {
       longitude = null
       return longitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'W') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'W' || result[1] === '-')) {
       longitude *= -1
     } else {
-      if ((result[4] !== '') && (result[4] !== null) && ((result[4] === 'W'))) {
+      if (result[4] && result[4] === 'W') {
         longitude *= -1
       }
     }
@@ -97,23 +97,23 @@ const latFromDm = (value) => {
     /^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([NS]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
+    if (result[2]) {
       latitude = parseFloat(result[2])
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
+    if (result[3]) {
       latitude += parseFloat(result[3]) / 60
     }
-    if ((result[4] !== '') && (result[4] !== null) && (result[4].replace(',', '.') !== '.')) {
+    if (result[4] && result[4].replace(',', '.') !== '.') {
       latitude += parseFloat(result[4].replace(',', '.')) / 60
     }
     if (latitude > 90) {
       latitude = null
       return latitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'S') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'S' || result[1] === '-')) {
       latitude *= -1
     } else {
-      if ((result[5] !== '') && (result[5] !== null) && ((result[5] === 'S'))) {
+      if (result[5] && (result[5] === 'S')) {
         latitude *= -1
       }
     }
@@ -131,23 +131,23 @@ const lngFromDm = (value) => {
     /^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([EW]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
+    if (result[2]) {
       longitude = parseFloat(result[2])
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
+    if (result[3]) {
       longitude += parseFloat(result[3]) / 60
     }
-    if ((result[4] !== '') && (result[4] !== null) && (result[4].replace(',', '.') !== '.')) {
+    if (result[4] && (result[4].replace(',', '.') !== '.')) {
       longitude += parseFloat(result[4].replace(',', '.')) / 60
     }
     if (longitude > 180) {
       longitude = null
       return longitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'W') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'W') || (result[1] === '-')) {
       longitude *= -1
     } else {
-      if ((result[5] !== '') && (result[5] !== null) && ((result[5] === 'W'))) {
+      if (result[5] && result[5] === 'W') {
         longitude *= -1
       }
     }
@@ -165,26 +165,26 @@ const latFromDms = (value) => {
     /^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?'?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([NS]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
+    if (result[2]) {
       latitude = parseFloat(result[2])
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
+    if (result[3]) {
       latitude += parseFloat(result[3]) / 60
     }
-    if ((result[4] !== '') && (result[4] !== null)) {
+    if (result[4]) {
       latitude += parseFloat(result[4]) / 3600
     }
-    if ((result[5] !== '') && (result[5] !== null) && (result[5].replace(',', '.') !== '.')) {
+    if (result[5] && (result[5].replace(',', '.') !== '.')) {
       latitude += parseFloat(result[5].replace(',', '.')) / 3600
     }
     if (latitude > 90) {
       latitude = null
       return latitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'S') || (result[1] === '-'))) {
+    if (result[1] && ((result[1] === 'S') || (result[1] === '-'))) {
       latitude *= -1
     } else {
-      if ((result[6] !== '') && (result[6] !== null) && ((result[6] === 'S'))) {
+      if (result[6] && ((result[6] === 'S'))) {
         latitude *= -1
       }
     }
@@ -202,26 +202,26 @@ const lngFromDms = (value) => {
     /^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?'?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([EW]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
+    if (result[2]) {
       longitude = parseFloat(result[2])
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
+    if (result[3]) {
       longitude += parseFloat(result[3]) / 60
     }
-    if ((result[4] !== '') && (result[4] !== null)) {
+    if (result[4]) {
       longitude += parseFloat(result[4]) / 3600
     }
-    if ((result[5] !== '') && (result[5] !== null) && (result[5].replace(',', '.') !== '.')) {
+    if (result[5] && (result[5].replace(',', '.') !== '.')) {
       longitude += parseFloat(result[5].replace(',', '.')) / 3600
     }
     if (longitude > 180) {
       longitude = null
       return longitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'W') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'W' || result[1] === '-')) {
       longitude *= -1
     } else {
-      if ((result[6] !== '') && (result[6] !== null) && ((result[6] === 'W'))) {
+      if (result[6] && result[6] === 'W') {
         longitude *= -1
       }
     }
