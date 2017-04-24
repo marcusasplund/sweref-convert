@@ -24,7 +24,7 @@ Offline support with service worker
 ````bash
     $ git clone https://github.com/marcusasplund/sweref-convert.git
 
-    $ cd hyperapp-todo-simple
+    $ cd sweref-convert
 
     $ yarn OR $ npm install
 
