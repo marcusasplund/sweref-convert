@@ -14,7 +14,7 @@ export const HeaderView = ({state, actions}) =>
       </div>
       <div class='column'>
         <label>
-          <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='rt90' />
+          <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='rt90' checked={!state.swerefSelected} />
           {' '}RT 90
         </label>
       </div>
