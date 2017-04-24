@@ -3,6 +3,7 @@ export const state = {
   rows: [],
   swerefSelected: false,
   showInfo: true,
+  fromLatLng: false,
   selectedParam: 'rt9025gonV',
   swerefs: [{
     value: 'sweref99tm',

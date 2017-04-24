@@ -1,5 +1,5 @@
 import {default as Papa} from 'papaparse'
-import {gridToGeodetic} from '../utils/geodetic-grid'
+import {geodeticToGrid, gridToGeodetic} from '../utils/geodetic-grid'
 import {projectionParams} from '../utils/projection-params'
 import {latToDms, lngToDms} from '../utils/latlng-convert'
 import {download} from '../utils/download'
@@ -7,20 +7,25 @@ import {download} from '../utils/download'
 let rows = []
 
 const refreshRows = (state, actions, results) => {
+  let geo
   let res = results.data[0]
   // first column
   let x = res[Object.keys(res)[0]]
   // second column
   let y = res[Object.keys(res)[1]]
   // convert to lat, lng according to selected projection
-  let geo = gridToGeodetic(x, y, projectionParams(state.selectedParam))
+  if (state.fromLatLng) {
+    geo = geodeticToGrid(x, y, projectionParams(state.selectedParam))
+  } else {
+    geo = gridToGeodetic(x, y, projectionParams(state.selectedParam))
+  }
   let row = {
-    x: x,
-    y: y,
-    lat: geo.lat,
-    lng: geo.lng,
-    latdms: latToDms(geo.lat),
-    lngdms: lngToDms(geo.lng)
+    x: state.fromLatLng ? geo.x : x,
+    y: state.fromLatLng ? geo.y : y,
+    lat: state.fromLatLng ? x : geo.lat,
+    lng: state.fromLatLng ? y : geo.lng,
+    latdms: state.fromLatLng ? latToDms(+x) : latToDms(geo.lat),
+    lngdms: state.fromLatLng ? lngToDms(+y) : latToDms(geo.lat)
   }
   // update state with row including conversions
   rows.push(row)
@@ -43,6 +48,7 @@ const parseCSVString = (state, e, actions) => {
 }
 
 const parseCSVFile = (state, e, actions) => {
+  e.preventDefault()
   // clear old result
   rows = []
   actions.updateRows()
@@ -89,6 +95,9 @@ export const actions = {
   // set selected projection
   setSelectedParam: (state, e) => ({
     selectedParam: e.target.value
+  }),
+  setFromLatLngSelected: (state, e) => ({
+    fromLatLng: e.target.checked
   }),
   // parse csv file
   parseFile: (state, e, actions) => {
