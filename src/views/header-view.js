@@ -9,13 +9,13 @@ export const HeaderView = ({state, actions}) =>
       <div class='column'>
         <label>
           <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='sweref' checked={state.swerefSelected} />
-          SWEREF 99 TM etc
+          {' '}SWEREF 99 TM etc
         </label>
       </div>
       <div class='column'>
         <label>
           <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='rt90' />
-           RT 90
+          {' '}RT 90
         </label>
       </div>
     </div>
