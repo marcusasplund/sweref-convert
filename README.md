@@ -15,7 +15,7 @@ For batch conversion of RT 90 and SWEREF 99 coords to lat, lng
 
 
 ## [demo](https://pap.as/sweref/)
-
+Js-framework: [hyperapp.js](https://github.com/hyperapp/hyperapp)
 Offline support with service worker
 
 
