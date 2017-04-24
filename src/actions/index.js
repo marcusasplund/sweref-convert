@@ -23,7 +23,6 @@ const refreshRows = (state, actions, results) => {
   }
   // update state with row including conversions
   rows.push(row)
-  actions.updateRows()
 }
 
 const parseCSVString = (state, e, actions) => {
@@ -36,7 +35,9 @@ const parseCSVString = (state, e, actions) => {
     header: true,
     worker: true,
     step: (results) =>
-      refreshRows(state, actions, results)
+      refreshRows(state, actions, results),
+    complete: () =>
+      actions.updateRows()
   })
 }
 
@@ -50,7 +51,9 @@ const parseCSVFile = (state, e, actions) => {
     header: true,
     worker: true,
     step: (results) =>
-      refreshRows(state, actions, results)
+      refreshRows(state, actions, results),
+    complete: () =>
+      actions.updateRows()
   })
 }
 
