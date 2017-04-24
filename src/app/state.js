@@ -1,8 +1,8 @@
 
 export const state = {
   rows: [],
-  swerefSelected: true,
-  selectedParam: 'sweref99tm',
+  swerefSelected: false,
+  selectedParam: 'rt9025gonV',
   swerefs: [{
     value: 'sweref99tm',
     text: 'SWEREF 99 TM'
