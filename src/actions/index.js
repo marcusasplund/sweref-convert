@@ -1,6 +1,7 @@
 import {default as Papa} from 'papaparse'
 import {gridToGeodetic} from '../utils/geodetic-grid'
 import {projectionParams} from '../utils/projection-params'
+import {latToDms, lngToDms} from '../utils/latlng-convert'
 
 let rows = []
 
@@ -16,7 +17,9 @@ const refreshRows = (state, actions, results) => {
     x: x,
     y: y,
     lat: geo.lat,
-    lng: geo.lng
+    lng: geo.lng,
+    latdms: latToDms(geo.lat),
+    lngdms: lngToDms(geo.lng)
   }
   // update state with row including conversions
   rows.push(row)

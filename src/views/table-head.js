@@ -11,13 +11,16 @@ export const TableHead = ({state}) =>
         {state.swerefSelected ? 'Y' : 'E' }
       </th>
       <th>
-    latitude
-    </th>
+        lat
+      </th>
       <th>
-    longitude
-    </th>
+        lng
+      </th>
       <th>
-      lat, lng
+        lat
+      </th>
+      <th>
+        lng
       </th>
     </tr>
   </thead>

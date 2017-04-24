@@ -13,9 +13,12 @@ export const TableRow = ({state, row}) =>
       {row.lat}
     </td>
     <td>
-      {row.lat}
+      {row.lng}
     </td>
     <td>
-      {row.lat + ', ' + row.lng}
+      {row.latdms}
+    </td>
+    <td>
+      {row.lngdms}
     </td>
   </tr>
