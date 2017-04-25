@@ -15,7 +15,7 @@ const addMap = (state, e, actions) => {
     mapView.remove()
   }
   mapView = L.map('map').setView([state.rows[0].lat, state.rows[0].lng], 12)
-  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(mapView)
   state.rows.filter((i, index) =>
