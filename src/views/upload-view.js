@@ -18,5 +18,5 @@ export const UploadView = ({state, actions}) =>
     <button disabled={state.rows && state.rows.length < 1} onClick={e => actions.showMap(e)} class='button'>
       {state.showLeaflet ? 'visa tabellvy' : 'visa kartvy'}
     </button>
-    {state.showLeaflet ? <small>här visas de 100 första i tabellen</small> : ''}
+    {state.showLeaflet ? <small>på kartan visas de 100 första i tabellen</small> : ''}
   </div>

@@ -15,7 +15,7 @@ const addMap = (state, e, actions) => {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapView)
     state.rows.filter((i, index) =>
-      (index < 20 || index < state.rows.length)).map((i, index) => {
+      (index < 100 || index < state.rows.length)).map((i, index) => {
         L.marker([i.lat, i.lng], {icon: mapIcon}).addTo(mapView)
         .bindPopup(i.lat + ', ' + i.lng)
       })
