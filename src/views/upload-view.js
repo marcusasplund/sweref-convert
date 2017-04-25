@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
 import {h} from 'hyperapp'
-import {TableHead} from './table-head'
-import {TableBody} from './table-body'
 
 export const UploadView = ({state, actions}) =>
   <div>
@@ -17,15 +15,8 @@ export const UploadView = ({state, actions}) =>
     <button disabled={state.rows && state.rows.length < 1} onClick={e => actions.downloadCSV(e)} class='button'>
       Ladda ned konverterad csv
     </button>
-    <table>
-      <TableHead state={state} />
-      <TableBody state={state} />
-    </table>
-    <input
-      type='text'
-      onInput={e => actions.parseRemote(e)}
-      placeholder='Klistra in url till fil' />
-    <textarea
-      onInput={e => actions.parseString(e)}
-      placeholder='Klistra in tabell med två kolumner X o Y eller N o E' />
+    <button disabled={state.rows && state.rows.length < 1} onClick={e => actions.showMap(e)} class='button'>
+      {state.showLeaflet ? 'visa tabellvy' : 'visa kartvy'}
+    </button>
+    {state.showLeaflet ? <small>här visas de 100 första i tabellen</small> : ''}
   </div>

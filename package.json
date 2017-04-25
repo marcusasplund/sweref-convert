@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "hyperapp": "^0.8.1",
+    "leaflet": "^1.0.3",
     "papaparse": "^4.2.0"
   }
 }
