@@ -5,21 +5,24 @@ import {latToDms, lngToDms} from '../utils/latlng-convert'
 import {download} from '../utils/download'
 import L from 'leaflet'
 
+let mapView
+
 const addMap = (state, e, actions) => {
-  let mapView
   let mapIcon = L.divIcon({className: 'map-icon'})
   actions.toggleMap()
-  if (!mapView) {
-    mapView = L.map('map').setView([state.rows[0].lat, state.rows[0].lng], 12)
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(mapView)
-    state.rows.filter((i, index) =>
-      (index < 100 || index < state.rows.length)).map((i, index) => {
-        L.marker([i.lat, i.lng], {icon: mapIcon}).addTo(mapView)
-        .bindPopup(i.lat + ', ' + i.lng)
-      })
+  if (mapView) {
+    mapView.off()
+    mapView.remove()
   }
+  mapView = L.map('map').setView([state.rows[0].lat, state.rows[0].lng], 12)
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(mapView)
+  state.rows.filter((i, index) =>
+    (index < 100 || index < state.rows.length)).map((i, index) => {
+      L.marker([i.lat, i.lng], {icon: mapIcon}).addTo(mapView)
+      .bindPopup(i.lat + ', ' + i.lng)
+    })
 }
 
 let rows = []
