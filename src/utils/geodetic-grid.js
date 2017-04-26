@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 
-// Author: Arnold Andreasson, info@mellifica.se
-// Copyright (c) 2007-2016 Arnold Andreasson
+// Author: Marcus Asplund
+// Copyright (c) 2017 Marcus Asplund, marcus@greatname.se
 // License: MIT License as follows:
-//
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -25,28 +25,34 @@
 // =============================================================================
 // Javascript-implementation of "Gauss Conformal Projection
 // (Transverse Mercator), Krügers Formulas".
-// - Parameters for SWEREF99 lat-long to/from RT90 and SWEREF99
+// by Arnold Andreasson, info@mellifica.se
+// - Parameters for SWEREF99 lat-lngg to/from RT90 and SWEREF99
 //   coordinates (RT90 and SWEREF99 are used in Swedish maps).
 // Source: http://www.lantmateriet.se/geodesi/
 
 // Conversion from geodetic coordinates to grid coordinates.
+import * as MATH from './math-polyfills'
+
 const geodeticToGrid = (latitude, longitude, params) => {
-  let xY = new Array(2)
+  let coords = {
+    x: null,
+    y: null
+  }
   if (params.centralMeridian === null) {
-    return xY
+    return coords
   }
   // Prepare ellipsoid-based stuff.
   let e2 = params.flattening * (2.0 - params.flattening)
   let n = params.flattening / (2.0 - params.flattening)
-  let aRoof = params.axis / (1.0 + n) * (1.0 + n * n / 4.0 + n * n * n * n / 64.0)
+  let aRoof = params.axis / (1.0 + n) * (1.0 + n ** 2 / 4.0 + n ** 4 / 64.0)
   let A = e2
-  let B = (5.0 * e2 * e2 - e2 * e2 * e2) / 6.0
-  let C = (104.0 * e2 * e2 * e2 - 45.0 * e2 * e2 * e2 * e2) / 120.0
-  let D = (1237.0 * e2 * e2 * e2 * e2) / 1260.0
-  let beta1 = n / 2.0 - 2.0 * n * n / 3.0 + 5.0 * n * n * n / 16.0 + 41.0 * n * n * n * n / 180.0
-  let beta2 = 13.0 * n * n / 48.0 - 3.0 * n * n * n / 5.0 + 557.0 * n * n * n * n / 1440.0
-  let beta3 = 61.0 * n * n * n / 240.0 - 103.0 * n * n * n * n / 140.0
-  let beta4 = 49561.0 * n * n * n * n / 161280.0
+  let B = (5.0 * e2 ** 2 - e2 ** 3) / 6.0
+  let C = (104.0 * e2 ** 3 - 45.0 * e2 ** 4) / 120.0
+  let D = (1237.0 * e2 ** 4) / 1260.0
+  let beta1 = n / 2.0 - 2.0 * n ** 2 / 3.0 + 5.0 * n ** 3 / 16.0 + 41.0 * n ** 4 / 180.0
+  let beta2 = 13.0 * n ** 2 / 48.0 - 3.0 * n ** 3 / 5.0 + 557.0 * n ** 4 / 1440.0
+  let beta3 = 61.0 * n ** 3 / 240.0 - 103.0 * n ** 4 / 140.0
+  let beta4 = 49561.0 * n ** 4 / 161280.0
   // Convert.
   let degToRad = Math.PI / 180.0
   let phi = latitude * degToRad
@@ -64,30 +70,34 @@ const geodeticToGrid = (latitude, longitude, params) => {
   let y = params.scale * aRoof * (
     etaPrim + beta1 * Math.cos(2.0 * xiPrim) * Math.sinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * Math.sinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * Math.sinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * Math.sinh(8.0 * etaPrim)
   ) + params.falseEasting
-  xY[0] = Math.round(x * 1000.0) / 1000.0
-  xY[1] = Math.round(y * 1000.0) / 1000.0
-  // xY[0] = x; xY[1] = y;
-  return xY
+  coords = {
+    x: +x.toFixed(0),
+    y: +y.toFixed(0)
+  }
+  return coords
 }
 
 // Conversion from grid coordinates to geodetic coordinates.
 const gridToGeodetic = (x, y, params) => {
-  let latLon = new Array(2)
+  let coords = {
+    lat: null,
+    lng: null
+  }
   if (params.centralMeridian === null) {
-    return latLon
+    return coords
   }
   // Prepare ellipsoid-based stuff.
   let e2 = params.flattening * (2.0 - params.flattening)
   let n = params.flattening / (2.0 - params.flattening)
-  let aRoof = params.axis / (1.0 + n) * (1.0 + n * n / 4.0 + n * n * n * n / 64.0)
-  let delta1 = n / 2.0 - 2.0 * n * n / 3.0 + 37.0 * n * n * n / 96.0 - n * n * n * n / 360.0
-  let delta2 = n * n / 48.0 + n * n * n / 15.0 - 437.0 * n * n * n * n / 1440.0
-  let delta3 = 17.0 * n * n * n / 480.0 - 37 * n * n * n * n / 840.0
-  let delta4 = 4397.0 * n * n * n * n / 161280.0
-  let Astar = e2 + e2 * e2 + e2 * e2 * e2 + e2 * e2 * e2 * e2
-  let Bstar = -(7.0 * e2 * e2 + 17.0 * e2 * e2 * e2 + 30.0 * e2 * e2 * e2 * e2) / 6.0
-  let Cstar = (224.0 * e2 * e2 * e2 + 889.0 * e2 * e2 * e2 * e2) / 120.0
-  let Dstar = -(4279.0 * e2 * e2 * e2 * e2) / 1260.0
+  let aRoof = params.axis / (1.0 + n) * (1.0 + n ** 2 / 4.0 + n ** 4 / 64.0)
+  let delta1 = n / 2.0 - 2.0 * n ** 2 / 3.0 + 37.0 * n ** 3 / 96.0 - n ** 4 / 360.0
+  let delta2 = n ** 2 / 48.0 + n ** 3 / 15.0 - 437.0 * n ** 4 / 1440.0
+  let delta3 = 17.0 * n ** 3 / 480.0 - 37 * n ** 4 / 840.0
+  let delta4 = 4397.0 * n ** 4 / 161280.0
+  let Astar = e2 + e2 ** 2 + e2 ** 3 + e2 ** 4
+  let Bstar = -(7.0 * e2 ** 2 + 17.0 * e2 ** 3 + 30.0 * e2 ** 4) / 6.0
+  let Cstar = (224.0 * e2 ** 3 + 889.0 * e2 ** 4) / 120.0
+  let Dstar = -(4279.0 * e2 ** 4) / 1260.0
   // Convert.
   let degToRad = Math.PI / 180
   let lambdaZero = params.centralMeridian * degToRad
@@ -105,13 +115,15 @@ const gridToGeodetic = (x, y, params) => {
   ) * Math.sinh(8.0 * eta)
   let phiStar = Math.asin(Math.sin(xiPrim) / Math.cosh(etaPrim))
   let deltaLambda = Math.atan(Math.sinh(etaPrim) / Math.cos(xiPrim))
-  let lonRadian = lambdaZero + deltaLambda
+  let lngRadian = lambdaZero + deltaLambda
   let latRadian = phiStar + Math.sin(phiStar) * Math.cos(phiStar) * (
     Astar + Bstar * Math.pow(Math.sin(phiStar), 2) + Cstar * Math.pow(Math.sin(phiStar), 4) + Dstar * Math.pow(Math.sin(phiStar), 6)
   )
-  latLon[0] = latRadian * 180.0 / Math.PI
-  latLon[1] = lonRadian * 180.0 / Math.PI
-  return latLon
+  coords = {
+    lat: latRadian * 180.0 / Math.PI,
+    lng: lngRadian * 180.0 / Math.PI
+  }
+  return coords
 }
 
 export {geodeticToGrid, gridToGeodetic}

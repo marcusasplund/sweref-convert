@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
-// Author: Arnold Andreasson, info@mellifica.se
-// Copyright (c) 2007-2016 Arnold Andreasson
+// Author: Marcus Asplund
+// Copyright (c) 2017 Marcus Asplund, marcus@greatname.se
 // License: MIT License as follows:
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,26 +30,27 @@
 // Accepts most input formats. Parser implemented in regexp.
 //
 // Converts from input format.
+
 const latFromDd = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
   value = value.replace(/[S]/gi, 'S')
   let result = value.match(/^\s*([NS\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([NS]?)\s*$/)
-  if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
-      latitude = parseFloat(result[2])
+  if (result) {
+    if (result[2]) {
+      latitude = +result[2]
     }
-    if ((result[3] !== '') && (result[3] !== null) && (result[3].replace(',', '.') !== '.')) {
-      latitude += parseFloat(result[3].replace(',', '.'))
+    if (result[3] && (result[3].replace(',', '.') !== '.')) {
+      latitude += +result[3].replace(',', '.')
     }
     if (latitude > 90) {
       latitude = null
       return latitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'S') || (result[1] === '-'))) {
+    if (result[1] && result[1] === 'S' || result[1] === '-') {
       latitude *= -1
     } else {
-      if ((result[4] !== '') && (result[4] !== null) && ((result[4] === 'S'))) {
+      if (result[4] && result[4] === 'S') {
         latitude *= -1
       }
     }
@@ -58,26 +59,27 @@ const latFromDd = (value) => {
   }
   return latitude
 }
+
 const lngFromDd = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E') // Note: ö=Öst for swedish users.
   value = value.replace(/[WV]/gi, 'W') // Note: v=Väst for swedish users.
   let result = value.match(/^\s*([EW\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([EW]?)\s*$/)
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
-      longitude = parseFloat(result[2])
+    if (result[2]) {
+      longitude = +result[2]
     }
-    if ((result[3] !== '') && (result[3] !== null) && (result[3].replace(',', '.') !== '.')) {
-      longitude += parseFloat(result[3].replace(',', '.'))
+    if (result[3] && result[3].replace(',', '.') !== '.') {
+      longitude += +result[3].replace(',', '.')
     }
     if (longitude > 180) {
       longitude = null
       return longitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'W') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'W' || result[1] === '-')) {
       longitude *= -1
     } else {
-      if ((result[4] !== '') && (result[4] !== null) && ((result[4] === 'W'))) {
+      if (result[4] && result[4] === 'W') {
         longitude *= -1
       }
     }
@@ -86,6 +88,7 @@ const lngFromDd = (value) => {
   }
   return longitude
 }
+
 const latFromDm = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
@@ -94,23 +97,23 @@ const latFromDm = (value) => {
     /^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([NS]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
-      latitude = parseFloat(result[2])
+    if (result[2]) {
+      latitude = +result[2]
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
-      latitude += parseFloat(result[3]) / 60
+    if (result[3]) {
+      latitude += +result[3] / 60
     }
-    if ((result[4] !== '') && (result[4] !== null) && (result[4].replace(',', '.') !== '.')) {
-      latitude += parseFloat(result[4].replace(',', '.')) / 60
+    if (result[4] && result[4].replace(',', '.') !== '.') {
+      latitude += +result[4].replace(',', '.') / 60
     }
     if (latitude > 90) {
       latitude = null
       return latitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'S') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'S' || result[1] === '-')) {
       latitude *= -1
     } else {
-      if ((result[5] !== '') && (result[5] !== null) && ((result[5] === 'S'))) {
+      if (result[5] && result[5] === 'S') {
         latitude *= -1
       }
     }
@@ -119,6 +122,7 @@ const latFromDm = (value) => {
   }
   return latitude
 }
+
 const lngFromDm = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E')
@@ -127,23 +131,23 @@ const lngFromDm = (value) => {
     /^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([EW]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
-      longitude = parseFloat(result[2])
+    if (result[2]) {
+      longitude = +result[2]
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
-      longitude += parseFloat(result[3]) / 60
+    if (result[3]) {
+      longitude += +result[3] / 60
     }
-    if ((result[4] !== '') && (result[4] !== null) && (result[4].replace(',', '.') !== '.')) {
-      longitude += parseFloat(result[4].replace(',', '.')) / 60
+    if (result[4] && result[4].replace(',', '.') !== '.') {
+      longitude += +result[4].replace(',', '.') / 60
     }
     if (longitude > 180) {
       longitude = null
       return longitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'W') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'W' || result[1] === '-')) {
       longitude *= -1
     } else {
-      if ((result[5] !== '') && (result[5] !== null) && ((result[5] === 'W'))) {
+      if (result[5] && result[5] === 'W') {
         longitude *= -1
       }
     }
@@ -152,6 +156,7 @@ const lngFromDm = (value) => {
   }
   return longitude
 }
+
 const latFromDms = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
@@ -160,26 +165,26 @@ const latFromDms = (value) => {
     /^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?'?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([NS]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
-      latitude = parseFloat(result[2])
+    if (result[2]) {
+      latitude = +result[2]
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
-      latitude += parseFloat(result[3]) / 60
+    if (result[3]) {
+      latitude += +result[3] / 60
     }
-    if ((result[4] !== '') && (result[4] !== null)) {
-      latitude += parseFloat(result[4]) / 3600
+    if (result[4]) {
+      latitude += +result[4] / 3600
     }
-    if ((result[5] !== '') && (result[5] !== null) && (result[5].replace(',', '.') !== '.')) {
-      latitude += parseFloat(result[5].replace(',', '.')) / 3600
+    if (result[5] && result[5].replace(',', '.') !== '.') {
+      latitude += +result[5].replace(',', '.') / 3600
     }
     if (latitude > 90) {
       latitude = null
       return latitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'S') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'S' || result[1] === '-')) {
       latitude *= -1
     } else {
-      if ((result[6] !== '') && (result[6] !== null) && ((result[6] === 'S'))) {
+      if (result[6] && result[6] === 'S') {
         latitude *= -1
       }
     }
@@ -188,6 +193,7 @@ const latFromDms = (value) => {
   }
   return latitude
 }
+
 const lngFromDms = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E')
@@ -196,26 +202,26 @@ const lngFromDms = (value) => {
     /^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?'?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([EW]?)\s*$/
   )
   if (result !== null) {
-    if ((result[2] !== '') && (result[2] !== null)) {
-      longitude = parseFloat(result[2])
+    if (result[2]) {
+      longitude = +result[2]
     }
-    if ((result[3] !== '') && (result[3] !== null)) {
-      longitude += parseFloat(result[3]) / 60
+    if (result[3]) {
+      longitude += +result[3] / 60
     }
-    if ((result[4] !== '') && (result[4] !== null)) {
-      longitude += parseFloat(result[4]) / 3600
+    if (result[4]) {
+      longitude += +result[4] / 3600
     }
-    if ((result[5] !== '') && (result[5] !== null) && (result[5].replace(',', '.') !== '.')) {
-      longitude += parseFloat(result[5].replace(',', '.')) / 3600
+    if (result[5] && result[5].replace(',', '.') !== '.') {
+      longitude += +result[5].replace(',', '.') / 3600
     }
     if (longitude > 180) {
       longitude = null
       return longitude
     }
-    if ((result[1] !== '') && (result[1] !== null) && ((result[1] === 'W') || (result[1] === '-'))) {
+    if (result[1] && (result[1] === 'W' || result[1] === '-')) {
       longitude *= -1
     } else {
-      if ((result[6] !== '') && (result[6] !== null) && ((result[6] === 'W'))) {
+      if (result[6] && result[6] === 'W') {
         longitude *= -1
       }
     }
@@ -224,18 +230,21 @@ const lngFromDms = (value) => {
   }
   return longitude
 }
+
 const latToDd = (value) => {
   if (value === null) {
     return ''
   }
   return value.toFixed(6) // Round.
 }
+
 const lngToDd = (value) => {
   if (value === null) {
     return ''
   }
   return value.toFixed(6) // Round.
 }
+
 const latToDm = (value) => {
   if (value === null) {
     return ''
@@ -244,15 +253,16 @@ const latToDm = (value) => {
   let degrees = Math.floor(Math.abs(value))
   let minutes = (Math.abs(value) - degrees) * 60
   if (value >= 0) {
-    return 'N ' + degrees + '° ' + (
+    return 'N ' + degrees + '\u00b0 ' + (
       Math.floor(minutes * 10000) / 10000
     ).toFixed(4) + '\u2032 '
   } else {
-    return 'S ' + degrees + '° ' + (
+    return 'S ' + degrees + '\u00b0 ' + (
       Math.floor(minutes * 10000) / 10000
     ).toFixed(4) + '\u2032 '
   }
 }
+
 const lngToDm = (value) => {
   if (value === null) {
     return ''
@@ -261,15 +271,16 @@ const lngToDm = (value) => {
   let degrees = Math.floor(Math.abs(value))
   let minutes = (Math.abs(value) - degrees) * 60
   if (value >= 0) {
-    return 'E ' + degrees + '° ' + (
+    return 'E ' + degrees + '\u00b0 ' + (
       Math.floor(minutes * 10000) / 10000
     ).toFixed(4) + '\u2032 '
   } else {
-    return 'W ' + degrees + '° ' + (
+    return 'W ' + degrees + '\u00b0 ' + (
       Math.floor(minutes * 10000) / 10000
     ).toFixed(4) + '\u2032 '
   }
 }
+
 const latToDms = (value) => {
   if (value === null) {
     return ''
@@ -279,15 +290,16 @@ const latToDms = (value) => {
   let minutes = Math.floor((Math.abs(value) - degrees) * 60)
   let seconds = (Math.abs(value) - degrees - minutes / 60) * 3600
   if (value >= 0) {
-    return 'N ' + degrees + '° ' + minutes + '\u2032 ' + (
+    return 'N ' + degrees + '\u00b0 ' + minutes + '\u2032 ' + (
       Math.floor(seconds * 100) / 100
     ).toFixed(2) + '\u2033 '
   } else {
-    return 'S ' + degrees + '° ' + minutes + '\u2032 ' + (
+    return 'S ' + degrees + '\u00b0 ' + minutes + '\u2032 ' + (
       Math.floor(seconds * 100) / 100
     ).toFixed(2) + '\u2033 '
   }
 }
+
 const lngToDms = (value) => {
   if (value === null) {
     return ''
@@ -297,11 +309,11 @@ const lngToDms = (value) => {
   let minutes = Math.floor((Math.abs(value) - degrees) * 60)
   let seconds = (Math.abs(value) - degrees - minutes / 60) * 3600
   if (value >= 0) {
-    return 'E ' + degrees + '° ' + minutes + '\u2032 ' + (
+    return 'E ' + degrees + '\u00b0 ' + minutes + '\u2032 ' + (
       Math.floor(seconds * 100) / 100
     ).toFixed(2) + '\u2033 '
   } else {
-    return 'W ' + degrees + '° ' + minutes + '\u2032 ' + (
+    return 'W ' + degrees + '\u00b0 ' + minutes + '\u2032 ' + (
       Math.floor(seconds * 100) / 100
     ).toFixed(2) + '\u2033 '
   }

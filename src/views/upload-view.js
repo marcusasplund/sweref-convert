@@ -1,0 +1,22 @@
+/* eslint-disable no-unused-vars */
+import {h} from 'hyperapp'
+
+export const UploadView = ({state, actions}) =>
+  <div>
+    <label for='files' class='button file-label'>Ladda upp csv
+    <input
+      onChange={e => actions.parseFile(e)}
+      accept='.csv'
+      class='hidden'
+      id='files'
+      type='file' />
+    </label>
+    {' '}
+    <button disabled={state.rows && state.rows.length < 1} onClick={e => actions.downloadCSV(e)} class='button'>
+      Ladda ned konverterad csv
+    </button>
+    <button disabled={state.rows && state.rows.length < 1} onClick={e => actions.showMap(e)} class='button'>
+      {state.showLeaflet ? 'visa tabellvy' : 'visa kartvy'}
+    </button>
+    {state.showLeaflet ? <small>på kartan visas de 100 första i tabellen</small> : ''}
+  </div>

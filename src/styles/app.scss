@@ -10,6 +10,9 @@
 @import 'Link';
 @import 'Spacing';
 @import 'Typography';
+@import 'Table';
+@import 'Utility';
+@import 'leaflet';
 
 /* roboto-300 - latin */
 @font-face {
@@ -36,10 +39,11 @@ button {
 header {
   padding-top: 5rem;
 }
-[contenteditable]:focus {
-  outline: 0px solid transparent;
-  border: 1px solid #9b4dca;
-  border-radius: 3px;
+input[type=file].hidden {
+  visibility: hidden;
+}
+.file-label {
+  width: 15rem;
 }
 .item {
   min-height: 6rem;
@@ -49,17 +53,13 @@ header {
   line-height: 3rem;
   height: 3rem;
 }
-.done {
-  color: gray;
-  text-decoration: line-through;
+#map {
+  height: 400px;
+  width: 100%;
 }
-.row {
-  display: flex;
-  flex-direction: row;
-}
-.left {
-  width: 10rem;
-}
-.right {
-  flex:1;
+.map-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 3rem;
+  background-color: rgba(255,0 ,255 , 0.5)
 }

@@ -1,4 +1,5 @@
 // Math polyfills
+const Math = Math
 
 Math.sinh = Math.sinh || function (x) {
   let y = Math.exp(x)
@@ -13,3 +14,5 @@ Math.cosh = Math.cosh || function (x) {
 Math.atanh = Math.atanh || function (x) {
   return Math.log((1 + x) / (1 - x)) / 2
 }
+
+export {Math}
