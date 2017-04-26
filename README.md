@@ -5,8 +5,7 @@ ES2015 port of http://latlong.mellifica.se
 For batch conversion of RT 90 and SWEREF 99 coords to lat, lng
 
 ## wip!!
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/marcusasplund/sweref-convert.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/marcusasplund/sweref-convert.svg?token=493ef87e08732e1c5bb6d1817e62e6f59fa6855c01f52285701c26e4299428ef)](https://greenkeeper.io/)
 [![GitHub issues](https://img.shields.io/github/issues/marcusasplund/sweref-convert.svg)](https://github.com/marcusasplund/sweref-convert/issues)
 [![Build status](https://travis-ci.org/marcusasplund/sweref-convert.svg?branch=master)](https://travis-ci.org/marcusasplund/sweref-convert)
 [![dependencies](https://david-dm.org/marcusasplund/sweref-convert.svg)](https://david-dm.org/marcusasplund/sweref-convert)
@@ -55,3 +54,4 @@ This will use serve to statically serve your app from the release directory.
 
 All geodetic conversion calculations are taken from https://github.com/arnoldandreasson/latlong_mellifica_se
 The rollup and fly config is based on https://github.com/tzellman/hyperapp-boilerplate
+
