@@ -46,7 +46,7 @@ const refreshRows = (state, actions, results) => {
     lat: state.fromLatLng ? x : geo.lat,
     lng: state.fromLatLng ? y : geo.lng,
     latdms: state.fromLatLng ? latToDms(+x) : latToDms(geo.lat),
-    lngdms: state.fromLatLng ? lngToDms(+y) : latToDms(geo.lat)
+    lngdms: state.fromLatLng ? lngToDms(+y) : lngToDms(geo.lng)
   }
   // update state with row including conversions
   rows.push(row)
