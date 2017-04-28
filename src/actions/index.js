@@ -124,18 +124,24 @@ export const actions = {
   // parse csv file
   parseFile: (state, e, actions) => {
     parseCSVFile(state, e, actions)
+    actions.hideMap()
   },
   // parse csv string
   parseString: (state, e, actions) => {
     parseCSVString(state, e, actions)
+    actions.hideMap()
   },
   // parse csv string
   parseRemote: (state, e, actions) => {
     parseCSVRemote(state, e, actions)
+    actions.hideMap()
   },
   // update state with parsed rows
   updateRows: (state) => ({
     rows: rows
+  }),
+  hideMap: (state, e, actions) => ({
+    showLeaflet: false
   }),
   showMap: (state, e, actions) =>
     addMap(state, e, actions),
