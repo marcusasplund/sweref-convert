@@ -18,10 +18,10 @@ const addMap = (state, e, actions) => {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(mapView)
-  state.rows.filter((i, index) =>
-    (index < 100 || index < state.rows.length)).map((i, index) => {
-      L.marker([i.lat, i.lng], {icon: mapIcon}).addTo(mapView)
-      .bindPopup(i.lat + ', ' + i.lng)
+  state.rows.filter((row, index) =>
+    (index < 100 || index < state.rows.length)).map((row, index) => {
+      L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
+      .bindPopup(row.lat + ', ' + row.lng)
     })
 }
 
@@ -60,7 +60,6 @@ const parseCSVString = (state, e, actions) => {
   let string = e.target.value
   Papa.parse(string, {
     header: true,
-    worker: true,
     step: (results) =>
       refreshRows(state, actions, results),
     complete: () =>
@@ -77,7 +76,6 @@ const parseCSVFile = (state, e, actions) => {
   let file = e.target.files[0]
   Papa.parse(file, {
     header: true,
-    worker: true,
     step: (results) =>
       refreshRows(state, actions, results),
     complete: () => {
@@ -95,7 +93,6 @@ const parseCSVRemote = (state, e, actions) => {
   Papa.parse(url, {
     download: true,
     header: true,
-    worker: true,
     step: (results) =>
       refreshRows(state, actions, results),
     complete: () =>
@@ -149,6 +146,10 @@ export const actions = {
     downloadCSVFile(e),
   toggleInfo: (state, e, actions) => ({
     showInfo: !state.showInfo
+  }),
+  toggleAll: (state, e, actions) => ({
+    showAll: !state.showAll,
+    rows: rows
   }),
   toggleMap: (state, e, actions) => ({
     showLeaflet: !state.showLeaflet

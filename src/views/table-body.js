@@ -4,9 +4,12 @@ import {TableRow} from '../views/table-row'
 
 export const TableBody = ({state}) =>
   <tbody>
-    {
-      state.rows
-        .map(row =>
-          <TableRow state={state} row={row} />)
+    {state.showAll
+      ? state.rows
+          .map(row =>
+            <TableRow state={state} row={row} />)
+      : state.rows.filter((row, index) =>
+          (index < 100)).map((row, index) =>
+            <TableRow state={state} row={row} />)
     }
   </tbody>

@@ -3,6 +3,7 @@ export const state = {
   rows: [],
   swerefSelected: false,
   showInfo: false,
+  showAll: false,
   showLeaflet: false,
   fromLatLng: false,
   selectedParam: 'rt9025gonV',
