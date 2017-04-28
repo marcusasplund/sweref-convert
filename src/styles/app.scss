@@ -56,7 +56,7 @@ input[type=file].hidden {
 #map {
   height: 400px;
   width: 100%;
-  padding-bottom: 50px;
+  margin-bottom: 50px;
 }
 .map-icon {
   width: 3rem;
@@ -65,6 +65,5 @@ input[type=file].hidden {
   background-color: rgba(255,0 ,255 , 0.5)
 }
 .hidden {
-  visibility: hidden;
-  height: 1px;
+  display: none;
 }
