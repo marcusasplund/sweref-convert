@@ -2,7 +2,7 @@
 export const state = {
   rows: [],
   swerefSelected: false,
-  showInfo: true,
+  showInfo: false,
   showLeaflet: false,
   fromLatLng: false,
   selectedParam: 'rt9025gonV',
