@@ -68,7 +68,7 @@ const parseCSVString = (state, e, actions) => {
 }
 
 const parseCSVFile = (state, e, actions) => {
-  e.preventDefault()
+  e.preventDefault ? e.preventDefault() : (e.returnValue = false)
   // clear old result
   rows = []
   actions.updateRows()
@@ -101,7 +101,7 @@ const parseCSVRemote = (state, e, actions) => {
 }
 
 const downloadCSVFile = (e) => {
-  e.preventDefault()
+  e.preventDefault ? e.preventDefault() : (e.returnValue = false)
   download(Papa.unparse(rows), 'converted.csv', 'text/csv')
 }
 
