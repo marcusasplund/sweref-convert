@@ -2,7 +2,7 @@
 
 ES2015 port of http://latlong.mellifica.se
 
-For batch conversion of RT 90 and SWEREF 99 coords to lat, lng
+For batch conversion of geodetic coordinates between [Swedish Grid RT 90](https://en.wikipedia.org/wiki/Swedish_grid), [SWEREF99](https://sv.wikipedia.org/wiki/SWEREF_99) and [WGS84](https://en.wikipedia.org/wiki/World_Geodetic_System) lat, lng
 
 ## wip!!
 [![Greenkeeper badge](https://badges.greenkeeper.io/marcusasplund/sweref-convert.svg?token=493ef87e08732e1c5bb6d1817e62e6f59fa6855c01f52285701c26e4299428ef)](https://greenkeeper.io/)
