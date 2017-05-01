@@ -18,11 +18,10 @@ const addMap = (state, actions, e) => {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(mapView)
-  state.rows.filter((row, index) =>
-    (index < 100 || index < state.rows.length)).map((row, index) => {
-      L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
-      .bindPopup(row.lat + ', ' + row.lng)
-    })
+  state.rows.slice(0, 100).map((row, index) => {
+    L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
+    .bindPopup(row.lat + ', ' + row.lng)
+  })
 }
 
 let rows = []
