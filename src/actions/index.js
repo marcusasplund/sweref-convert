@@ -7,7 +7,7 @@ import L from 'leaflet'
 
 let mapView
 
-const addMap = (state, e, actions) => {
+const addMap = (state, actions, e) => {
   let mapIcon = L.divIcon({className: 'map-icon'})
   actions.toggleMap()
   if (mapView) {
@@ -52,7 +52,7 @@ const refreshRows = (state, actions, results) => {
   rows.push(row)
 }
 
-const parseCSVString = (state, e, actions) => {
+const parseCSVString = (state, actions, e) => {
   // clear old result
   rows = []
   actions.updateRows()
@@ -67,7 +67,7 @@ const parseCSVString = (state, e, actions) => {
   })
 }
 
-const parseCSVFile = (state, e, actions) => {
+const parseCSVFile = (state, actions, e) => {
   e.preventDefault ? e.preventDefault() : (e.returnValue = false)
   // clear old result
   rows = []
@@ -84,7 +84,7 @@ const parseCSVFile = (state, e, actions) => {
   })
 }
 
-const parseCSVRemote = (state, e, actions) => {
+const parseCSVRemote = (state, actions, e) => {
   // clear old result
   rows = []
   actions.updateRows()
@@ -107,51 +107,51 @@ const downloadCSVFile = (e) => {
 
 export const actions = {
   // set selected projection type
-  setSwerefSelected: (state, e) => ({
+  setSwerefSelected: (state, actions, e) => ({
     swerefSelected: e.target.value === 'sweref',
     selectedParam: e.target.value === 'sweref' ? 'sweref99tm' : 'rt9025gonV'
   }),
   // set selected projection
-  setSelectedParam: (state, e) => ({
+  setSelectedParam: (state, actions, e) => ({
     selectedParam: e.target.value
   }),
-  setFromLatLngSelected: (state, e) => ({
+  setFromLatLngSelected: (state, actions, e) => ({
     fromLatLng: e.target.checked
   }),
   // parse csv file
-  parseFile: (state, e, actions) => {
-    parseCSVFile(state, e, actions)
+  parseFile: (state, actions, e) => {
+    parseCSVFile(state, actions, e)
     actions.hideMap()
   },
   // parse csv string
-  parseString: (state, e, actions) => {
-    parseCSVString(state, e, actions)
+  parseString: (state, actions, e) => {
+    parseCSVString(state, actions, e)
     actions.hideMap()
   },
   // parse csv string
-  parseRemote: (state, e, actions) => {
-    parseCSVRemote(state, e, actions)
+  parseRemote: (state, actions, e) => {
+    parseCSVRemote(state, actions, e)
     actions.hideMap()
   },
   // update state with parsed rows
   updateRows: (state) => ({
     rows: rows
   }),
-  hideMap: (state, e, actions) => ({
+  hideMap: (state, actions, e) => ({
     showLeaflet: false
   }),
-  showMap: (state, e, actions) =>
-    addMap(state, e, actions),
-  downloadCSV: (state, e, actions) =>
+  showMap: (state, actions, e) =>
+    addMap(state, actions, e),
+  downloadCSV: (state, actions, e) =>
     downloadCSVFile(e),
-  toggleInfo: (state, e, actions) => ({
+  toggleInfo: (state, actions, e) => ({
     showInfo: !state.showInfo
   }),
-  toggleAll: (state, e, actions) => ({
+  toggleAll: (state, actions, e) => ({
     showAll: !state.showAll,
     rows: rows
   }),
-  toggleMap: (state, e, actions) => ({
+  toggleMap: (state, actions, e) => ({
     showLeaflet: !state.showLeaflet
   })
 }

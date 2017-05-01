@@ -9,5 +9,5 @@ export const InputView = ({actions, className}) =>
       placeholder='Klistra in url till fil' />
     <textarea
       onInput={e => actions.parseString(e)}
-      placeholder='Klistra in tabell med två kolumner X o Y eller N o E' />
+      placeholder='Klistra in tabell med två kolumner med X o Y, N o E eller lat o lng' />
   </div>

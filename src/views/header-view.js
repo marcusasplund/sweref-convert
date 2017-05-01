@@ -6,7 +6,7 @@ export const HeaderView = ({state, actions}) =>
   <header>
     <h2>Konvertera mellan SWEREF99/RT90 och lat, lng</h2>
     <div>
-      <button class='float-right' onClick={actions.toggleInfo}>
+      <button class='float-right' onclick={actions.toggleInfo}>
         {state.showInfo ? 'X' : 'ℹ'}
       </button>
       {state.showInfo ? <InfoText /> : ''}
@@ -34,7 +34,7 @@ export const HeaderView = ({state, actions}) =>
     <div class='row'>
       <div class='column'>
         <label> Välj SWEREF 99 projektion:
-          <select value={state.selectedParam} onChange={actions.setSelectedParam} disabled={!state.swerefSelected}>
+          <select value={state.selectedParam} onchange={actions.setSelectedParam} disabled={!state.swerefSelected}>
             {
               state.swerefs.map(ref =>
                 <option value={ref.value}>{ref.text}</option>)

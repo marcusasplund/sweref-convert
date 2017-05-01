@@ -10,6 +10,7 @@ const ShowMore = ({state, actions}) =>
     </button>
     {state.showAll ? '' : 'Nu visas endast de 100 första raderna'}
   </div>
+
 export const TableView = ({state, actions}) =>
   <div class={state.rows && state.rows.length > 0 && !state.showLeaflet ? '' : 'hidden'}>
     <table>
