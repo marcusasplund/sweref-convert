@@ -39,8 +39,10 @@ button {
 header {
   padding-top: 5rem;
 }
-input[type=file].hidden {
+input[type=file] {
   visibility: hidden;
+  width: 15rem;
+  margin-left: -15rem;
 }
 .file-label {
   width: 15rem;
