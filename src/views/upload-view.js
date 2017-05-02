@@ -8,7 +8,6 @@ export const UploadView = ({state, actions}) =>
     <input
       onchange={actions.parseFile}
       accept='.csv'
-      class='hidden'
       id='files'
       type='file' />
     {' '}
