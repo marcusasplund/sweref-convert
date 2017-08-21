@@ -7,9 +7,8 @@ import L from 'leaflet'
 
 let mapView
 
-const addMap = (state, actions, e) => {
+const renderMap = (state, actions, e) => {
   let mapIcon = L.divIcon({className: 'map-icon'})
-  actions.toggleMap()
   if (mapView) {
     mapView.off()
     mapView.remove()
@@ -22,6 +21,13 @@ const addMap = (state, actions, e) => {
     L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
     .bindPopup(row.lat + ', ' + row.lng)
   })
+}
+
+const addMap = (state, actions, e) => {
+  actions.toggleMap()
+  setTimeout(function () {
+    renderMap(state, actions, e)
+  }, 200)
 }
 
 let rows = []
