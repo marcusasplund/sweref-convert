@@ -139,24 +139,24 @@ export const actions = {
     actions.hideMap()
   },
   // update state with parsed rows
-  updateRows: (state) => ({
+  updateRows: state => ({
     rows: rows
   }),
-  hideMap: (state, actions, e) => ({
+  hideMap: state => ({
     showLeaflet: false
   }),
   showMap: (state, actions, e) =>
     addMap(state, actions, e),
   downloadCSV: (state, actions, e) =>
     downloadCSVFile(e),
-  toggleInfo: (state, actions, e) => ({
+  toggleInfo: state => ({
     showInfo: !state.showInfo
   }),
-  toggleAll: (state, actions, e) => ({
+  toggleAll: state => ({
     showAll: !state.showAll,
     rows: rows
   }),
-  toggleMap: (state, actions, e) => ({
+  toggleMap: state => ({
     showLeaflet: !state.showLeaflet
   })
 }
