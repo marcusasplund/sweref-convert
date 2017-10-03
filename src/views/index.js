@@ -7,7 +7,7 @@ import {LeafletMap} from './leaflet-map'
 import {InputView} from './input-view'
 
 export const view = (state, actions) =>
-  <div class='container'>
+  <div>
     <HeaderView actions={actions} state={state} />
     <UploadView actions={actions} state={state} />
     <LeafletMap className={state.showLeaflet ? '' : 'hidden'} />

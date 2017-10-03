@@ -16386,6 +16386,8 @@ var actions = {
   }); }
 };
 
+var root = document.getElementById('root');
+
 var state = {
   rows: [],
   swerefSelected: false,
@@ -16484,12 +16486,13 @@ var HeaderView = function (ref) {
     var state = ref.state;
     var actions = ref.actions;
 
-    return h( 'header', null,
-    h( 'h2', null, "Konvertera mellan SWEREF99/RT90 och lat, lng" ),
-    h( 'div', null,
-      h( 'button', { class: 'float-right', onclick: actions.toggleInfo },
+    return h( 'div', null,
+    h( 'div', { class: 'float-right' },
+      h( 'button', { onclick: actions.toggleInfo },
         state.showInfo ? 'X' : 'ℹ'
-      ),
+      )
+    ),
+    h( 'div', { class: 'row' },
       state.showInfo ? h( InfoText, null ) : ''
     ),
     h( 'div', { class: 'row' },
@@ -16637,7 +16640,7 @@ var InputView = function (ref) {
 };
 
 /* eslint-disable no-unused-vars */
-var view = function (state, actions) { return h( 'div', { class: 'container' },
+var view = function (state, actions) { return h( 'div', null,
     h( HeaderView, { actions: actions, state: state }),
     h( UploadView, { actions: actions, state: state }),
     h( LeafletMap, { className: state.showLeaflet ? '' : 'hidden' }),
@@ -16710,6 +16713,7 @@ if ('serviceWorker' in navigator) {
 
 app({
   actions: actions,
+  root: root,
   state: state,
   view: view
 });

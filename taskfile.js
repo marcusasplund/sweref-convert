@@ -7,7 +7,7 @@ const target = 'dist'
 const releaseTarget = 'release'
 const src = {
   js: 'src/**/*.js',
-  scss: 'src/styles/app.scss',
+  scss: ['src/styles/app.scss', 'src/styles/leaflet.scss'],
   staticAssets: [
     'src/static/**/*.*',
     'src/*.html'

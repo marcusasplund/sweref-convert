@@ -3,12 +3,13 @@ import {h} from 'hyperapp'
 import {InfoText} from './info-text'
 
 export const HeaderView = ({state, actions}) =>
-  <header>
-    <h2>Konvertera mellan SWEREF99/RT90 och lat, lng</h2>
-    <div>
-      <button class='float-right' onclick={actions.toggleInfo}>
+  <div>
+    <div class='float-right'>
+      <button onclick={actions.toggleInfo}>
         {state.showInfo ? 'X' : 'ℹ'}
       </button>
+    </div>
+    <div class='row'>
       {state.showInfo ? <InfoText /> : ''}
     </div>
     <div class='row'>
@@ -53,4 +54,4 @@ export const HeaderView = ({state, actions}) =>
         </label>
       </div>
     </div>
-  </header>
+  </div>
