@@ -1,69 +1,19 @@
 (function () {
 'use strict';
 
-var i;
-var stack = [];
-
-function h(type, props) {
-  var arguments$1 = arguments;
-
-  var node;
-  var children = [];
-
-  for (i = arguments.length; i-- > 2; ) {
-    stack.push(arguments$1[i]);
-  }
-
-  while (stack.length) {
-    if (Array.isArray((node = stack.pop()))) {
-      for (i = node.length; i--; ) {
-        stack.push(node[i]);
-      }
-    } else if (node != null && node !== true && node !== false) {
-      children.push(typeof node === "number" ? (node = node + "") : node);
-    }
-  }
-
-  return typeof type === "string"
-    ? { type: type, props: props || {}, children: children }
-    : type(props || {}, children)
-}
-
 function app(props, container) {
   var root = (container = container || document.body).children[0];
-  var node = elementToNode(root, [].map);
-  var callbacks = [];
-  var skipRender;
-  var globalState;
-  var globalActions;
+  var node = vnode(root, [].map);
+  var appState = {};
+  var appActions = {};
+  var lifecycle = [];
+  var patchLock;
 
-  repaint(flush(init(props, (globalState = {}), (globalActions = {}))));
+  repaint(init(appState, appActions, props, []));
 
-  return globalActions
+  return appActions
 
-  function repaint() {
-    if (props.view && !skipRender) {
-      requestAnimationFrame(render, (skipRender = !skipRender));
-    }
-  }
-
-  function render() {
-    flush(
-      (root = patch(
-        container,
-        root,
-        node,
-        (node = props.view(globalState, globalActions)),
-        (skipRender = !skipRender)
-      ))
-    );
-  }
-
-  function flush(cb) {
-    while ((cb = callbacks.pop())) { cb(); }
-  }
-
-  function elementToNode(element, map) {
+  function vnode(element, map) {
     return (
       element &&
       h(
@@ -72,58 +22,91 @@ function app(props, container) {
         map.call(element.childNodes, function(element) {
           return element.nodeType === 3
             ? element.nodeValue
-            : elementToNode(element, map)
+            : vnode(element, map)
         })
       )
     )
   }
 
-  function init(module, state, actions) {
-    if (module.init) {
-      callbacks.push(function() {
-        module.init(state, actions);
-      });
-    }
-
-    assign(state, module.state);
-
-    initActions(state, actions, module.actions);
-
-    for (var i in module.modules) {
-      init(module.modules[i], (state[i] = {}), (actions[i] = {}));
+  function repaint() {
+    if (props.view && !patchLock) {
+      setTimeout(render, (patchLock = !patchLock));
     }
   }
 
-  function initActions(state, actions, source) {
-    Object.keys(source || {}).map(function(i) {
-      typeof source[i] === "function"
-        ? (actions[i] = function(data) {
-            return typeof (data = source[i](state, actions, data)) === "function"
-              ? data(update)
-              : update(data)
-          })
-        : initActions(state[i] || (state[i] = {}), (actions[i] = {}), source[i]);
+  function render(next) {
+    patchLock = !patchLock;
+    if ((next = props.view(appState, appActions)) && !patchLock) {
+      root = patch(container, root, node, (node = next));
+    }
+    while ((next = lifecycle.pop())) { next(); }
+  }
+
+  function init(state, actions, from, path) {
+    var modules = from.modules;
+
+    initDeep(state, actions, from.actions, path);
+    set(state, from.state);
+
+    for (var i in modules) {
+      init((state[i] = {}), (actions[i] = {}), modules[i], path.concat(i));
+    }
+  }
+
+  function initDeep(state, actions, from, path) {
+    Object.keys(from || {}).map(function(key) {
+      if (typeof from[key] === "function") {
+        actions[key] = function(data) {
+          var result = from[key]((state = get(path, appState)), actions);
+
+          if (typeof result === "function") {
+            result = result(data);
+          }
+
+          if (result && result !== state && !result.then) {
+            repaint((appState = setDeep(path, merge(state, result), appState)));
+          }
+
+          return result
+        };
+      } else {
+        initDeep(
+          state[key] || (state[key] = {}),
+          (actions[key] = {}),
+          from[key],
+          path.concat(key)
+        );
+      }
     });
-
-    function update(data) {
-      return (
-        typeof data === "function"
-          ? update(data(state))
-          : data && repaint(assign(state, data)),
-        state
-      )
-    }
   }
 
-  function assign(target, source) {
-    for (var i in source) {
-      target[i] = source[i];
-    }
-    return target
+  function merge(to, from) {
+    return set(set({}, to), from)
   }
 
-  function merge(target, source) {
-    return assign(assign({}, target), source)
+  function set(to, from) {
+    for (var i in from) {
+      to[i] = from[i];
+    }
+    return to
+  }
+
+  function setDeep(path, value, from) {
+    var to = {};
+    return path.length === 0
+      ? value
+      : ((to[path[0]] =
+          1 < path.length
+            ? setDeep(path.slice(1), value, from[path[0]])
+            : value),
+        merge(from, to))
+  }
+
+  function get(path, from) {
+    for (var i = 0; i < path.length; i++) {
+      from = from[path[i]];
+    }
+    return from
   }
 
   function createElement(node, isSVG) {
@@ -134,8 +117,8 @@ function app(props, container) {
         ? document.createElementNS("http://www.w3.org/2000/svg", node.type)
         : document.createElement(node.type);
 
-      if (node.props && node.props.oncreate) {
-        callbacks.push(function() {
+      if (node.props.oncreate) {
+        lifecycle.push(function() {
           node.props.oncreate(element);
         });
       }
@@ -159,14 +142,14 @@ function app(props, container) {
       }
     } else {
       try {
-        element[name] = value;
+        element[name] = null == value ? "" : value;
       } catch (_) {}
 
       if (typeof value !== "function") {
-        if (value) {
-          element.setAttribute(name, value);
-        } else {
+        if (null == value || false === value) {
           element.removeAttribute(name);
+        } else {
+          element.setAttribute(name, value);
         }
       }
     }
@@ -178,29 +161,25 @@ function app(props, container) {
       var oldValue = i === "value" || i === "checked" ? element[i] : oldProps[i];
 
       if (value !== oldValue) {
-        value !== oldValue && setElementProp(element, i, value, oldValue);
+        setElementProp(element, i, value, oldValue);
       }
     }
 
-    if (props && props.onupdate) {
-      callbacks.push(function() {
+    if (props.onupdate) {
+      lifecycle.push(function() {
         props.onupdate(element, oldProps);
       });
     }
   }
 
   function removeElement(parent, element, props) {
-    if (
-      props &&
-      props.onremove &&
-      typeof (props = props.onremove(element)) === "function"
-    ) {
-      props(remove);
+    if (props && props.onremove) {
+      props.onremove(element, done);
     } else {
-      remove();
+      done();
     }
 
-    function remove() {
+    function done() {
       parent.removeChild(element);
     }
   }
@@ -212,7 +191,8 @@ function app(props, container) {
   }
 
   function patch(parent, element, oldNode, node, isSVG, nextSibling) {
-    if (oldNode == null) {
+    if (oldNode === node) {
+    } else if (oldNode == null) {
       element = parent.insertBefore(createElement(node, isSVG), element);
     } else if (node.type != null && node.type === oldNode.type) {
       updateElement(element, oldNode.props, node.props);
@@ -250,7 +230,6 @@ function app(props, container) {
         }
 
         var newKey = getKey(newChild);
-
         var keyedNode = oldKeyed[newKey] || [];
 
         if (null == newKey) {
@@ -302,8 +281,39 @@ function app(props, container) {
         removeElement(parent, nextSibling, oldNode.props);
       }
     }
+
     return element
   }
+}
+
+function h(type, props) {
+  var arguments$1 = arguments;
+
+  var node;
+  var stack = [];
+  var children = [];
+
+  for (var i = arguments.length; i-- > 2; ) {
+    stack.push(arguments$1[i]);
+  }
+
+  while (stack.length) {
+    if (Array.isArray((node = stack.pop()))) {
+      for (i = node.length; i--; ) {
+        stack.push(node[i]);
+      }
+    } else if (node != null && node !== true && node !== false) {
+      children.push(typeof node === "number" ? (node = node + "") : node);
+    }
+  }
+
+  return typeof type === "string"
+    ? {
+        type: type,
+        props: props || {},
+        children: children
+      }
+    : type(props || {}, children)
 }
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -2348,7 +2358,8 @@ var lngToDms = function (value) {
   }
 };
 
-// download.js v4.2, by dandavis; 2008-2016. [CCBY2] see http://danml.com/download.html for tests/usage
+var download = createCommonjsModule(function (module, exports) {
+//download.js v4.2, by dandavis; 2008-2016. [MIT] see http://danml.com/download.html for tests/usage
 // v1 landed a FF+Chrome compat way of downloading strings to local un-named files, upgraded to use a hidden frame and optional mime
 // v2 added named files via a[download], msSaveBlob, IE (10+) support, and window.URL support for larger+faster saves than dataURLs
 // v3 added dataURL and Blob Input, bind-toggle arity, and legacy dataURL fallback was improved with force-download mime and base64 support. 3.1 improved safari handling.
@@ -2357,132 +2368,162 @@ var lngToDms = function (value) {
 // v4.2 adds semantic variable names, long (over 2MB) dataURL support, and hidden by default temp anchors
 // https://github.com/rndme/download
 
-function download (data, strFileName, strMimeType) {
-  var self = window, // this script is only for browsers anyway...
-    defaultMime = 'application/octet-stream', // this default mime also triggers iframe downloads
-    mimeType = strMimeType || defaultMime,
-    payload = data,
-    url = !strFileName && !strMimeType && payload,
-    anchor = document.createElement('a'),
-    toString = function (a) { return String(a) },
-    myBlob = (self.Blob || self.MozBlob || self.WebKitBlob || toString),
-    fileName = strFileName || 'download',
-    blob,
-    reader;
-  myBlob = myBlob.call ? myBlob.bind(self) : Blob;
+(function (root, factory) {
+	if (typeof undefined === 'function' && undefined.amd) {
+		// AMD. Register as an anonymous module.
+		undefined([], factory);
+	} else {
+		// Node. Does not work with strict CommonJS, but
+		// only CommonJS-like environments that support module.exports,
+		// like Node.
+		module.exports = factory();
+	}
+}(commonjsGlobal, function () {
 
-  if (String(this) === 'true') { // reverse arguments, allowing download.bind(true, "text/xml", "export.xml") to act as a callback
-    payload = [payload, mimeType];
-    mimeType = payload[0];
-    payload = payload[1];
-  }
+	return function download(data, strFileName, strMimeType) {
 
-  if (url && url.length < 2048) { // if no filename and no mime, assume a url was passed as the only argument
-    fileName = url.split('/').pop().split('?')[0];
-    anchor.href = url; // assign href prop to temp anchor
-		  	if (anchor.href.indexOf(url) !== -1) { // if the browser determines that it's a potentially valid url path:
-        		var ajax = new XMLHttpRequest();
-        		ajax.open('GET', url, true);
+		var self = window, // this script is only for browsers anyway...
+			defaultMime = "application/octet-stream", // this default mime also triggers iframe downloads
+			mimeType = strMimeType || defaultMime,
+			payload = data,
+			url = !strFileName && !strMimeType && payload,
+			anchor = document.createElement("a"),
+			toString = function(a){return String(a);},
+			myBlob = (self.Blob || self.MozBlob || self.WebKitBlob || toString),
+			fileName = strFileName || "download",
+			blob,
+			reader;
+			myBlob= myBlob.call ? myBlob.bind(self) : Blob ;
+	  
+		if(String(this)==="true"){ //reverse arguments, allowing download.bind(true, "text/xml", "export.xml") to act as a callback
+			payload=[payload, mimeType];
+			mimeType=payload[0];
+			payload=payload[1];
+		}
+
+
+		if(url && url.length< 2048){ // if no filename and no mime, assume a url was passed as the only argument
+			fileName = url.split("/").pop().split("?")[0];
+			anchor.href = url; // assign href prop to temp anchor
+		  	if(anchor.href.indexOf(url) !== -1){ // if the browser determines that it's a potentially valid url path:
+        		var ajax=new XMLHttpRequest();
+        		ajax.open( "GET", url, true);
         		ajax.responseType = 'blob';
-        		ajax.onload = function (e) {
+        		ajax.onload= function(e){ 
 				  download(e.target.response, fileName, defaultMime);
-        };
-        		setTimeout(function () { ajax.send(); }, 0); // allows setting custom ajax headers using the return:
-			    return ajax
-  } // end if valid url?
-  } // end if url?
+				};
+        		setTimeout(function(){ ajax.send();}, 0); // allows setting custom ajax headers using the return:
+			    return ajax;
+			} // end if valid url?
+		} // end if url?
 
-		// go ahead and download dataURLs right away
-  if (/^data\:[\w+\-]+\/[\w+\-]+[,;]/.test(payload)) {
-    if (payload.length > (1024 * 1024 * 1.999) && myBlob !== toString) {
-      payload = dataUrlToBlob(payload);
-      mimeType = payload.type || defaultMime;
-    } else {
-      return navigator.msSaveBlob  // IE10 can't do a[download], only Blobs:
-					? navigator.msSaveBlob(dataUrlToBlob(payload), fileName)
-					: saver(payload)  // everyone else can save dataURLs un-processed
-    }
-  }// end if dataURL passed?
 
-  blob = payload instanceof myBlob
-			? payload
-			: new myBlob([payload], {type: mimeType});
+		//go ahead and download dataURLs right away
+		if(/^data:([\w+-]+\/[\w+.-]+)?[,;]/.test(payload)){
+		
+			if(payload.length > (1024*1024*1.999) && myBlob !== toString ){
+				payload=dataUrlToBlob(payload);
+				mimeType=payload.type || defaultMime;
+			}else{			
+				return navigator.msSaveBlob ?  // IE10 can't do a[download], only Blobs:
+					navigator.msSaveBlob(dataUrlToBlob(payload), fileName) :
+					saver(payload) ; // everyone else can save dataURLs un-processed
+			}
+			
+		}else{//not data url, is it a string with special needs?
+			if(/([\x80-\xff])/.test(payload)){			  
+				var i=0, tempUiArr= new Uint8Array(payload.length), mx=tempUiArr.length;
+				for(i;i<mx;++i) { tempUiArr[i]= payload.charCodeAt(i); }
+			 	payload=new myBlob([tempUiArr], {type: mimeType});
+			}		  
+		}
+		blob = payload instanceof myBlob ?
+			payload :
+			new myBlob([payload], {type: mimeType}) ;
 
-  function dataUrlToBlob (strUrl) {
-    var parts = strUrl.split(/[:;,]/),
-      type = parts[1],
-      decoder = parts[2] == 'base64' ? atob : decodeURIComponent,
-      binData = decoder(parts.pop()),
-      mx = binData.length,
-      i = 0,
-      uiArr = new Uint8Array(mx);
 
-    for (i; i < mx; ++i) { uiArr[i] = binData.charCodeAt(i); }
+		function dataUrlToBlob(strUrl) {
+			var parts= strUrl.split(/[:;,]/),
+			type= parts[1],
+			decoder= parts[2] == "base64" ? atob : decodeURIComponent,
+			binData= decoder( parts.pop() ),
+			mx= binData.length,
+			i= 0,
+			uiArr= new Uint8Array(mx);
 
-    return new myBlob([uiArr], {type: type})
+			for(i;i<mx;++i) { uiArr[i]= binData.charCodeAt(i); }
+
+			return new myBlob([uiArr], {type: type});
 		 }
 
-  function saver (url, winMode) {
-    if ('download' in anchor) { // html5 A[download]
-      anchor.href = url;
-      anchor.setAttribute('download', fileName);
-      anchor.className = 'download-js-link';
-      anchor.innerHTML = 'downloading...';
-      anchor.style.display = 'none';
-      document.body.appendChild(anchor);
-      setTimeout(function () {
-        anchor.click();
-        document.body.removeChild(anchor);
-        if (winMode === true) { setTimeout(function () { self.URL.revokeObjectURL(anchor.href); }, 250); }
-      }, 66);
-      return true
-    }
+		function saver(url, winMode){
+
+			if ('download' in anchor) { //html5 A[download]
+				anchor.href = url;
+				anchor.setAttribute("download", fileName);
+				anchor.className = "download-js-link";
+				anchor.innerHTML = "downloading...";
+				anchor.style.display = "none";
+				document.body.appendChild(anchor);
+				setTimeout(function() {
+					anchor.click();
+					document.body.removeChild(anchor);
+					if(winMode===true){setTimeout(function(){ self.URL.revokeObjectURL(anchor.href);}, 250 );}
+				}, 66);
+				return true;
+			}
 
 			// handle non-a[download] safari as best we can:
-    if (/(Version)\/(\d+)\.(\d+)(?:\.(\d+))?.*Safari\//.test(navigator.userAgent)) {
-      url = url.replace(/^data:([\w\/\-\+]+)/, defaultMime);
-      if (!window.open(url)) { // popup blocked, offer direct download:
-        if (confirm('Displaying New Document\n\nUse Save As... to download, then click back to return to this page.')) { location.href = url; }
-      }
-      return true
-    }
+			if(/(Version)\/(\d+)\.(\d+)(?:\.(\d+))?.*Safari\//.test(navigator.userAgent)) {
+				if(/^data:/.test(url))	{ url="data:"+url.replace(/^data:([\w\/\-\+]+)/, defaultMime); }
+				if(!window.open(url)){ // popup blocked, offer direct download:
+					if(confirm("Displaying New Document\n\nUse Save As... to download, then click back to return to this page.")){ location.href=url; }
+				}
+				return true;
+			}
 
-			// do iframe dataURL download (old ch+FF):
-    var f = document.createElement('iframe');
-    document.body.appendChild(f);
+			//do iframe dataURL download (old ch+FF):
+			var f = document.createElement("iframe");
+			document.body.appendChild(f);
 
-    if (!winMode) { // force a mime that will download:
-      url = 'data:' + url.replace(/^data:([\w\/\-\+]+)/, defaultMime);
-    }
-    f.src = url;
-    setTimeout(function () { document.body.removeChild(f); }, 333);
-  }// end saver
+			if(!winMode && /^data:/.test(url)){ // force a mime that will download:
+				url="data:"+url.replace(/^data:([\w\/\-\+]+)/, defaultMime);
+			}
+			f.src=url;
+			setTimeout(function(){ document.body.removeChild(f); }, 333);
 
-  if (navigator.msSaveBlob) { // IE10+ : (has Blob, but not a[download] or URL)
-    return navigator.msSaveBlob(blob, fileName)
-  }
+		}//end saver
 
-  if (self.URL) { // simple fast and modern way using Blob and URL:
-    saver(self.URL.createObjectURL(blob), true);
-  } else {
+
+
+
+		if (navigator.msSaveBlob) { // IE10+ : (has Blob, but not a[download] or URL)
+			return navigator.msSaveBlob(blob, fileName);
+		}
+
+		if(self.URL){ // simple fast and modern way using Blob and URL:
+			saver(self.URL.createObjectURL(blob), true);
+		}else{
 			// handle non-Blob()+non-URL browsers:
-    if (typeof blob === 'string' || blob.constructor === toString) {
-      try {
-        return saver('data:' + mimeType + ';base64,' + self.btoa(blob))
-      } catch (y) {
-        return saver('data:' + mimeType + ',' + encodeURIComponent(blob))
-      }
-    }
+			if(typeof blob === "string" || blob.constructor===toString ){
+				try{
+					return saver( "data:" +  mimeType   + ";base64,"  +  self.btoa(blob)  );
+				}catch(y){
+					return saver( "data:" +  mimeType   + "," + encodeURIComponent(blob)  );
+				}
+			}
 
 			// Blob but not URL support:
-    reader = new FileReader();
-    reader.onload = function (e) {
-      saver(this.result);
-    };
-    reader.readAsDataURL(blob);
-  }
-  return true
-}
+			reader=new FileReader();
+			reader.onload=function(e){
+				saver(this.result);
+			};
+			reader.readAsDataURL(blob);
+		}
+		return true;
+	}; /* end download() */
+}));
+});
 
 var leafletSrc = createCommonjsModule(function (module, exports) {
 /* @preserve
@@ -16232,7 +16273,7 @@ exports.map = createMap;
 
 var mapView;
 
-var renderMap = function (state, actions, e) {
+var renderMap = function (state, e) {
   var mapIcon = leafletSrc.divIcon({className: 'map-icon'});
   if (mapView) {
     mapView.off();
@@ -16249,15 +16290,12 @@ var renderMap = function (state, actions, e) {
 };
 
 var addMap = function (state, actions, e) {
-  actions.toggleMap();
-  setTimeout(function () {
-    renderMap(state, actions, e);
-  }, 200);
+  setTimeout(function () { return renderMap(state, e); }, 500);
 };
 
 var rows = [];
 
-var refreshRows = function (state, actions, results) {
+var refreshRows = function (state, results) {
   var geo;
   var res = results.data[0];
   // first column
@@ -16290,7 +16328,7 @@ var parseCSVString = function (state, actions, e) {
   var string = e.target.value;
   papaparse.parse(string, {
     header: true,
-    step: function (results) { return refreshRows(state, actions, results); },
+    step: function (results) { return refreshRows(state, results); },
     complete: function () { return actions.updateRows(); }
   });
 };
@@ -16304,7 +16342,7 @@ var parseCSVFile = function (state, actions, e) {
   var file = e.target.files[0];
   papaparse.parse(file, {
     header: true,
-    step: function (results) { return refreshRows(state, actions, results); },
+    step: function (results) { return refreshRows(state, results); },
     complete: function () {
       actions.updateRows();
     }
@@ -16320,7 +16358,7 @@ var parseCSVRemote = function (state, actions, e) {
   papaparse.parse(url, {
     download: true,
     header: true,
-    step: function (results) { return refreshRows(state, actions, results); },
+    step: function (results) { return refreshRows(state, results); },
     complete: function () { return actions.updateRows(); }
   });
 };
@@ -16332,32 +16370,32 @@ var downloadCSVFile = function (e) {
 
 var actions = {
   // set selected projection type
-  setSwerefSelected: function (state, actions, e) { return ({
+  setSwerefSelected: function (state, actions) { return function (e) { return ({
     swerefSelected: e.target.value === 'sweref',
     selectedParam: e.target.value === 'sweref' ? 'sweref99tm' : 'rt9025gonV'
-  }); },
+  }); }; },
   // set selected projection
-  setSelectedParam: function (state, actions, e) { return ({
+  setSelectedParam: function (state, actions) { return function (e) { return ({
     selectedParam: e.target.value
-  }); },
-  setFromLatLngSelected: function (state, actions, e) { return ({
+  }); }; },
+  setFromLatLngSelected: function (state, actions) { return function (e) { return ({
     fromLatLng: e.target.checked
-  }); },
+  }); }; },
   // parse csv file
-  parseFile: function (state, actions, e) {
+  parseFile: function (state, actions) { return function (e) {
     parseCSVFile(state, actions, e);
     actions.hideMap();
-  },
+  }; },
   // parse csv string
-  parseString: function (state, actions, e) {
+  parseString: function (state, actions) { return function (e) {
     parseCSVString(state, actions, e);
     actions.hideMap();
-  },
+  }; },
   // parse csv string
-  parseRemote: function (state, actions, e) {
+  parseRemote: function (state, actions) { return function (e) {
     parseCSVRemote(state, actions, e);
     actions.hideMap();
-  },
+  }; },
   // update state with parsed rows
   updateRows: function (state) { return ({
     rows: rows
@@ -16365,8 +16403,8 @@ var actions = {
   hideMap: function (state) { return ({
     showLeaflet: false
   }); },
-  showMap: function (state, actions, e) { return addMap(state, actions, e); },
-  downloadCSV: function (state, actions, e) { return downloadCSVFile(e); },
+  showMap: function (state, actions) { return function (e) { return addMap(state, actions, e); }; },
+  downloadCSV: function (state, actions) { return function (e) { return downloadCSVFile(e); }; },
   toggleInfo: function (state) { return ({
     showInfo: !state.showInfo
   }); },
@@ -16459,7 +16497,7 @@ var UploadView = function (ref) {
       onchange: actions.parseFile, accept: '.csv', id: 'files', type: 'file' }),
     ' ',
     h( 'button', { disabled: state.rows && state.rows.length < 1, onclick: actions.downloadCSV, class: 'button' }, "Ladda ned konverterad csv"),
-    h( 'button', { disabled: state.rows && state.rows.length < 1, onclick: actions.showMap, class: 'button' },
+    h( 'button', { disabled: state.rows && state.rows.length < 1, onclick: actions.toggleMap, class: 'button' },
       state.showLeaflet ? 'visa tabellvy' : 'visa kartvy'
     ),
     state.showLeaflet ? h( 'small', null, "på kartan visas de 100 första i tabellen" ) : ''
@@ -16610,9 +16648,9 @@ var TableView = function (ref) {
 
 /* eslint-disable no-unused-vars */
 var LeafletMap = function (ref) {
-    var className = ref.className;
+    var actions = ref.actions;
 
-    return h( 'div', { id: 'map', class: className },
+    return h( 'div', { id: 'map', oncreate: actions.showMap },
     ''
   );
 };
@@ -16632,9 +16670,14 @@ var InputView = function (ref) {
 
 /* eslint-disable no-unused-vars */
 var view = function (state, actions) { return h( 'div', null,
+    h( 'header', null,
+      h( 'h2', null, "Konvertera mellan SWEREF99/RT90 och lat, lng" )
+    ),
     h( HeaderView, { actions: actions, state: state }),
     h( UploadView, { actions: actions, state: state }),
-    h( LeafletMap, { className: state.showLeaflet ? '' : 'hidden' }),
+    state.showLeaflet
+      ? h( LeafletMap, { actions: actions })
+    : '',
     h( TableView, { actions: actions, state: state }),
     h( InputView, { actions: actions, className: state.showLeaflet ? 'hidden' : '' })
   ); };
@@ -16709,6 +16752,9 @@ app({
   view: view
 },
 document.getElementById('root'));
+
+// Register service worker if not on localhost
+var local = window.location.host.startsWith('localhost');
 
 }());
 

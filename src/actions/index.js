@@ -2,12 +2,12 @@ import {default as Papa} from 'papaparse'
 import {geodeticToGrid, gridToGeodetic} from '../utils/geodetic-grid'
 import {projectionParams} from '../utils/projection-params'
 import {latToDms, lngToDms} from '../utils/latlng-convert'
-import {download} from '../utils/download'
+import download from 'downloadjs'
 import L from 'leaflet'
 
 let mapView
 
-const renderMap = (state, actions, e) => {
+const renderMap = (state, e) => {
   let mapIcon = L.divIcon({className: 'map-icon'})
   if (mapView) {
     mapView.off()
@@ -24,15 +24,12 @@ const renderMap = (state, actions, e) => {
 }
 
 const addMap = (state, actions, e) => {
-  actions.toggleMap()
-  setTimeout(function () {
-    renderMap(state, actions, e)
-  }, 200)
+  setTimeout(() => renderMap(state, e), 500)
 }
 
 let rows = []
 
-const refreshRows = (state, actions, results) => {
+const refreshRows = (state, results) => {
   let geo
   let res = results.data[0]
   // first column
@@ -66,7 +63,7 @@ const parseCSVString = (state, actions, e) => {
   Papa.parse(string, {
     header: true,
     step: (results) =>
-      refreshRows(state, actions, results),
+      refreshRows(state, results),
     complete: () =>
       actions.updateRows()
   })
@@ -82,7 +79,7 @@ const parseCSVFile = (state, actions, e) => {
   Papa.parse(file, {
     header: true,
     step: (results) =>
-      refreshRows(state, actions, results),
+      refreshRows(state, results),
     complete: () => {
       actions.updateRows()
     }
@@ -99,7 +96,7 @@ const parseCSVRemote = (state, actions, e) => {
     download: true,
     header: true,
     step: (results) =>
-      refreshRows(state, actions, results),
+      refreshRows(state, results),
     complete: () =>
       actions.updateRows()
   })
@@ -112,29 +109,29 @@ const downloadCSVFile = (e) => {
 
 export const actions = {
   // set selected projection type
-  setSwerefSelected: (state, actions, e) => ({
+  setSwerefSelected: (state, actions) => (e) => ({
     swerefSelected: e.target.value === 'sweref',
     selectedParam: e.target.value === 'sweref' ? 'sweref99tm' : 'rt9025gonV'
   }),
   // set selected projection
-  setSelectedParam: (state, actions, e) => ({
+  setSelectedParam: (state, actions) => (e) => ({
     selectedParam: e.target.value
   }),
-  setFromLatLngSelected: (state, actions, e) => ({
+  setFromLatLngSelected: (state, actions) => (e) => ({
     fromLatLng: e.target.checked
   }),
   // parse csv file
-  parseFile: (state, actions, e) => {
+  parseFile: (state, actions) => (e) => {
     parseCSVFile(state, actions, e)
     actions.hideMap()
   },
   // parse csv string
-  parseString: (state, actions, e) => {
+  parseString: (state, actions) => (e) => {
     parseCSVString(state, actions, e)
     actions.hideMap()
   },
   // parse csv string
-  parseRemote: (state, actions, e) => {
+  parseRemote: (state, actions) => (e) => {
     parseCSVRemote(state, actions, e)
     actions.hideMap()
   },
@@ -145,9 +142,9 @@ export const actions = {
   hideMap: state => ({
     showLeaflet: false
   }),
-  showMap: (state, actions, e) =>
+  showMap: (state, actions) => (e) =>
     addMap(state, actions, e),
-  downloadCSV: (state, actions, e) =>
+  downloadCSV: (state, actions) => (e) =>
     downloadCSVFile(e),
   toggleInfo: state => ({
     showInfo: !state.showInfo

@@ -8,9 +8,16 @@ import {InputView} from './input-view'
 
 export const view = (state, actions) =>
   <div>
+    <header>
+      <h2>Konvertera mellan SWEREF99/RT90 och lat, lng</h2>
+    </header>
     <HeaderView actions={actions} state={state} />
     <UploadView actions={actions} state={state} />
-    <LeafletMap className={state.showLeaflet ? '' : 'hidden'} />
+    {
+      state.showLeaflet
+      ? <LeafletMap actions={actions} />
+    : ''
+    }
     <TableView actions={actions} state={state} />
     <InputView actions={actions} className={state.showLeaflet ? 'hidden' : ''} />
   </div>

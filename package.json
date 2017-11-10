@@ -41,8 +41,9 @@
     "taskr": "^1.1.0"
   },
   "dependencies": {
-    "hyperapp": "^0.15.0",
+    "downloadjs": "^1.4.7",
+    "hyperapp": "^0.16.0",
     "leaflet": "^1.2.0",
-    "papaparse": "^4.3.5"
+    "papaparse": "^4.3.6"
   }
 }

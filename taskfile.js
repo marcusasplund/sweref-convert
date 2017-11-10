@@ -1,13 +1,19 @@
 const browserSync = require('browser-sync')
-
 let isWatching = false
+let isServer = false
+
+export async function reload (task) {
+  isWatching && isServer && browserSync.reload()
+}
 
 // some source/dest consts
 const target = 'dist'
 const releaseTarget = 'release'
+const applicationId = 'sweref-convert'
+
 const src = {
   js: 'src/**/*.js',
-  scss: ['src/styles/app.scss', 'src/styles/leaflet.scss'],
+  scss: 'src/styles/app.scss',
   staticAssets: [
     'src/static/**/*.*',
     'src/*.html'
@@ -15,12 +21,12 @@ const src = {
 }
 
 export async function cache (task) {
-  await task.source('release/**/*.{js,html,css,png,jpg,gif,woff,woff2,json}')
+  await task.source('release/**/*.{js,html,css,png,jpg,gif,woff,woff2}')
     .precache({
-      cacheId: 'sweref-convert',
+      cacheId: `${applicationId}`,
       stripPrefix: 'release/'
     })
-    .target('release')
+    .target(`${releaseTarget}`)
 }
 
 export async function clean (task) {
@@ -37,9 +43,14 @@ export async function js (task) {
       plugins: [
         require('rollup-plugin-buble')({
           jsx: 'h',
+          transforms: {
+            dangerousForOf: true
+          },
           objectAssign: 'Object.assign'
         }),
-        require('rollup-plugin-commonjs')(),
+        require('rollup-plugin-commonjs')({
+          include: 'node_modules/**'
+        }),
         require('rollup-plugin-replace')({
           'process.env.NODE_ENV': JSON.stringify(isWatching ? 'development' : 'production')
         }),
@@ -60,7 +71,7 @@ export async function js (task) {
 export async function styles (task) {
   await task.source(src.scss).sass({
     outputStyle: 'compressed',
-    includePaths: []
+    includePaths: ['./node_modules']
   })
   .postcss({
     plugins: [require('autoprefixer')({
@@ -86,7 +97,7 @@ export async function release (task) {
     }
   }).target(target)
   await task.source(`${target}/**/*`).rev({
-    ignores: ['.html', '.png', '.svg', '.ico', '.json', '.xml', '.txt', '.ttf', '.otf', '.woff', '.woff2']
+    ignores: ['.html', '.png', '.svg', '.ico', '.xml', '.json', '.txt', '.ttf', '.otf', '.woff', '.woff2']
   }).revManifest({dest: releaseTarget, trim: target}).revReplace().target(releaseTarget)
   await task.source(`${releaseTarget}/*.html`).htmlmin().target(releaseTarget)
   await task.serial(['cache'])
@@ -98,17 +109,18 @@ export async function watch (task) {
   await task.watch(src.js, ['js', 'reload'])
   await task.watch(src.scss, ['styles', 'reload'])
   await task.watch(src.staticAssets, ['copyStaticAssets', 'reload'])
-  // start server
+  await task.start('serve')
+}
+
+export async function serve (task) {
+  isServer = 1
   browserSync({
+    logPrefix: `${applicationId}`,
     server: target,
-    logPrefix: 'sweref-convert',
     port: process.env.PORT || 4000,
+    cors: false,
     middleware: [
       require('connect-history-api-fallback')()
     ]
   })
-}
-
-export async function reload (task) {
-  isWatching && browserSync.reload()
 }
