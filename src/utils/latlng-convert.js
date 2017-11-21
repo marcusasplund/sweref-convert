@@ -47,7 +47,7 @@ const latFromDd = (value) => {
       latitude = null
       return latitude
     }
-    if (result[1] && result[1] === 'S' || result[1] === '-') {
+    if ((result[1] && result[1] === 'S') || result[1] === '-') {
       latitude *= -1
     } else {
       if (result[4] && result[4] === 'S') {

@@ -1,5 +1,3 @@
-// Math polyfills
-const Math = Math
 
 Math.sinh = Math.sinh || function (x) {
   let y = Math.exp(x)

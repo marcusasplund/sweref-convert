@@ -1,4 +1,7 @@
 const browserSync = require('browser-sync')
+const wbBuild = require('workbox-build')
+const rollup = require('rollup')
+
 let isWatching = false
 let isServer = false
 
@@ -6,7 +9,6 @@ export async function reload (task) {
   isWatching && isServer && browserSync.reload()
 }
 
-// some source/dest consts
 const target = 'dist'
 const releaseTarget = 'release'
 const applicationId = 'sweref-convert'
@@ -20,13 +22,24 @@ const src = {
   ]
 }
 
-export async function cache (task) {
-  await task.source('release/**/*.{js,html,css,png,jpg,gif,woff,woff2}')
-    .precache({
-      cacheId: `${applicationId}`,
-      stripPrefix: 'release/'
-    })
-    .target(`${releaseTarget}`)
+export async function cache () {
+  await wbBuild.generateSW({
+    globDirectory: './release/',
+    swDest: `${releaseTarget}/sw.js`,
+    globPatterns: ['**/*.{js,html,css,png,jpg,gif,woff,woff2}']
+  })
+  .then(() => {
+    console.log('Service worker generated.')
+  })
+  .catch((err) => {
+    console.log('[ERROR] This happened: ' + err)
+  })
+}
+
+export async function lint (task) {
+  await task.source(src.js)
+  .standard()
+  .target(`${target}`)
 }
 
 export async function clean (task) {
@@ -37,35 +50,38 @@ export async function copyStaticAssets (task, o) {
   await task.source(o.src || src.staticAssets).target(target)
 }
 
-export async function js (task) {
-  await task.source('src/index.js').rollup({
-    rollup: {
-      plugins: [
-        require('rollup-plugin-buble')({
-          jsx: 'h',
-          transforms: {
-            dangerousForOf: true
-          },
-          objectAssign: 'Object.assign'
-        }),
-        require('rollup-plugin-commonjs')({
-          include: 'node_modules/**'
-        }),
-        require('rollup-plugin-replace')({
-          'process.env.NODE_ENV': JSON.stringify(isWatching ? 'development' : 'production')
-        }),
-        require('rollup-plugin-node-resolve')({
-          browser: true,
-          main: true
-        })
-      ]
-    },
-    bundle: {
-      format: 'iife',
-      sourceMap: isWatching,
-      moduleName: 'window'
-    }
-  }).target(`${target}`)
+const rollupInputOptions = {
+  input: './src/index.js',
+  plugins: [
+    require('rollup-plugin-buble')({
+      jsx: 'h',
+      transforms: {
+        dangerousForOf: true
+      },
+      objectAssign: 'Object.assign'
+    }),
+    require('rollup-plugin-commonjs')({
+      include: 'node_modules/**'
+    }),
+    require('rollup-plugin-replace')({
+      'process.env.NODE_ENV': JSON.stringify(isWatching ? 'development' : 'production')
+    }),
+    require('rollup-plugin-node-resolve')({
+      browser: true,
+      main: true
+    })
+  ]
+}
+
+const rollupOutputOptions = {
+  file: `${target}/index.js`,
+  format: 'iife',
+  name: 'window'
+}
+
+export async function js () {
+  const bundle = await rollup.rollup(rollupInputOptions)
+  await bundle.write(rollupOutputOptions)
 }
 
 export async function styles (task) {
@@ -81,12 +97,11 @@ export async function styles (task) {
 }
 
 export async function build (task) {
-    // TODO add linting
-  await task.serial(['clean', 'copyStaticAssets', 'styles', 'js'])
+  await task.serial(['clean', 'copyStaticAssets', 'styles', 'lint', 'js'])
 }
 
 export async function release (task) {
-  await task.source(`${target}/*.js`).uglify({
+  await task.source(`${target}/index.js`).uglify({
     compress: {
       conditionals: 1,
       drop_console: 1,
