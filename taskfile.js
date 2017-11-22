@@ -24,7 +24,8 @@ const src = {
 
 export async function cache () {
   await wbBuild.generateSW({
-    globDirectory: './release/',
+    cacheId: `${applicationId}`,
+    globDirectory: `${releaseTarget}/`,
     swDest: `${releaseTarget}/sw.js`,
     globPatterns: ['**/*.{js,html,css,png,jpg,gif,woff,woff2}']
   })
@@ -101,7 +102,7 @@ export async function build (task) {
 }
 
 export async function release (task) {
-  await task.source(`${target}/index.js`).uglify({
+  await task.source(`${target}/*.js`).uglify({
     compress: {
       conditionals: 1,
       drop_console: 1,
