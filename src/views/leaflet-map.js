@@ -2,6 +2,6 @@
 import {h} from 'hyperapp'
 
 export const LeafletMap = ({actions}) =>
-  <div id='map' oncreate={actions.showMap}>
+  <div id='map' oncreate={actions.renderMap}>
     {''}
   </div>

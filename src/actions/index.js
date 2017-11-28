@@ -7,7 +7,7 @@ import L from 'leaflet'
 
 let mapView
 
-const renderMap = (state, e) => {
+const renderMap = (state) => {
   let mapIcon = L.divIcon({className: 'map-icon'})
   if (mapView) {
     mapView.off()
@@ -23,13 +23,7 @@ const renderMap = (state, e) => {
   })
 }
 
-const addMap = (state, actions, e) => {
-  setTimeout(() => renderMap(state, e), 500)
-}
-
-let rows = []
-
-const refreshRows = (state, results) => {
+const addRows = (state, results) => {
   let geo
   let res = results.data[0]
   // first column
@@ -51,107 +45,61 @@ const refreshRows = (state, results) => {
     lngdms: state.fromLatLng ? lngToDms(+y) : lngToDms(geo.lng)
   }
   // update state with row including conversions
-  rows.push(row)
+  return state.rows.concat(row)
 }
 
-const parseCSVString = (state, actions, e) => {
-  // clear old result
-  rows = []
-  actions.updateRows()
-  // parse uploaded file row by row
-  let string = e.target.value
-  Papa.parse(string, {
+const parseCSV = (state, actions, data, isFile) => {
+  actions.resetRows()
+  Papa.parse(data, {
+    download: isFile,
     header: true,
     step: (results) =>
-      refreshRows(state, results),
-    complete: () =>
-      actions.updateRows()
-  })
-}
-
-const parseCSVFile = (state, actions, e) => {
-  e.preventDefault ? e.preventDefault() : (e.returnValue = false)
-  // clear old result
-  rows = []
-  actions.updateRows()
-  // parse uploaded file row by row
-  let file = e.target.files[0]
-  Papa.parse(file, {
-    header: true,
-    step: (results) =>
-      refreshRows(state, results),
+      actions.addRows(results),
     complete: () => {
-      actions.updateRows()
+      actions.hideMap()
     }
   })
 }
 
-const parseCSVRemote = (state, actions, e) => {
-  // clear old result
-  rows = []
-  actions.updateRows()
-  // parse uploaded file row by row
-  let url = e.target.value
-  Papa.parse(url, {
-    download: true,
-    header: true,
-    step: (results) =>
-      refreshRows(state, results),
-    complete: () =>
-      actions.updateRows()
-  })
-}
-
-const downloadCSVFile = (e) => {
+const downloadCSVFile = (state, e) => {
   e.preventDefault ? e.preventDefault() : (e.returnValue = false)
-  download(Papa.unparse(rows), 'converted.csv', 'text/csv')
+  download(Papa.unparse(state.rows), 'converted.csv', 'text/csv')
 }
 
 export const actions = {
-  // set selected projection type
-  setSwerefSelected: (state, actions) => (e) => ({
-    swerefSelected: e.target.value === 'sweref',
-    selectedParam: e.target.value === 'sweref' ? 'sweref99tm' : 'rt9025gonV'
-  }),
-  // set selected projection
   setSelectedParam: (state, actions) => (e) => ({
     selectedParam: e.target.value
   }),
   setFromLatLngSelected: (state, actions) => (e) => ({
     fromLatLng: e.target.checked
   }),
-  // parse csv file
   parseFile: (state, actions) => (e) => {
-    parseCSVFile(state, actions, e)
-    actions.hideMap()
+    parseCSV(state, actions, e.target.files[0])
   },
-  // parse csv string
   parseString: (state, actions) => (e) => {
-    parseCSVString(state, actions, e)
-    actions.hideMap()
+    parseCSV(state, actions, e.target.value)
   },
-  // parse csv string
   parseRemote: (state, actions) => (e) => {
-    parseCSVRemote(state, actions, e)
-    actions.hideMap()
+    parseCSV(state, actions, e.target.value, true)
   },
-  // update state with parsed rows
-  updateRows: state => ({
-    rows: rows
+  resetRows: state => ({
+    rows: []
+  }),
+  addRows: (state, actions) => (results) => ({
+    rows: addRows(state, results)
   }),
   hideMap: state => ({
     showLeaflet: false
   }),
-  showMap: (state, actions) => (e) =>
-    addMap(state, actions, e),
+  renderMap: (state) =>
+    renderMap(state),
   downloadCSV: (state, actions) => (e) =>
-    downloadCSVFile(e),
+    downloadCSVFile(state, e),
   toggleInfo: state => ({
     showInfo: !state.showInfo
   }),
   toggleAll: state => ({
-    showAll: !state.showAll,
-    rows: rows
+    showAll: !state.showAll
   }),
   toggleMap: state => ({
     showLeaflet: !state.showLeaflet

@@ -1,13 +1,12 @@
 
 export const state = {
   rows: [],
-  swerefSelected: false,
-  showInfo: false,
+  showInfo: true,
   showAll: false,
   showLeaflet: false,
   fromLatLng: false,
   selectedParam: 'rt9025gonV',
-  swerefs: [{
+  params: [{
     value: 'sweref99tm',
     text: 'SWEREF 99 TM'
   }, {
@@ -46,8 +45,7 @@ export const state = {
   }, {
     value: 'sweref992315',
     text: 'SWEREF 99 23 15'
-  }],
-  rt90s: [ {
+  }, {
     value: 'rt9075gonV',
     text: 'RT90 7.5 gon V 0:-15'
   }, {

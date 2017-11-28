@@ -1,17 +1,8 @@
 /* eslint-disable no-unused-vars */
 import {h} from 'hyperapp'
-import {InfoText} from './info-text'
 
 export const HeaderView = ({state, actions}) =>
   <div>
-    <div class='float-right'>
-      <button onclick={actions.toggleInfo}>
-        {state.showInfo ? 'X' : 'ℹ'}
-      </button>
-    </div>
-    <div class='row'>
-      {state.showInfo ? <InfoText /> : ''}
-    </div>
     <div class='row'>
       <div class='column'>
         <label>
@@ -20,34 +11,10 @@ export const HeaderView = ({state, actions}) =>
         </label>
       </div>
       <div class='column'>
-        <label>
-          <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='sweref' checked={state.swerefSelected} />
-          {' '}SWEREF 99 TM etc
-        </label>
-      </div>
-      <div class='column'>
-        <label>
-          <input type='radio' onclick={actions.setSwerefSelected} name='radios' value='rt90' checked={!state.swerefSelected} />
-          {' '}RT 90
-        </label>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='column'>
-        <label> Välj SWEREF 99 projektion:
-          <select value={state.selectedParam} onchange={actions.setSelectedParam} disabled={!state.swerefSelected}>
+        <label> Välj projektion (SWEREF 99, RT 90):
+          <select value={state.selectedParam} onchange={actions.setSelectedParam}>
             {
-              state.swerefs.map(ref =>
-                <option value={ref.value}>{ref.text}</option>)
-            }
-          </select>
-        </label>
-      </div>
-      <div class='column'>
-        <label> Välj RT 90 projektion:
-          <select value={state.selectedParam} onchange={actions.setSelectedParam} disabled={state.swerefSelected}>
-            {
-              state.rt90s.map(ref =>
+              state.params.map(ref =>
                 <option value={ref.value}>{ref.text}</option>)
             }
           </select>
