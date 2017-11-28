@@ -40,6 +40,10 @@
     "taskr-standard": "^1.0.1",
     "workbox-build": "^2.1.2"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
   "dependencies": {
     "downloadjs": "^1.4.7",
     "hyperapp": "^0.16.0",
