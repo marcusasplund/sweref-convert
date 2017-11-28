@@ -25,27 +25,34 @@ const renderMap = (state) => {
 
 const addRows = (state, results) => {
   let geo
-  let res = results.data[0]
+  let data = results.data[0]
+  let keys = Object.keys(data)
   // first column
-  let x = res[Object.keys(res)[0]]
+  let x = data[keys[0]]
   // second column
-  let y = res[Object.keys(res)[1]]
-  // convert to lat, lng according to selected projection
+  let y = data[keys[1]]
+  // TODO: faulty data handling
   if (state.fromLatLng) {
     geo = geodeticToGrid(x, y, projectionParams(state.selectedParam))
+    return state.rows.concat({
+      x: geo.x,
+      y: geo.y,
+      lat: x,
+      lng: y,
+      latdms: latToDms(+x),
+      lngdms: lngToDms(+y)
+    })
   } else {
     geo = gridToGeodetic(x, y, projectionParams(state.selectedParam))
+    return state.rows.concat({
+      x: x,
+      y: y,
+      lat: geo.lat,
+      lng: geo.lng,
+      latdms: latToDms(geo.lat),
+      lngdms: lngToDms(geo.lng)
+    })
   }
-  let row = {
-    x: state.fromLatLng ? geo.x : x,
-    y: state.fromLatLng ? geo.y : y,
-    lat: state.fromLatLng ? x : geo.lat,
-    lng: state.fromLatLng ? y : geo.lng,
-    latdms: state.fromLatLng ? latToDms(+x) : latToDms(geo.lat),
-    lngdms: state.fromLatLng ? lngToDms(+y) : lngToDms(geo.lng)
-  }
-  // update state with row including conversions
-  return state.rows.concat(row)
 }
 
 const parseCSV = (state, actions, data, isFile) => {
