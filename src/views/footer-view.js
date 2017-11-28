@@ -6,7 +6,7 @@ export const FooterView = ({state, actions}) =>
   <div>
     <div class='float-right'>
       <button onclick={actions.toggleInfo}>
-        {state.showInfo ? 'X' : 'ℹ'}
+        {state.showInfo ? 'dölj info' : 'visa info'}
       </button>
     </div>
     <div class='row'>
