@@ -19,7 +19,9 @@ export const view = (state, actions) =>
       ? <LeafletMap actions={actions} />
     : ''
     }
-    <TableView actions={actions} state={state} />
+    <div id='wrapper'>
+      <TableView actions={actions} state={state} />
+    </div>
     <InputView actions={actions} className={state.showLeaflet ? 'hidden' : ''} />
     <FooterView actions={actions} state={state} />
   </div>
