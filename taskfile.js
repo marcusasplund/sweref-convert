@@ -11,7 +11,7 @@ export async function reload (task) {
 
 const target = 'dist'
 const releaseTarget = 'release'
-const applicationId = 'sweref-convert'
+const applicationId = 'sweref-convert-2'
 
 const src = {
   js: 'src/**/*.js',

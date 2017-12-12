@@ -7,7 +7,7 @@ import {LeafletMap} from './leaflet-map'
 import {InputView} from './input-view'
 import {FooterView} from './footer-view'
 
-export const view = (state, actions) =>
+export const view = state => actions =>
   <div>
     <header>
       <h2>Konvertera mellan SWEREF99/RT90 och lat, lng</h2>

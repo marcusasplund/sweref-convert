@@ -74,41 +74,42 @@ const downloadCSVFile = (state, e) => {
 }
 
 export const actions = {
-  setSelectedParam: (state, actions) => (e) => ({
-    selectedParam: e.target.value
-  }),
-  setFromLatLngSelected: (state, actions) => (e) => ({
-    fromLatLng: e.target.checked
-  }),
-  parseFile: (state, actions) => (e) => {
-    parseCSV(state, actions, e.target.files[0])
-  },
-  parseString: (state, actions) => (e) => {
-    parseCSV(state, actions, e.target.value)
-  },
-  parseRemote: (state, actions) => (e) => {
-    parseCSV(state, actions, e.target.value, true)
-  },
-  resetRows: state => ({
+  setSelectedParam: e => state => actions => ({
+    selectedParam: e.target.value,
     rows: []
   }),
-  addRows: (state, actions) => (results) => ({
+  setFromLatLngSelected: e => state => actions => ({
+    fromLatLng: e.target.checked
+  }),
+  parseFile: e => state => actions => {
+    parseCSV(state, actions, e.target.files[0])
+  },
+  parseString: e => state => actions => {
+    parseCSV(state, actions, e.target.value)
+  },
+  parseRemote: e => state => actions => {
+    parseCSV(state, actions, e.target.value, true)
+  },
+  resetRows: () => state => ({
+    rows: []
+  }),
+  addRows: results => state => actions => ({
     rows: addRows(state, results)
   }),
-  hideMap: state => ({
+  hideMap: () => state => ({
     showLeaflet: false
   }),
-  renderMap: (state) =>
+  renderMap: () => state =>
     renderMap(state),
-  downloadCSV: (state, actions) => (e) =>
+  downloadCSV: e => state => actions =>
     downloadCSVFile(state, e),
-  toggleInfo: state => ({
+  toggleInfo: () => state => ({
     showInfo: !state.showInfo
   }),
-  toggleAll: state => ({
+  toggleAll: () => state => ({
     showAll: !state.showAll
   }),
-  toggleMap: state => ({
+  toggleMap: () => state => ({
     showLeaflet: !state.showLeaflet
   })
 }

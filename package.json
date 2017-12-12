@@ -1,6 +1,6 @@
 {
   "name": "sweref-convert",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Marcus Asplund <marcus@greatname.se> (@marcusasplund)",
   "license": "MIT",
   "scripts": {
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "downloadjs": "^1.4.7",
-    "hyperapp": "^0.16.0",
+    "hyperapp": "^0.16.2",
     "leaflet": "^1.2.0",
     "papaparse": "^4.3.6"
   }
