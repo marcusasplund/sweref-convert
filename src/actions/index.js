@@ -73,43 +73,4 @@ const downloadCSVFile = (state, e) => {
   download(Papa.unparse(state.rows), 'converted.csv', 'text/csv')
 }
 
-export const actions = {
-  setSelectedParam: e => state => actions => ({
-    selectedParam: e.target.value,
-    rows: []
-  }),
-  setFromLatLngSelected: e => state => actions => ({
-    fromLatLng: e.target.checked
-  }),
-  parseFile: e => state => actions => {
-    parseCSV(state, actions, e.target.files[0])
-  },
-  parseString: e => state => actions => {
-    parseCSV(state, actions, e.target.value)
-  },
-  parseRemote: e => state => actions => {
-    parseCSV(state, actions, e.target.value, true)
-  },
-  resetRows: () => state => ({
-    rows: []
-  }),
-  addRows: results => state => actions => ({
-    rows: addRows(state, results)
-  }),
-  hideMap: () => state => ({
-    showLeaflet: false
-  }),
-  renderMap: () => state =>
-    renderMap(state),
-  downloadCSV: e => state => actions =>
-    downloadCSVFile(state, e),
-  toggleInfo: () => state => ({
-    showInfo: !state.showInfo
-  }),
-  toggleAll: () => state => ({
-    showAll: !state.showAll
-  }),
-  toggleMap: () => state => ({
-    showLeaflet: !state.showLeaflet
-  })
-}
+export {downloadCSVFile, parseCSV, addRows, renderMap}
