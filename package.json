@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "downloadjs": "^1.4.7",
-    "hyperapp": "^0.17.1",
+    "hyperapp": "^0.18.0",
     "leaflet": "^1.2.0",
     "papaparse": "^4.3.6"
   }

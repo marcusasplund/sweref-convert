@@ -14,7 +14,7 @@ For batch conversion of geodetic coordinates between [Swedish Grid RT 90](https:
 
 
 ## [demo](https://pap.as/sweref/)
-Js-framework: [hyperapp.js](https://github.com/hyperapp/hyperapp)
+Js-framework: [Hyperapp](https://github.com/hyperapp/hyperapp)
 Offline support with service worker
 
 
