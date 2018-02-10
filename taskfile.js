@@ -11,7 +11,7 @@ export async function reload (task) {
 
 const target = 'dist'
 const releaseTarget = 'release'
-const applicationId = 'sweref-convert-3'
+const applicationId = 'sweref-convert-4'
 
 const src = {
   js: 'src/**/*.js',
@@ -27,7 +27,7 @@ export async function cache () {
     cacheId: `${applicationId}`,
     globDirectory: `${releaseTarget}/`,
     swDest: `${releaseTarget}/sw.js`,
-    globPatterns: ['**/*.{js,html,css,png,jpg,gif,woff,woff2}']
+    globPatterns: ['**/*.{html,css,png,jpg,gif,woff,woff2}', '*.js']
   })
     .then(() => {
       console.log('Service worker generated.')
