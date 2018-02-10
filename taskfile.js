@@ -27,7 +27,7 @@ export async function cache () {
     cacheId: `${applicationId}`,
     globDirectory: `${releaseTarget}/`,
     swDest: `${releaseTarget}/sw.js`,
-    globPatterns: ['**/*.{html,css,png,jpg,gif,woff,woff2}', '*.js']
+    globPatterns: ['*.{html,css,png,jpg,gif,woff,woff2}', '*.js']
   })
     .then(() => {
       console.log('Service worker generated.')
