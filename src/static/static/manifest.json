@@ -1,0 +1,29 @@
+{
+  "dir": "ltr",
+  "lang": "sv",
+  "name": "Fröken Mussla",
+  "scope": "./",
+  "display": "fullscreen",
+  "start_url": "./",
+  "short_name": "Mussla",
+  "theme_color": "#ffffff",
+  "description": "Fröken Mussla | aktuell information om blåmusslor, ostron och hjärtmusslor",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "icons": [{
+    "src": "./apple-touch-icon.png",
+    "sizes": "180x180",
+    "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

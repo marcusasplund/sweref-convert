@@ -23,6 +23,19 @@
   <meta property="og:description" content="Konvertera fr&aring;n SWEREF o RT90 till lat, lon" />
   <meta property="og:image" content="https://pap.as/sweref/android-chrome-512x512.png" />
   <link rel="stylesheet" href="./app.css">
+  <script>
+  // IE 11 polyfills
+  if (!Promise) {
+    var promisePoly = document.createElement('script');
+    promisePoly.src = './promise.min.js'
+    document.head.appendChild(promisePoly)
+  }
+  if (!Object.assign) {
+    var assignPoly = document.createElement('script')
+    assignPoly.src = './object-assign-auto.min.js'
+    document.head.appendChild(assignPoly)
+  }
+  </script>
 </head>
 <body>
   <div id="root" class="container">
