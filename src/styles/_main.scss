@@ -24,7 +24,7 @@ body {
 
 @media (max-width: 684px) {
     body {
-        font-size: $font-size-base * 0.85;
+        font-size: $font-size-base;
     }
 }
 
@@ -152,7 +152,6 @@ textarea {
     text-align: center;
     text-decoration: none;
     white-space: nowrap;
-
     background-color: $color-blossom;
     color: $color-bg;
     border-radius: 1px;

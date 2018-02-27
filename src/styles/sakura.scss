@@ -17,6 +17,18 @@ $font-family-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sa
 input, select, textarea, .button {
 	font-family: $font-family-sans-serif;
 }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input,
+textarea,
+p,
+label,
+select {
+  font-size: 16px;
+}
 td {
   white-space: nowrap;
 }
@@ -42,7 +54,7 @@ button:not(.file-label) {
 	padding: 8px;
 }
 .file-label {
-	font-size: small;
+	font-weight: normal;
 }
 .item {
   min-height: 6rem;
