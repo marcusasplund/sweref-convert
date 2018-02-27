@@ -5,7 +5,7 @@ import {HeaderView} from './header-view'
 import {TableView} from './table-view'
 import {LeafletMap} from './leaflet-map'
 import {InputView} from './input-view'
-import {FooterView} from './footer-view'
+import {Dialog} from './dialog-view'
 
 export const view = (state, actions) =>
   <div>
@@ -23,5 +23,5 @@ export const view = (state, actions) =>
       <TableView actions={actions} state={state} />
     </div>
     <InputView actions={actions} className={state.showLeaflet ? 'hidden' : ''} />
-    <FooterView actions={actions} state={state} />
+    <Dialog actions={actions} />
   </div>

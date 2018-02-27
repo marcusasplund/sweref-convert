@@ -4,24 +4,10 @@ import {projectionParams} from '../utils/projection-params'
 import {latToDms, lngToDms} from '../utils/latlng-convert'
 import download from 'downloadjs'
 import L from 'leaflet'
+import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
 
 let mapView
-
-const renderMap = (state) => {
-  let mapIcon = L.divIcon({className: 'map-icon'})
-  if (mapView) {
-    mapView.off()
-    mapView.remove()
-  }
-  mapView = L.map('map').setView([state.rows[0].lat, state.rows[0].lng], 12)
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(mapView)
-  state.rows.slice(0, 100).map((row, index) => {
-    L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
-    .bindPopup(row.lat + ', ' + row.lng)
-  })
-}
+let dialog
 
 const addRows = (state, results) => {
   let geo
@@ -101,8 +87,21 @@ export const actions = {
   hideMap: () => state => ({
     showLeaflet: false
   }),
-  renderMap: () => (state, actions) =>
-    renderMap(state),
+  renderMap: () => (state, actions) => {
+    let mapIcon = L.divIcon({className: 'map-icon'})
+    if (mapView) {
+      mapView.off()
+      mapView.remove()
+    }
+    mapView = L.map('map').setView([state.rows[0].lat, state.rows[0].lng], 12)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(mapView)
+    state.rows.slice(0, 100).map((row, index) => {
+      L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
+      .bindPopup(row.lat + ', ' + row.lng)
+    })
+  },
   downloadCSV: (e) => (state, actions) =>
     downloadCSVFile(state, e),
   toggleInfo: () => state => ({
@@ -113,5 +112,11 @@ export const actions = {
   }),
   toggleMap: () => state => ({
     showLeaflet: !state.showLeaflet
-  })
+  }),
+  cancelDialog: () => dialog.close(),
+  showModal: () => dialog.showModal(),
+  attachDialog: (el) => (state, actions) => {
+    dialog = el
+    dialogPolyfill.registerDialog(dialog)
+  }
 }

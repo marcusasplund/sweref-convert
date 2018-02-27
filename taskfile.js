@@ -14,8 +14,8 @@ const releaseTarget = 'release'
 const applicationId = 'sweref-convert-4'
 
 const src = {
-  js: 'src/**/*.js',
-  scss: 'src/styles/app.scss',
+  js: 'src/index.js',
+  scss: 'src/styles/sakura.scss',
   staticAssets: [
     'src/static/**/*.*',
     'src/*.html'
@@ -27,7 +27,7 @@ export async function cache () {
     cacheId: `${applicationId}`,
     globDirectory: `${releaseTarget}/`,
     swDest: `${releaseTarget}/sw.js`,
-    globPatterns: ['*.{html,css,png,jpg,gif,woff,woff2}', '*.js']
+    globPatterns: ['*.{html,css,js}']
   })
     .then(() => {
       console.log('Service worker generated.')

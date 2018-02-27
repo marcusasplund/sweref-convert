@@ -6,6 +6,7 @@ export const state = {
   showLeaflet: false,
   fromLatLng: false,
   selectedParam: 'rt9025gonV',
+  selectDisabled: false,
   params: [{
     value: 'sweref99tm',
     text: 'SWEREF 99 TM'
