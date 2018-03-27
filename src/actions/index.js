@@ -57,7 +57,9 @@ const parseCSV = (actions, data, isFile) => {
 
 const downloadCSVFile = (state, e) => {
   e.preventDefault ? e.preventDefault() : (e.returnValue = false)
-  download(Papa.unparse(state.rows), 'converted.csv', 'text/csv')
+  download(Papa.unparse(state.rows, {
+      delimiter: ';'
+    }), 'converted.csv', 'text/csv')
 }
 
 export const actions = {
