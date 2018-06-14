@@ -58,8 +58,8 @@ const parseCSV = (actions, data, isFile) => {
 const downloadCSVFile = (state, e) => {
   e.preventDefault ? e.preventDefault() : (e.returnValue = false)
   download(Papa.unparse(state.rows, {
-      delimiter: ';'
-    }), 'converted.csv', 'text/csv')
+    delimiter: ';'
+  }), 'converted.csv', 'text/csv')
 }
 
 export const actions = {
@@ -101,7 +101,7 @@ export const actions = {
     }).addTo(mapView)
     state.rows.slice(0, 100).map((row, index) => {
       L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
-      .bindPopup(row.lat + ', ' + row.lng)
+        .bindPopup(row.lat + ', ' + row.lng)
     })
   },
   downloadCSV: (e) => (state, actions) =>

@@ -16,8 +16,8 @@ export const view = (state, actions) =>
     <UploadView actions={actions} state={state} />
     {
       state.showLeaflet
-      ? <LeafletMap actions={actions} />
-    : ''
+        ? <LeafletMap actions={actions} />
+        : ''
     }
     <div id='wrapper'>
       <TableView actions={actions} state={state} />

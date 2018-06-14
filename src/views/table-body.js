@@ -6,10 +6,9 @@ export const TableBody = ({state}) =>
   <tbody>
     {state.showAll
       ? state.rows
-          .map(row =>
-            <TableRow state={state} row={row} />)
+        .map(row =>
+          <TableRow state={state} row={row} />)
       : state.rows.filter((row, index) =>
-          (index < 100)).map((row, index) =>
-            <TableRow state={state} row={row} />)
+        (index < 100)).map((row, index) => <TableRow state={state} row={row} />)
     }
   </tbody>

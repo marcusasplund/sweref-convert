@@ -4,10 +4,8 @@
   "author": "Marcus Asplund <marcus@greatname.se> (@marcusasplund)",
   "license": "MIT",
   "scripts": {
-    "build": "taskr build release",
-    "start": "taskr watch",
-    "preserve": "yarn run build",
-    "serve": "serve release -s -p 4000"
+    "start": "standard && parcel src/index.html -p 3000 --open",
+    "build": "standard && parcel build src/index.html -d release --public-url ./ && workbox generateSW"
   },
   "main": "src/index.js",
   "repository": {
@@ -19,26 +17,22 @@
   },
   "homepage": "https://github.com/marcusasplund/sweref-convert#readme",
   "devDependencies": {
-    "@taskr/clear": "^1.1.0",
-    "@taskr/concat": "^1.1.0",
-    "@taskr/esnext": "^1.1.0",
-    "@taskr/htmlmin": "^1.1.0",
-    "@taskr/postcss": "^1.1.2",
-    "@taskr/rev": "^1.1.0",
-    "@taskr/sass": "^1.1.0",
-    "@taskr/uglify": "^1.1.0",
-    "@taskr/watch": "^1.1.0",
-    "autoprefixer": "^8.0.0",
-    "browser-sync": "^2.23.6",
-    "rollup": "^0.60.1",
-    "rollup-plugin-buble": "^0.19.2",
-    "rollup-plugin-commonjs": "^9.0.0",
-    "rollup-plugin-node-resolve": "^3.0.2",
-    "rollup-plugin-replace": "^2.0.0",
-    "serve": "^8.1.2",
-    "taskr": "^1.1.0",
-    "taskr-standard": "^1.0.1",
-    "workbox-build": "^3.0.0"
+    "babel-eslint": "^8.2.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "node-sass": "^4.8.3",
+    "parcel-bundler": "^1.7.0",
+    "standard": "*",
+    "workbox-build": "^3.0.1",
+    "workbox-cli": "^3.0.1"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "dist/",
+      "release/",
+      "object-assign-auto.min.js",
+      "promise-polyfill.js"
+    ]
   },
   "dependencies": {
     "dialog-polyfill": "^0.4.9",
