@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/marcusasplund/sweref-convert#readme",
   "devDependencies": {
-    "babel-eslint": "^8.2.2",
+    "babel-eslint": "^8.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "node-sass": "^4.8.3",
-    "parcel-bundler": "^1.7.0",
+    "node-sass": "^4.9.0",
+    "parcel-bundler": "^1.9.0",
     "standard": "*",
-    "workbox-build": "^3.0.1",
-    "workbox-cli": "^3.0.1"
+    "workbox-build": "^3.2.0",
+    "workbox-cli": "^3.2.0"
   },
   "standard": {
     "parser": "babel-eslint",
@@ -37,8 +37,8 @@
   "dependencies": {
     "dialog-polyfill": "^0.4.9",
     "downloadjs": "^1.4.7",
-    "hyperapp": "^1.1.2",
+    "hyperapp": "^1.2.6",
     "leaflet": "^1.3.1",
-    "papaparse": "^4.3.7"
+    "papaparse": "^4.5.0"
   }
 }
