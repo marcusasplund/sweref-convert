@@ -36,22 +36,11 @@ Open up application at http://localhost:4000/ in browser
 ## build a release
 
 ````bash
-    $ yarn run build
+    $ yarn build
 
 ````
 This will generate a release directory with your minified/rev'd assets.
 
-
-## serve static
-
-````bash
-    $ yarn run serve
-
-````
-
-This will use serve to statically serve your app from the release directory.
-
 ## Credits
 
 All geodetic conversion calculations are taken from https://github.com/arnoldandreasson/latlong_mellifica_se
-The rollup and fly config is based on https://github.com/tzellman/hyperapp-boilerplate
