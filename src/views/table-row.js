@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import {h} from 'hyperapp'
+import { h } from 'hyperapp'
 
-export const TableRow = ({state, row}) =>
+export const TableRow = ({ state, row }) =>
   <tr>
     <td>
       {row.x}

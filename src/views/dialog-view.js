@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import {h} from 'hyperapp'
+import { h } from 'hyperapp'
 
-export const Dialog = ({actions}) => (
+export const Dialog = ({ actions }) => (
   <dialog oncreate={el => actions.attachDialog(el)}>
     <button
       class='right'

@@ -210,37 +210,37 @@ const testCase = {
 }
 
 const params = {
-  rt9075gonV: {...grs80Params, ...rt9075gonV},
-  rt9050gonV: {...grs80Params, ...rt9050gonV},
-  rt9025gonV: {...grs80Params, ...rt9025gonV},
-  rt9000gonV: {...grs80Params, ...rt9000gonV},
-  rt9025gonO: {...grs80Params, ...rt9025gonO},
-  rt9050gonO: {...grs80Params, ...rt9050gonO},
-  besselRt9075gonV: {...besselParams, ...besselRt9075gonV},
-  besselRt9050gonV: {...besselParams, ...besselRt9050gonV},
-  besselRt9025gonV: {...besselParams, ...besselRt9025gonV},
-  besselRt9000gonV: {...besselParams, ...besselRt9000gonV},
-  besselRt9025gonO: {...besselParams, ...besselRt9025gonO},
-  besselRt9050gonO: {...besselParams, ...besselRt9050gonO},
-  sweref99tm: {...sweref99Params, ...sweref99tm},
-  sweref991200: {...sweref99Params, ...sweref991200},
-  sweref991330: {...sweref99Params, ...sweref991330},
-  sweref991500: {...sweref99Params, ...sweref991500},
-  sweref991630: {...sweref99Params, ...sweref991630},
-  sweref991800: {...sweref99Params, ...sweref991800},
-  sweref991415: {...sweref99Params, ...sweref991415},
-  sweref991545: {...sweref99Params, ...sweref991545},
-  sweref991715: {...sweref99Params, ...sweref991715},
-  sweref991845: {...sweref99Params, ...sweref991845},
-  sweref992015: {...sweref99Params, ...sweref992015},
-  sweref992145: {...sweref99Params, ...sweref992145},
-  sweref992315: {...sweref99Params, ...sweref992315},
+  rt9075gonV: { ...grs80Params, ...rt9075gonV },
+  rt9050gonV: { ...grs80Params, ...rt9050gonV },
+  rt9025gonV: { ...grs80Params, ...rt9025gonV },
+  rt9000gonV: { ...grs80Params, ...rt9000gonV },
+  rt9025gonO: { ...grs80Params, ...rt9025gonO },
+  rt9050gonO: { ...grs80Params, ...rt9050gonO },
+  besselRt9075gonV: { ...besselParams, ...besselRt9075gonV },
+  besselRt9050gonV: { ...besselParams, ...besselRt9050gonV },
+  besselRt9025gonV: { ...besselParams, ...besselRt9025gonV },
+  besselRt9000gonV: { ...besselParams, ...besselRt9000gonV },
+  besselRt9025gonO: { ...besselParams, ...besselRt9025gonO },
+  besselRt9050gonO: { ...besselParams, ...besselRt9050gonO },
+  sweref99tm: { ...sweref99Params, ...sweref99tm },
+  sweref991200: { ...sweref99Params, ...sweref991200 },
+  sweref991330: { ...sweref99Params, ...sweref991330 },
+  sweref991500: { ...sweref99Params, ...sweref991500 },
+  sweref991630: { ...sweref99Params, ...sweref991630 },
+  sweref991800: { ...sweref99Params, ...sweref991800 },
+  sweref991415: { ...sweref99Params, ...sweref991415 },
+  sweref991545: { ...sweref99Params, ...sweref991545 },
+  sweref991715: { ...sweref99Params, ...sweref991715 },
+  sweref991845: { ...sweref99Params, ...sweref991845 },
+  sweref992015: { ...sweref99Params, ...sweref992015 },
+  sweref992145: { ...sweref99Params, ...sweref992145 },
+  sweref992315: { ...sweref99Params, ...sweref992315 },
   testCase: testCase
 }
 
 // example usage: projectionParams('rt9075gonV')
 const projectionParams = (projection) => {
-  return {...defaultParams, ...params[projection]}
+  return { ...defaultParams, ...params[projection] }
 }
 
-export {projectionParams}
+export { projectionParams }

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import {h} from 'hyperapp'
+import { h } from 'hyperapp'
 
-export const UploadView = ({state, actions}) =>
+export const UploadView = ({ state, actions }) =>
   <div>
     <label for='files' class='button file-label'>Ladda upp csv
     </label>

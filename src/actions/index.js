@@ -1,7 +1,7 @@
-import {default as Papa} from 'papaparse'
-import {geodeticToGrid, gridToGeodetic} from '../utils/geodetic-grid'
-import {projectionParams} from '../utils/projection-params'
-import {latToDms, lngToDms} from '../utils/latlng-convert'
+import Papa from 'papaparse'
+import { geodeticToGrid, gridToGeodetic } from '../utils/geodetic-grid'
+import { projectionParams } from '../utils/projection-params'
+import { latToDms, lngToDms } from '../utils/latlng-convert'
 import download from 'downloadjs'
 import L from 'leaflet'
 import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
@@ -90,7 +90,7 @@ export const actions = {
     showLeaflet: false
   }),
   renderMap: () => (state, actions) => {
-    let mapIcon = L.divIcon({className: 'map-icon'})
+    let mapIcon = L.divIcon({ className: 'map-icon' })
     if (mapView) {
       mapView.off()
       mapView.remove()
@@ -100,7 +100,7 @@ export const actions = {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapView)
     state.rows.slice(0, 100).map((row, index) => {
-      L.marker([row.lat, row.lng], {icon: mapIcon}).addTo(mapView)
+      L.marker([row.lat, row.lng], { icon: mapIcon }).addTo(mapView)
         .bindPopup(row.lat + ', ' + row.lng)
     })
   },

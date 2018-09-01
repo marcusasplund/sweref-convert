@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import {h} from 'hyperapp'
+import { h } from 'hyperapp'
 
-export const HeaderView = ({state, actions}) =>
+export const HeaderView = ({ state, actions }) =>
   <div>
     <button onclick={e => actions.showModal()}>
       hjälp/info

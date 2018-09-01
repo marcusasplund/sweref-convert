@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import {h} from 'hyperapp'
+import { h } from 'hyperapp'
 
-export const InputView = ({actions, className}) =>
+export const InputView = ({ actions, className }) =>
   <div class={className}>
     <input
       type='text'

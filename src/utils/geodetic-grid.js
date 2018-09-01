@@ -106,11 +106,11 @@ const gridToGeodetic = (x, y, params) => {
   let xiPrim = xi - delta1 * Math.sin(2.0 * xi) * Math.cosh(2.0 * eta) - delta2 * Math.sin(4.0 * xi) * Math.cosh(
     4.0 * eta
   ) - delta3 * Math.sin(6.0 * xi) * Math.cosh(6.0 * eta) - delta4 * Math.sin(8.0 * xi) * Math.cosh(
-      8.0 * eta)
+    8.0 * eta)
   let etaPrim = eta - delta1 * Math.cos(2.0 * xi) * Math.sinh(2.0 * eta) - delta2 * Math.cos(
     4.0 * xi
   ) * Math.sinh(4.0 * eta) - delta3 * Math.cos(6.0 * xi) * Math.sinh(6.0 * eta) - delta4 * Math.cos(
-      8.0 * xi) * Math.sinh(8.0 * eta)
+    8.0 * xi) * Math.sinh(8.0 * eta)
   let phiStar = Math.asin(Math.sin(xiPrim) / Math.cosh(etaPrim))
   let deltaLambda = Math.atan(Math.sinh(etaPrim) / Math.cos(xiPrim))
   let lngRadian = lambdaZero + deltaLambda
@@ -124,4 +124,4 @@ const gridToGeodetic = (x, y, params) => {
   return coords
 }
 
-export {geodeticToGrid, gridToGeodetic}
+export { geodeticToGrid, gridToGeodetic }

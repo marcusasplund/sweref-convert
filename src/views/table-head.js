@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import {h} from 'hyperapp'
+import { h } from 'hyperapp'
 
-export const TableHead = ({state}) =>
+export const TableHead = ({ state }) =>
   <thead>
     <tr>
       <th>
