@@ -21,7 +21,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "node-sass": "^4.9.3",
-    "parcel-bundler": "^1.9.7",
+    "parcel-bundler": "^1.10.2",
     "standard": "*",
     "workbox-build": "^3.4.1",
     "workbox-cli": "^3.4.1"
