@@ -31,7 +31,6 @@
 // Source: http://www.lantmateriet.se/geodesi/
 
 // Conversion from geodetic coordinates to grid coordinates.
-import * as MATH from './math-polyfills'
 
 const geodeticToGrid = (latitude, longitude, params) => {
   let coords = {

@@ -7,7 +7,7 @@ import { LeafletMap } from './leaflet-map'
 import { InputView } from './input-view'
 import { Dialog } from './dialog-view'
 
-export const view = (state, actions) =>
+export const view = (state, actions) => (
   <div>
     <header>
       <h2>Konvertera mellan SWEREF99/RT90 och lat, lng</h2>
@@ -25,3 +25,4 @@ export const view = (state, actions) =>
     <InputView actions={actions} className={state.showLeaflet ? 'hidden' : ''} />
     <Dialog actions={actions} />
   </div>
+)
