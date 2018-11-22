@@ -26,7 +26,12 @@
     "json5": "2.1.0",
     "node-sass": "^4.9.3",
     "parcel-bundler": "^1.10.2",
+    "parcel-plugin-sw-cache": "^0.2.6",
     "standard": "*"
+  },
+  "cache": {
+    "inDev": true,
+    "swDest": "service-worker.js"
   },
   "standard": {
     "parser": "babel-eslint",
