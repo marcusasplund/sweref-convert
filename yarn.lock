@@ -549,29 +549,6 @@
     "@babel/helper-get-function-arity" "^7.0.0"
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-transform-react-display-name@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-display-name/-/plugin-transform-react-display-name-7.0.0.tgz#93759e6c023782e52c2da3b75eca60d4f10533ee"
-  integrity sha512-BX8xKuQTO0HzINxT6j/GiCwoJB0AOMs0HmLbEnAvcte8U8rSkNa/eSCAY+l1OA4JnCVq2jw2p6U8QQryy2fTPg==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
-
-"@babel/plugin-transform-react-jsx-self@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx-self/-/plugin-transform-react-jsx-self-7.0.0.tgz#a84bb70fea302d915ea81d9809e628266bb0bc11"
-  integrity sha512-pymy+AK12WO4safW1HmBpwagUQRl9cevNX+82AIAtU1pIdugqcH+nuYP03Ja6B+N4gliAaKWAegIBL/ymALPHA==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
-    "@babel/plugin-syntax-jsx" "^7.0.0"
-
-"@babel/plugin-transform-react-jsx-source@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx-source/-/plugin-transform-react-jsx-source-7.0.0.tgz#28e00584f9598c0dd279f6280eee213fa0121c3c"
-  integrity sha512-OSeEpFJEH5dw/TtxTg4nijl4nHBbhqbKL94Xo/Y17WKIf2qJWeIk/QeXACF19lG1vMezkxqruwnTjVizaW7u7w==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
-    "@babel/plugin-syntax-jsx" "^7.0.0"
-
 "@babel/plugin-transform-react-jsx@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx/-/plugin-transform-react-jsx-7.0.0.tgz#524379e4eca5363cd10c4446ba163f093da75f3e"
@@ -727,17 +704,6 @@
     invariant "^2.2.2"
     js-levenshtein "^1.1.3"
     semver "^5.3.0"
-
-"@babel/preset-react@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.0.0.tgz#e86b4b3d99433c7b3e9e91747e2653958bc6b3c0"
-  integrity sha512-oayxyPS4Zj+hF6Et11BwuBkmpgT/zMxyuZgFrMeZID6Hdh3dGlk4sHCAhdBCpuCKW2ppBfl2uCCetlrUIJRY3w==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
-    "@babel/plugin-transform-react-display-name" "^7.0.0"
-    "@babel/plugin-transform-react-jsx" "^7.0.0"
-    "@babel/plugin-transform-react-jsx-self" "^7.0.0"
-    "@babel/plugin-transform-react-jsx-source" "^7.0.0"
 
 "@babel/runtime@^7.0.0":
   version "7.1.2"
@@ -1136,11 +1102,6 @@ babel-plugin-transform-object-rest-spread@^6.26.0:
   dependencies:
     babel-plugin-syntax-object-rest-spread "^6.8.0"
     babel-runtime "^6.26.0"
-
-babel-plugin-transform-remove-console@^6.9.4:
-  version "6.9.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-transform-remove-console/-/babel-plugin-transform-remove-console-6.9.4.tgz#b980360c067384e24b357a588d807d3c83527780"
-  integrity sha1-uYA2DAZzhOJLNXpYjYB9PINSd4A=
 
 babel-runtime@^6.11.6, babel-runtime@^6.26.0:
   version "6.26.0"
@@ -4699,15 +4660,15 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
   integrity sha512-lQe48YPsMJAig+yngZ87Lus+NF+3mtu7DVOBu6b/gHO1YpKwIj5AWjZ/TOS7i46HD/UixzWb1zeWDZfGZ3iYcg==
 
-papaparse@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.6.1.tgz#7b3c5bdf4f0fd12374e2d37f987e9d74a1834ca8"
-  integrity sha512-X9Ws5tnEQKRCZRfoojX3KvRZbLY1BbL0wqSHF3CKGmxD8Zr4E0WaipUuFweffkCN8RSQzHKhb/F+ATYdNcz1rg==
+papaparse@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.6.2.tgz#5b2df0296f505f1c9d4c2261f903d3b44866a28d"
+  integrity sha512-P/4p6S6wZyXAjcFPnJAjFn7lxMIkd+23prFELhcbfWswQfg7dG1XJfV8/lKvk5lu5BGSSJZFHSDMejjFcB1feg==
 
-parcel-bundler@^1.10.2:
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/parcel-bundler/-/parcel-bundler-1.10.2.tgz#be8448de155552d43ba9b44c2f81389812586b78"
-  integrity sha512-n6DZ2W/rqxBy2snZZKMUSR1W8brNpV0+n3qBdFU4EIYbHH5dqe+lB8kMWs51jtDIo/hE6KDVxfAUIfdw2nHG7A==
+parcel-bundler@^1.10.3:
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/parcel-bundler/-/parcel-bundler-1.10.3.tgz#8502b40d3f23139093b25e82658f6060f025c024"
+  integrity sha512-Lj31fr5o2AZFbazghL/MrubzvJEXLwx24rd3MiR3lncmqCXbd5q0hgl1kpV6X+vRaN9/cSDR8G0lotmgl5OyZg==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     "@babel/core" "^7.0.0"
@@ -5525,6 +5486,11 @@ progress@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
   integrity sha1-ihvjZr+Pwj2yvSPxDG/pILQ4nR8=
+
+promise-polyfill@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.1.0.tgz#30059da54d1358ce905ac581f287e184aedf995d"
+  integrity sha512-OzSf6gcCUQ01byV4BgwyUCswlaQQ6gzXc23aLQWhicvfX9kfsUiUhgt3CCQej8jDnl8/PhGF31JdHX2/MzF3WA==
 
 prop-types@^15.6.2:
   version "15.6.2"

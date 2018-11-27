@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "standard && parcel src/index.html -p 3000 --open",
-    "build": "standard && parcel build src/index.html -d release --public-url ./"
+    "build": "rm -rf release && standard && parcel build src/index.html -d release --public-url ./"
   },
   "main": "src/index.js",
   "repository": {
@@ -18,14 +18,12 @@
   "homepage": "https://github.com/marcusasplund/sweref-convert#readme",
   "devDependencies": {
     "@babel/core": "^7.1.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "7.1.6",
-    "@babel/preset-react": "7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "babel-eslint": "^9.0.0",
-    "babel-plugin-transform-remove-console": "^6.9.4",
     "json5": "2.1.0",
     "node-sass": "^4.9.3",
-    "parcel-bundler": "^1.10.2",
+    "parcel-bundler": "^1.10.3",
     "parcel-plugin-sw-cache": "^0.2.6",
     "standard": "*"
   },
@@ -37,9 +35,7 @@
     "parser": "babel-eslint",
     "ignore": [
       "dist/",
-      "release/",
-      "object-assign-auto.min.js",
-      "promise-polyfill.js"
+      "release/"
     ]
   },
   "dependencies": {
@@ -47,6 +43,7 @@
     "downloadjs": "^1.4.7",
     "hyperapp": "^1.2.9",
     "leaflet": "^1.3.4",
-    "papaparse": "^4.6.1"
+    "papaparse": "^4.6.2",
+    "promise-polyfill": "^8.1.0"
   }
 }
