@@ -43,7 +43,7 @@
     "downloadjs": "^1.4.7",
     "hyperapp": "^1.2.9",
     "leaflet": "^1.3.4",
-    "papaparse": "^4.6.2",
+    "papaparse": "^4.6.3",
     "promise-polyfill": "^8.1.0"
   }
 }
