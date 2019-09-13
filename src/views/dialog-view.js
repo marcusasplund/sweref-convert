@@ -6,12 +6,14 @@ export const Dialog = ({ actions }) => (
     <button
       class='right'
       type='button'
-      onclick={e => actions.cancelDialog()}>
+      onclick={e => actions.cancelDialog()}
+    >
       x
     </button>
     <h2>info</h2>
     <form
-      method='dialog'>
+      method='dialog'
+    >
       <p>Denna app är till för att snabbt konvertera stora mängder koordinater mellan RT90/SWEREF och WGS84
       Det enklaste är att ladda upp ett .csv-dokument med två kolumner; en x- o en y-kolumn. Om ni vill konvertera från WGS84 så
       bocka i rutan för detta. Välj sedan önskad projektion i select-menyn. Om din ursprungsdata är i ngt SWEREF- eller RT90-format
@@ -29,7 +31,7 @@ export const Dialog = ({ actions }) => (
       </p>
       <p>
         <b>Exempelfil:</b><br />
-        <a download='rt90.csv' target='_blank' href='https://pap.as/sweref/rt90.csv'>https://pap.as/sweref/rt90.csv</a>
+        <a download='rt90.csv' target='_blank' rel='noopener noreferrer' href='https://pap.as/sweref/rt90.csv'>https://pap.as/sweref/rt90.csv</a>
       </p>
       <p>
         Jag tar tacksamt emot synpunkter o önskemål på appen, t.ex. kan det hända
@@ -45,7 +47,8 @@ export const Dialog = ({ actions }) => (
       </p>
       <button
         type='button'
-        onclick={e => actions.cancelDialog()}>
+        onclick={e => actions.cancelDialog()}
+      >
         stäng
       </button>
     </form>

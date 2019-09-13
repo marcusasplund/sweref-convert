@@ -7,8 +7,7 @@ export const TableBody = ({ state }) =>
     {state.showAll
       ? state.rows
         .map(row =>
-          <TableRow state={state} row={row} />)
+          <TableRow state={state} row={row} key={row.x * row.y} />)
       : state.rows.filter((row, index) =>
-        (index < 100)).map((row, index) => <TableRow state={state} row={row} />)
-    }
+        (index < 100)).map((row, index) => <TableRow state={state} row={row} key={row.x * row.y} />)}
   </tbody>

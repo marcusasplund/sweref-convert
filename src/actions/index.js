@@ -24,12 +24,12 @@ export const actions = {
 
   addRows: (results) => (state, actions) => {
     let geo
-    let data = results.data[0]
-    let keys = Object.keys(data)
+    const data = results.data[0]
+    const keys = Object.keys(data)
     // first column
-    let x = data[keys[0]]
+    const x = data[keys[0]]
     // second column
-    let y = data[keys[1]]
+    const y = data[keys[1]]
     // TODO: faulty data handling
     if (state.fromLatLng) {
       geo = geodeticToGrid(x, y, projectionParams(state.selectedParam))
@@ -93,7 +93,7 @@ export const actions = {
   }),
 
   renderMap: () => (state, actions) => {
-    let mapIcon = L.divIcon({ className: 'map-icon' })
+    const mapIcon = L.divIcon({ className: 'map-icon' })
     if (mapView) {
       mapView.off()
       mapView.remove()

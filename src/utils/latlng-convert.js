@@ -35,7 +35,7 @@ const latFromDd = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
   value = value.replace(/[S]/gi, 'S')
-  let result = value.match(/^\s*([NS\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([NS]?)\s*$/)
+  const result = value.match(/^\s*([NS\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([NS]?)\s*$/)
   if (result) {
     if (result[2]) {
       latitude = +result[2]
@@ -64,7 +64,7 @@ const lngFromDd = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E') // Note: ö=Öst for swedish users.
   value = value.replace(/[WV]/gi, 'W') // Note: v=Väst for swedish users.
-  let result = value.match(/^\s*([EW\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([EW]?)\s*$/)
+  const result = value.match(/^\s*([EW\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([EW]?)\s*$/)
   if (result !== null) {
     if (result[2]) {
       longitude = +result[2]
@@ -93,7 +93,7 @@ const latFromDm = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
   value = value.replace(/[S]/gi, 'S')
-  let result = value.match(
+  const result = value.match(
     /^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([NS]?)\s*$/
   )
   if (result !== null) {
@@ -127,7 +127,7 @@ const lngFromDm = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E')
   value = value.replace(/[WV]/gi, 'W')
-  let result = value.match(
+  const result = value.match(
     /^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([EW]?)\s*$/
   )
   if (result !== null) {
@@ -161,7 +161,7 @@ const latFromDms = (value) => {
   let latitude
   value = value.replace(/[N]/gi, 'N')
   value = value.replace(/[S]/gi, 'S')
-  let result = value.match(
+  const result = value.match(
     /^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?'?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([NS]?)\s*$/
   )
   if (result !== null) {
@@ -198,7 +198,7 @@ const lngFromDms = (value) => {
   let longitude
   value = value.replace(/[EÖ]/gi, 'E')
   value = value.replace(/[WV]/gi, 'W')
-  let result = value.match(
+  const result = value.match(
     /^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?'?\s*([0-5]?[0-9])?([.,]\d*)?'?\s*([EW]?)\s*$/
   )
   if (result !== null) {
@@ -250,8 +250,8 @@ const latToDm = (value) => {
     return ''
   }
   value += 0.0000008 // Round (= 0.5 min).
-  let degrees = Math.floor(Math.abs(value))
-  let minutes = (Math.abs(value) - degrees) * 60
+  const degrees = Math.floor(Math.abs(value))
+  const minutes = (Math.abs(value) - degrees) * 60
   if (value >= 0) {
     return 'N ' + degrees + '\u00b0 ' + (
       Math.floor(minutes * 10000) / 10000
@@ -268,8 +268,8 @@ const lngToDm = (value) => {
     return ''
   }
   value += 0.0000008 // Round (= 0.5 min).
-  let degrees = Math.floor(Math.abs(value))
-  let minutes = (Math.abs(value) - degrees) * 60
+  const degrees = Math.floor(Math.abs(value))
+  const minutes = (Math.abs(value) - degrees) * 60
   if (value >= 0) {
     return 'E ' + degrees + '\u00b0 ' + (
       Math.floor(minutes * 10000) / 10000
@@ -286,9 +286,9 @@ const latToDms = (value) => {
     return ''
   }
   value += 0.0000014 // Round (= 0.5 sec).
-  let degrees = Math.floor(Math.abs(value))
-  let minutes = Math.floor((Math.abs(value) - degrees) * 60)
-  let seconds = (Math.abs(value) - degrees - minutes / 60) * 3600
+  const degrees = Math.floor(Math.abs(value))
+  const minutes = Math.floor((Math.abs(value) - degrees) * 60)
+  const seconds = (Math.abs(value) - degrees - minutes / 60) * 3600
   if (value >= 0) {
     return 'N ' + degrees + '\u00b0 ' + minutes + '\u2032 ' + (
       Math.floor(seconds * 100) / 100
@@ -305,9 +305,9 @@ const lngToDms = (value) => {
     return ''
   }
   value += 0.0000014 // Round (= 0.5 sec).
-  let degrees = Math.floor(Math.abs(value))
-  let minutes = Math.floor((Math.abs(value) - degrees) * 60)
-  let seconds = (Math.abs(value) - degrees - minutes / 60) * 3600
+  const degrees = Math.floor(Math.abs(value))
+  const minutes = Math.floor((Math.abs(value) - degrees) * 60)
+  const seconds = (Math.abs(value) - degrees - minutes / 60) * 3600
   if (value >= 0) {
     return 'E ' + degrees + '\u00b0 ' + minutes + '\u2032 ' + (
       Math.floor(seconds * 100) / 100

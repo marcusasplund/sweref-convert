@@ -9,7 +9,8 @@ export const UploadView = ({ state, actions }) =>
       onchange={actions.parseFile}
       accept='.csv'
       id='files'
-      type='file' />
+      type='file'
+    />
     {' '}
     <button disabled={state.rows && state.rows.length < 1} onclick={actions.downloadCSV} class='button'>
       Ladda ned konverterad csv

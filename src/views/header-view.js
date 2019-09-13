@@ -75,7 +75,7 @@ export const HeaderView = ({ state, actions }) =>
       <select value={state.selectedParam} onchange={actions.setSelectedParam}>
         {
           params.map(ref =>
-            <option value={ref.value}>{ref.text}</option>)
+            <option value={ref.value} key={ref.value}>{ref.text}</option>)
         }
       </select>
       {' '}Välj projektion (SWEREF 99, RT 90):
