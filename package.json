@@ -23,7 +23,7 @@
     "node-sass": "^4.12.0",
     "parcel-bundler": "^1.12.3",
     "parcel-plugin-sw-cache": "^0.3.1",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "json5": "2.1.0",
     "standard": "*"
   },
