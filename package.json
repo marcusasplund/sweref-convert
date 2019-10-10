@@ -41,7 +41,7 @@
   "dependencies": {
     "dialog-polyfill": "^0.5.0",
     "downloadjs-next": "^1.5.7",
-    "hyperapp": "^1.x.x",
+    "hyperapp": "^2.0.2",
     "leaflet": "^1.5.1",
     "papaparse": "^5.0.2",
     "promise-polyfill": "^8.1.3"
