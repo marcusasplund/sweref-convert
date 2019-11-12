@@ -1,8 +1,8 @@
 {
   "ci": {
-    "staticDistDir": "release",
     "assert": {
       "preset": "lighthouse:recommended",
+      "staticDistDir": "release",
       "assertions": {
         "uses-responsive-images": "off"
       }
