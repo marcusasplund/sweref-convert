@@ -6,14 +6,8 @@ node_js:
 
 sudo: false
 
-before_install:
-  - npm install -g @lhci/cli@0.3.x
-  
 install:
   - yarn
 
 script:
   - yarn build
-  - lhci autorun # run lighthouse CI
-addons:
-  chrome: stable # make sure you have Chrome available
