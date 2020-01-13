@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/marcusasplund/sweref-convert#readme",
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "7.7.7",
+    "@babel/core": "^7.8.0",
+    "@babel/preset-env": "7.8.0",
     "babel-eslint": "^10.0.3",
     "node-sass": "^4.12.0",
     "parcel-bundler": "^1.12.3",
     "parcel-plugin-sw-cache": "^0.3.1",
-    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.0",
     "json5": "2.1.1",
     "standard": "*"
   },
