@@ -6,8 +6,10 @@ node_js:
 
 sudo: false
 
-install:
-  - yarn
-
+before_install:
+  - npm install -g @lhci/cli@0.3.x
 script:
-  - yarn build
+  - npm run build
+  - lhci autorun
+addons:
+  chrome: stable
