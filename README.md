@@ -8,6 +8,7 @@ For batch conversion of geodetic coordinates between [Swedish Grid RT 90](https:
 [![GitHub issues](https://img.shields.io/github/issues/marcusasplund/sweref-convert.svg)](https://github.com/marcusasplund/sweref-convert/issues)
 [![Build status](https://travis-ci.org/marcusasplund/sweref-convert.svg?branch=master)](https://travis-ci.org/marcusasplund/sweref-convert)
 [![dependencies](https://david-dm.org/marcusasplund/sweref-convert.svg)](https://david-dm.org/marcusasplund/sweref-convert)
+[![Known Vulnerabilities](https://snyk.io/test/github/marcusasplund/sweref-convert/badge.svg?targetFile=package.json)](https://snyk.io/test/github/marcusasplund/sweref-convert?targetFile=package.json)
 
 [![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) 
 
