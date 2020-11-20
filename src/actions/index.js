@@ -4,7 +4,7 @@ import { projectionParams } from '../utils/projection-params'
 import { latToDms, lngToDms } from '../utils/latlng-convert'
 import download from 'downloadjs-next'
 import L from 'leaflet'
-import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
+import dialogPolyfill from 'dialog-polyfill'
 import 'promise-polyfill/src/polyfill'
 
 let mapView
@@ -24,7 +24,7 @@ export const actions = {
 
   addRows: (results) => (state, actions) => {
     let geo
-    const data = results.data[0]
+    const data = results.data
     const keys = Object.keys(data)
     // first column
     const x = data[keys[0]]
@@ -103,8 +103,10 @@ export const actions = {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapView)
     state.rows.slice(0, 100).map((row, index) => {
-      L.marker([row.lat, row.lng], { icon: mapIcon }).addTo(mapView)
+      L.marker([row.lat, row.lng], { icon: mapIcon })
+        .addTo(mapView)
         .bindPopup(row.lat + ', ' + row.lng)
+      return null
     })
   },
 
