@@ -76,4 +76,3 @@ export const gridToGeodetic = (x, y, params) => {
   }
   return coords
 }
-

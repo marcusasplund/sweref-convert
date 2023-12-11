@@ -10,9 +10,14 @@ const darkTheme = createTheme({
   }
 })
 
+const rootElement = document.getElementById('root')
+if (rootElement == null) {
+  throw new Error('Root element not found')
+}
+
 render(() => (
   <ThemeProvider theme={darkTheme}>
     <CssBaseline />
     <App />
   </ThemeProvider>
-), document.getElementById('root')!)
+), rootElement)

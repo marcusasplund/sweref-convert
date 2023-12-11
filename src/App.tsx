@@ -1,16 +1,14 @@
-import Button from '@suid/material/Button'
 import Papa from 'papaparse'
-import { Stack, Typography, Box, TextField, FormControl, InputLabel, MenuItem, Select } from '@suid/material'
+import { Button, SelectChangeEvent, Stack, Typography, Box, TextField, FormControl, InputLabel, MenuItem, Select } from '@suid/material'
 import TopBar from './TopBar'
-import { createSignal, createEffect } from 'solid-js'
+import { createSignal, createEffect, JSX } from 'solid-js'
 import styled from '@suid/material/styles/styled'
-import { SelectChangeEvent } from '@suid/material/Select'
-import {gridToGeodetic} from './geo/gridToGeodetic'
-import {geodeticToGrid} from './geo/geodeticToGrid'
-import {latToDms, lngToDms} from './geo/latlngConvert'
-import { InfoDialog } from './InfoDialog'
-import {selectParams} from './constants/selectParams'
-import {projectionParams} from './constants/projectionParams'
+import { gridToGeodetic } from './geo/gridToGeodetic'
+import { geodeticToGrid } from './geo/geodeticToGrid'
+import { latToDms, lngToDms } from './geo/latlngConvert'
+import InfoDialog from './InfoDialog'
+import { selectParams } from './constants/selectParams'
+import { projectionParams } from './constants/projectionParams'
 import ResultTable from './ResultTable'
 import './App.css'
 
@@ -18,130 +16,174 @@ const FileInput = styled('input')({
   display: 'none'
 })
 
-export default function App () {
+interface CsvData {
+  data: string | File
+  isFile: boolean
+}
+
+interface PapaParseResult {
+  data: {
+    x: number
+    y: number
+  }
+}
+
+export interface ConvertedRow {
+  x: string | number
+  y: string | number
+  lat: string | number
+  lng: string | number
+  x2: string | number | null
+  y2: string | number | null
+  latdms: string | number
+  lngdms: string | number
+}
+
+export default function App (): JSX.Element {
   const [open, setOpen] = createSignal(false)
   const [from, setFrom] = createSignal('rt9025gonV')
-  const [to, setTo] = createSignal('wgs84')
-  const [rows, setRows] = createSignal<Array<any>>([])
+  const [to, setTo] = createSignal('sweref991330')
+  const [rows, setRows] = createSignal<any[]>([])
   const [viewMap, setViewMap] = createSignal(false)
-  const [csvData, setCsvData] = createSignal<any>(null);
+  const [csvData, setCsvData] = createSignal<CsvData | null>(null)
+  const [isDisabled, setIsDisabled] = createSignal(true)
+  const [twoWay, setTwoWay] = createSignal(false)
+  const [conversionChanged, setConversionChanged] = createSignal(false)
 
-  const handleChangeFrom = (event: SelectChangeEvent) => {
+  const handleChangeFrom = (event: SelectChangeEvent): void => {
     setFrom(event.target.value)
+    setConversionChanged(true)
   }
 
-  const handleChangeTo = (event: SelectChangeEvent) => {
+  const handleChangeTo = (event: SelectChangeEvent): void => {
     setTo(event.target.value)
+    setConversionChanged(true)
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (): void => {
     setOpen(true)
   }
 
-  const handleClickClose = () => {
+  const handleClickClose = (): void => {
     setOpen(false)
   }
 
-  const downloadCSV = (e) => {
-    e.preventDefault ? e.preventDefault() : (e.returnValue = false);
-  
-    // Convert your data to CSV format
+  const toggleMap = (): void => {
+    setViewMap(!viewMap())
+  }
+
+  const downloadCSV = (e: Event): void => {
+    if ('preventDefault' in e) e.preventDefault()
     const csvData = Papa.unparse(rows(), {
       delimiter: ';'
-    });
-  
-    // Create a Blob from the CSV data
-    const blob = new Blob([csvData], { type: 'text/csv' });
-  
-    // Create a link and set the URL
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'converted.csv';
-  
-    // Append the link to the document and trigger a click
-    document.body.appendChild(link);
-    link.click();
-  
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
+    })
+    const blob = new Blob([csvData], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'converted.csv'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
 
-  const addRows = (results) => {
-    const data = results.data
-    const keys = Object.keys(data)
-    // first column
-    const x = data[keys[0]]
-    // second column
-    const y = data[keys[1]]
-    // TODO: faulty data handling
-    if (from() !== 'wgs84' && to() !== 'wgs84'){
-      const converted = gridToGeodetic(x, y, projectionParams(to()))
-      const twoWayConverted = geodeticToGrid(converted.lat, converted.lng, projectionParams(to()))
-      setRows((prevRows) => [
-        ...prevRows,
-          {
-            x: twoWayConverted.x,
-            y: twoWayConverted.y,
-            lat: converted.x,
-            lng: converted.y,
-            latdms: latToDms(+converted.x),
-            lngdms: lngToDms(+converted.y)
-          }
-        ]);
+  const convertRow = (x: number | string, y: number | string, currentFrom: string, currentTo: string): ConvertedRow => {
+    if (currentFrom !== 'wgs84' && currentTo !== 'wgs84') {
+      const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
+      const twoWayConverted = geodeticToGrid(converted.lat, converted.lng, projectionParams(currentTo))
+      return {
+        x,
+        y,
+        lat: converted.lat,
+        lng: converted.lng,
+        x2: twoWayConverted.x,
+        y2: twoWayConverted.y,
+        latdms: latToDms(+converted.lat),
+        lngdms: lngToDms(+converted.lat)
+      }
     }
-    if (from() === 'wgs84') {
-      const converted = geodeticToGrid(x, y, projectionParams(to()))
-      setRows((prevRows) => [
-        ...prevRows,
-          {
-            x: converted.x,
-            y: converted.y,
-            lat: x,
-            lng: y,
-            latdms: latToDms(+x),
-            lngdms: lngToDms(+y)
-          }
-        ]);
-
+    if (currentFrom === 'wgs84') {
+      const converted = geodeticToGrid(x, y, projectionParams(currentTo))
+      return {
+        x: converted.x,
+        y: converted.y,
+        lat: x,
+        lng: y,
+        x2: null,
+        y2: null,
+        latdms: latToDms(+x),
+        lngdms: lngToDms(+y)
+      }
     } else {
-      const converted = gridToGeodetic(x, y, projectionParams(from()))
-      setRows((prevRows) => [
-        ...prevRows,
-          {
-            x: x,
-            y: y,
-            lat: converted.lat,
-            lng: converted.lng,
-            latdms: latToDms(+converted.lat),
-            lngdms: lngToDms(+converted.lat)
-          }
-        ]);
+      const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
+      return {
+        x,
+        y,
+        lat: converted.lat,
+        lng: converted.lng,
+        x2: null,
+        y2: null,
+        latdms: latToDms(+converted.lat),
+        lngdms: lngToDms(+converted.lat)
+      }
     }
   }
 
+  const processCsvData = (data: CsvData): void => {
+    Papa.parse(data.data, {
+      download: data.isFile,
+      header: true,
+      step: (results: PapaParseResult) => {
+        const convertedRow = convertRow(results.data.x, results.data.y, from(), to())
+        setRows((prevRows) => [...prevRows, convertedRow])
+      },
+      complete: () => setViewMap(false)
+    })
+  }
+
   createEffect(() => {
-    const data: any = csvData();
-    if (data) {
+    const data = csvData()
+    if (data != null) {
       setRows([])
-      Papa.parse(data, {
-        download: data.isFile,
-        header: true,
-        step: (results) => addRows(results),
-        complete: () => setViewMap(false),
-      });
-    } else {
-      setRows([])
+      processCsvData(data)
     }
-  });
+  })
 
-  const parseFile = (e) => setCsvData(e.target.files[0]);
-  const parseString = (e) => setCsvData(e.target.value);
-  const parseRemote = (e) => setCsvData({ data: e.target.value, isFile: true });
+  createEffect(() => {
+    if (conversionChanged()) {
+      const currentFrom = from()
+      const currentTo = to()
+      const convertedData = rows().map(row => convertRow(row.x, row.y, currentFrom, currentTo))
+      setRows(convertedData)
+      setConversionChanged(false)
+    }
+  })
 
-  const toggleMap = () => {
-    setViewMap(!viewMap())
+  createEffect(() => {
+    const hasMultipleRows = rows().length > 1
+    setIsDisabled(!hasMultipleRows)
+  })
+
+  createEffect(() => {
+    const istwoWay = from() !== 'wgs84' && to() !== 'wgs84'
+    setTwoWay(istwoWay)
+  })
+  const parseFile = (e: Event): void => {
+    const target = e.target as HTMLInputElement
+    if ((target.files != null) && target.files.length > 0) {
+      setCsvData({ data: target.files[0], isFile: true })
+    }
+  }
+
+  const parseString = (e: Event): void => {
+    const target = e.target as HTMLInputElement
+    setCsvData({ data: target.value, isFile: false })
+  }
+
+  const parseRemote = (e: Event): void => {
+    const target = e.target as HTMLInputElement
+    setCsvData({ data: target.value, isFile: true })
   }
 
   return (
@@ -167,7 +209,9 @@ export default function App () {
               onChange={handleChangeFrom}
             >
               {
-            selectParams.map(p => <MenuItem value={p.value}>{p.text}</MenuItem>)
+            selectParams.map((p: any) => (
+              <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>)
+            )
           }
             </Select>
           </FormControl>
@@ -179,8 +223,8 @@ export default function App () {
               onChange={handleChangeTo}
             >
               {
-            selectParams.map(p => <MenuItem value={p.value}>{p.text}</MenuItem>)
-          }
+            selectParams.map((p: any) => <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>)
+}
 
             </Select>
           </FormControl>
@@ -194,22 +238,22 @@ export default function App () {
             direction={{ xs: 'column', sm: 'row' }}
             spacing={{ xs: 1, sm: 2 }}
           >
-            <label for="contained-button-file">
-        <FileInput
-          accept=".csv"
-          id="contained-button-file"
-          multiple
-          type="file"
-          onChange={parseFile}
-        />
-        <Button variant="contained" component="span">
-        Ladda upp .csv
-        </Button>
-      </label>
-            <Button onClick={downloadCSV} disabled variant='contained'>
+            <label for='contained-button-file'>
+              <FileInput
+                accept='.csv'
+                id='contained-button-file'
+                multiple
+                type='file'
+                onChange={parseFile}
+              />
+              <Button variant='contained' component='span'>
+                Ladda upp .csv
+              </Button>
+            </label>
+            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
               Ladda ned konverterad .csv
             </Button>
-            <Button onClick={toggleMap} disabled variant='outlined'>
+            <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
               {viewMap() ? 'Tabellvy' : 'Kartvy'}
             </Button>
           </Stack>
@@ -236,7 +280,7 @@ export default function App () {
               fullWidth
             />
           </Stack>
-          {rows().length > 0 && <ResultTable rows={rows} /> }
+          {rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
         </Box>
       </div>
       <InfoDialog open={open} onClose={handleClickClose} />
