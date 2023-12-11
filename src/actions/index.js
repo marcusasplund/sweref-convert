@@ -1,7 +1,7 @@
 import Papa from 'papaparse'
-import { geodeticToGrid, gridToGeodetic } from '../utils/geodetic-grid'
-import { projectionParams } from '../utils/projection-params'
-import { latToDms, lngToDms } from '../utils/latlng-convert'
+import { geodeticToGrid, gridToGeodetic } from '../geo/gridToGeodetic'
+import { projectionParams } from '../geo/projection-params'
+import { latToDms, lngToDms } from '../geo/latlngConvert'
 import download from 'downloadjs-next'
 import L from 'leaflet'
 import dialogPolyfill from 'dialog-polyfill'
@@ -47,8 +47,8 @@ export const actions = {
       geo = gridToGeodetic(x, y, projectionParams(state.selectedParam))
       return {
         rows: state.rows.concat({
-          x: x,
-          y: y,
+          x,
+          y,
           lat: geo.lat,
           lng: geo.lng,
           latdms: latToDms(geo.lat),

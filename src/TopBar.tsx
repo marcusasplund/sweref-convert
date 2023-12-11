@@ -6,10 +6,10 @@ import IconButton from '@suid/material/IconButton'
 import ShareIcon from '@suid/icons-material/Share'
 import Help from '@suid/icons-material/Help'
 
-export const TopBar = (props) => {
-    const {handleClickOpen} = props
+export default function TopBar(props) {
+  const { handleClickOpen } = props
 
-  const shareApp = () => window.navigator.share({
+  const shareApp = async () => await window.navigator.share({
     title: 'Sweref convert',
     text: 'Info on Nordic repeaters',
     url: `https://pap.as${location.pathname}`
@@ -30,7 +30,7 @@ export const TopBar = (props) => {
             color='inherit'
             aria-label='share'
             sx={{ mr: 2 }}
-            onClick={() => shareApp()}
+            onClick={async () => await shareApp()}
           >
             <ShareIcon />
           </IconButton>

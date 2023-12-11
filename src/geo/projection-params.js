@@ -235,7 +235,7 @@ const params = {
   sweref992015: { ...sweref99Params, ...sweref992015 },
   sweref992145: { ...sweref99Params, ...sweref992145 },
   sweref992315: { ...sweref99Params, ...sweref992315 },
-  testCase: testCase
+  testCase
 }
 
 // example usage: projectionParams('rt9075gonV')
