@@ -1,5 +1,8 @@
 export const selectParams = [
   {
+    value: 'wgs84',
+    text: 'WGS84'
+  }, {
     value: 'sweref99tm',
     text: 'SWEREF 99 TM'
   }, {
@@ -56,7 +59,4 @@ export const selectParams = [
   }, {
     value: 'rt9050gonO',
     text: 'RT90 5 gon O 0:-15'
-  }, {
-    value: 'wgs84',
-    text: 'WGS84'
   }]

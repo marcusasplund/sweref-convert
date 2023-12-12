@@ -13,7 +13,7 @@ For batch conversion of geodetic coordinates between [Swedish Grid RT 90](https:
 [![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) 
 
 ## [Demo](https://pap.as/sweref/)
-Built with [Hyperapp](https://github.com/hyperapp/hyperapp)
+Built with [SolidJS](https://github.com/solidjs/solid) and [SUID](https://github.com/swordev/suid)
 
 Offline support with service worker
 
@@ -29,8 +29,6 @@ Offline support with service worker
 
     $ yarn start
 ````
-
-Open up application at http://localhost:4000/ in browser
 
 ## build a release
 

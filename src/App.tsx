@@ -1,15 +1,17 @@
 import Papa from 'papaparse'
-import { Button, SelectChangeEvent, Stack, Typography, Box, TextField, FormControl, InputLabel, MenuItem, Select } from '@suid/material'
-import TopBar from './TopBar'
-import { createSignal, createEffect, JSX } from 'solid-js'
+import { createEffect, createSignal, JSX } from 'solid-js'
 import styled from '@suid/material/styles/styled'
-import { gridToGeodetic } from './geo/gridToGeodetic'
-import { geodeticToGrid } from './geo/geodeticToGrid'
-import { latToDms, lngToDms } from './geo/latlngConvert'
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@suid/material'
+import { SelectChangeEvent } from '@suid/material/Select'
 import InfoDialog from './InfoDialog'
-import { selectParams } from './constants/selectParams'
-import { projectionParams } from './constants/projectionParams'
 import ResultTable from './ResultTable'
+import TopBar from './TopBar'
+import { LeafletMap } from './LeafletMap'
+import { geodeticToGrid } from './geo/geodeticToGrid'
+import { gridToGeodetic } from './geo/gridToGeodetic'
+import { latToDms, lngToDms } from './geo/latlngConvert'
+import { projectionParams } from './constants/projectionParams'
+import { selectParams } from './constants/selectParams'
 import './App.css'
 
 const FileInput = styled('input')({
@@ -33,8 +35,8 @@ export interface ConvertedRow {
   y: string | number
   lat: string | number
   lng: string | number
-  x2: string | number | null
-  y2: string | number | null
+  x2: string | number
+  y2: string | number
   latdms: string | number
   lngdms: string | number
 }
@@ -42,7 +44,7 @@ export interface ConvertedRow {
 export default function App (): JSX.Element {
   const [open, setOpen] = createSignal(false)
   const [from, setFrom] = createSignal('rt9025gonV')
-  const [to, setTo] = createSignal('sweref991330')
+  const [to, setTo] = createSignal('wgs84')
   const [rows, setRows] = createSignal<any[]>([])
   const [viewMap, setViewMap] = createSignal(false)
   const [csvData, setCsvData] = createSignal<CsvData | null>(null)
@@ -110,8 +112,8 @@ export default function App (): JSX.Element {
         y: converted.y,
         lat: x,
         lng: y,
-        x2: null,
-        y2: null,
+        x2: 0,
+        y2: 0,
         latdms: latToDms(+x),
         lngdms: lngToDms(+y)
       }
@@ -122,8 +124,8 @@ export default function App (): JSX.Element {
         y,
         lat: converted.lat,
         lng: converted.lng,
-        x2: null,
-        y2: null,
+        x2: 0,
+        y2: 0,
         latdms: latToDms(+converted.lat),
         lngdms: lngToDms(+converted.lat)
       }
@@ -172,7 +174,7 @@ export default function App (): JSX.Element {
   const parseFile = (e: Event): void => {
     const target = e.target as HTMLInputElement
     if ((target.files != null) && target.files.length > 0) {
-      setCsvData({ data: target.files[0], isFile: true })
+      setCsvData({ data: target.files[0], isFile: false })
     }
   }
 
@@ -223,9 +225,10 @@ export default function App (): JSX.Element {
               onChange={handleChangeTo}
             >
               {
-            selectParams.map((p: any) => <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>)
-}
-
+            selectParams.map((p: any) => (
+              <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>
+            ))
+            }
             </Select>
           </FormControl>
         </Stack>
@@ -246,7 +249,7 @@ export default function App (): JSX.Element {
                 type='file'
                 onChange={parseFile}
               />
-              <Button variant='contained' component='span'>
+              <Button variant='contained' component='span' fullWidth>
                 Ladda upp .csv
               </Button>
             </label>
@@ -263,7 +266,11 @@ export default function App (): JSX.Element {
             paddingTop: 2
           }}
         >
-          <Stack spacing={2} direction='column'>
+          <Stack
+            spacing={2} direction='column' sx={{
+              paddingBottom: 2
+            }}
+          >
             <TextField
               id='outlined-basic'
               label='Klistra in url till fil från server'
@@ -280,7 +287,8 @@ export default function App (): JSX.Element {
               fullWidth
             />
           </Stack>
-          {rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
+          {viewMap() && rows().length > 0 && <LeafletMap rows={rows} />}
+          {!viewMap() && rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
         </Box>
       </div>
       <InfoDialog open={open} onClose={handleClickClose} />

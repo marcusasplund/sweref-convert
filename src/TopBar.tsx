@@ -1,7 +1,13 @@
-import { AppBar, Box, Toolbar, Typography, IconButton, ShareIcon, Help } from '@suid/material'
+import { Help, Share } from '@suid/icons-material'
+import { AppBar, Box, Toolbar, Typography, IconButton } from '@suid/material'
+
 import { JSX } from 'solid-js'
 
-export default function TopBar (props): JSX.Element {
+interface Props {
+  handleClickOpen: () => void
+}
+
+export default function TopBar (props: Props): JSX.Element {
   const { handleClickOpen } = props
 
   const shareApp = async (): Promise<void> => {
@@ -41,7 +47,7 @@ export default function TopBar (props): JSX.Element {
             sx={{ mr: 2 }}
             onClick={handleShareClick}
           >
-            <ShareIcon />
+            <Share />
           </IconButton>
           <IconButton
             size='large'

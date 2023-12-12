@@ -19,6 +19,7 @@
   "homepage": "https://github.com/marcusasplund/sweref-convert#readme",
   "devDependencies": {
     "@suid/vite-plugin": "^0.1.5",
+    "@types/leaflet": "^1.9.8",
     "ts-standard": "^12.0.2",
     "typescript": "^5.3.3",
     "vite": "^5.0.6",
@@ -30,7 +31,9 @@
   "dependencies": {
     "@suid/icons-material": "^0.6.11",
     "@suid/material": "^0.15.1",
+    "leaflet": "^1.9.4",
     "papaparse": "^5.4.1",
-    "solid-js": "^1.8.7"
+    "solid-js": "^1.8.7",
+    "solidjs-leaflet": "^1.0.2"
   }
 }
