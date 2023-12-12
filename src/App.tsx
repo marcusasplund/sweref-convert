@@ -76,10 +76,12 @@ export default function App (): JSX.Element {
 
   const downloadCSV = (e: Event): void => {
     if ('preventDefault' in e) e.preventDefault()
-    const csvData = Papa.unparse(rows(), {
+    const parsed: string = Papa.unparse(rows(), {
       delimiter: ';'
     })
-    const blob = new Blob([csvData], { type: 'text/csv' })
+    const BOM: string = '\uFEFF'
+    const blob = new Blob([BOM + parsed], { type: 'text/csv;charset=utf-8;' })
+
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -133,11 +135,19 @@ export default function App (): JSX.Element {
   }
 
   const processCsvData = (data: CsvData): void => {
+    let headers: any = []
     Papa.parse(data.data, {
       download: data.isFile,
       header: true,
       step: (results: PapaParseResult) => {
-        const convertedRow = convertRow(results.data.x, results.data.y, from(), to())
+        if (headers.length === 0) {
+          headers = Object.keys(results.data)
+          if (headers.length < 2) {
+            console.error('CSV does not have enough columns')
+            return
+          }
+        }
+        const convertedRow = convertRow(results.data[headers[0]], results.data[headers[1]], from(), to())
         setRows((prevRows) => [...prevRows, convertedRow])
       },
       complete: () => setViewMap(false)
@@ -163,7 +173,7 @@ export default function App (): JSX.Element {
   })
 
   createEffect(() => {
-    const hasMultipleRows = rows().length > 1
+    const hasMultipleRows = rows().length > 0
     setIsDisabled(!hasMultipleRows)
   })
 

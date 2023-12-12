@@ -32,12 +32,11 @@
 
 // Conversion from grid coordinates to geodetic coordinates.
 export const gridToGeodetic = (x, y, params) => {
-  let coords = {
-    lat: null,
-    lng: null
-  }
   if (params.centralMeridian === null) {
-    return coords
+    return {
+      lat: null,
+      lng: null
+    }
   }
   // Prepare ellipsoid-based stuff.
   const e2 = params.flattening * (2.0 - params.flattening)
@@ -70,7 +69,7 @@ export const gridToGeodetic = (x, y, params) => {
   const latRadian = phiStar + Math.sin(phiStar) * Math.cos(phiStar) * (
     Astar + Bstar * Math.pow(Math.sin(phiStar), 2) + Cstar * Math.pow(Math.sin(phiStar), 4) + Dstar * Math.pow(Math.sin(phiStar), 6)
   )
-  coords = {
+  const coords = {
     lat: latRadian * 180.0 / Math.PI,
     lng: lngRadian * 180.0 / Math.PI
   }

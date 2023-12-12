@@ -17,6 +17,7 @@ interface Props {
   rows: () => ConvertedRow[]
   twoWay: () => boolean
 }
+
 export default function ResultTable (props: Props): JSX.Element {
   const { rows, twoWay } = props
   const [showAll, setShowAll] = createSignal(false)
@@ -41,7 +42,7 @@ export default function ResultTable (props: Props): JSX.Element {
               </Stack>
           }
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+        <Table sx={{ minWidth: 650, whiteSpace: 'nowrap' }} aria-label='simple table'>
           <TableHead>
             <TableRow>
               <TableCell>X</TableCell>

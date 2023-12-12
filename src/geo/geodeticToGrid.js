@@ -33,12 +33,11 @@
 // Conversion from geodetic coordinates to grid coordinates.
 
 export const geodeticToGrid = (latitude, longitude, params) => {
-  let coords = {
-    x: null,
-    y: null
-  }
   if (params.centralMeridian === null) {
-    return coords
+    return {
+      x: null,
+      y: null
+    }
   }
   // Prepare ellipsoid-based stuff.
   const e2 = params.flattening * (2.0 - params.flattening)
@@ -54,9 +53,9 @@ export const geodeticToGrid = (latitude, longitude, params) => {
   const beta4 = 49561.0 * n ** 4 / 161280.0
   // Convert.
   const degToRad = Math.PI / 180.0
-  const phi = latitude * degToRad
+  const phi = +latitude * degToRad
   const lambdaZero = params.centralMeridian * degToRad
-  const lambda = longitude * degToRad
+  const lambda = +longitude * degToRad
   const phiStar = phi - Math.sin(phi) * Math.cos(phi) * (
     A + B * Math.pow(Math.sin(phi), 2) + C * Math.pow(Math.sin(phi), 4) + D * Math.pow(Math.sin(phi), 6)
   )
@@ -69,9 +68,9 @@ export const geodeticToGrid = (latitude, longitude, params) => {
   const y = params.scale * aRoof * (
     etaPrim + beta1 * Math.cos(2.0 * xiPrim) * Math.sinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * Math.sinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * Math.sinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * Math.sinh(8.0 * etaPrim)
   ) + params.falseEasting
-  coords = {
-    x: +x.toFixed(0),
-    y: +y.toFixed(0)
+  const coords = {
+    x: +x.toFixed(3),
+    y: +y.toFixed(3)
   }
   return coords
 }
