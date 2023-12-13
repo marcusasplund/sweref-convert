@@ -24,15 +24,15 @@ Offline support with service worker
 
     $ cd sweref-convert
 
-    $ yarn
+    $ yarn || npm install
 
-    $ yarn start
+    $ yarn start || nepm run start
 ````
 
 ## build a release
 
 ````bash
-    $ yarn build
+    $ yarn build || npm run build
 
 ````
 This will generate a release directory with your minified/rev'd assets.
