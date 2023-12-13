@@ -1,7 +1,7 @@
 import Papa from 'papaparse'
 import { createEffect, createSignal, JSX } from 'solid-js'
 import styled from '@suid/material/styles/styled'
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@suid/material'
+import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@suid/material'
 import { SelectChangeEvent } from '@suid/material/Select'
 import InfoDialog from './InfoDialog'
 import ResultTable from './ResultTable'
@@ -31,14 +31,14 @@ interface PapaParseResult {
 }
 
 export interface ConvertedRow {
-  x: string | number
-  y: string | number
-  lat: string | number
-  lng: string | number
-  x2: string | number
-  y2: string | number
-  latdms: string | number
-  lngdms: string | number
+  x: number
+  y: number
+  lat: number
+  lng: number
+  x2: number
+  y2: number
+  latdms: number
+  lngdms: number
 }
 
 export default function App (): JSX.Element {
@@ -92,7 +92,7 @@ export default function App (): JSX.Element {
     URL.revokeObjectURL(url)
   }
 
-  const convertRow = (x: number | string, y: number | string, currentFrom: string, currentTo: string): ConvertedRow => {
+  const convertRow = (x: number, y: number, currentFrom: string, currentTo: string): ConvertedRow => {
     if (currentFrom !== 'wgs84' && currentTo !== 'wgs84') {
       const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
       const twoWayConverted = geodeticToGrid(converted.lat, converted.lng, projectionParams(currentTo))
@@ -166,7 +166,7 @@ export default function App (): JSX.Element {
     if (conversionChanged()) {
       const currentFrom = from()
       const currentTo = to()
-      const convertedData = rows().map(row => convertRow(row.x, row.y, currentFrom, currentTo))
+      const convertedData = rows().map(row => convertRow(+row.x, +row.y, currentFrom, currentTo))
       setRows(convertedData)
       setConversionChanged(false)
     }
@@ -204,6 +204,7 @@ export default function App (): JSX.Element {
       <div class='container'>
         <Typography
           variant='h4' component='div' sx={{
+            padding: 2,
             paddingBottom: 5
           }}
         >
@@ -212,6 +213,9 @@ export default function App (): JSX.Element {
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           spacing={{ xs: 1, sm: 2 }}
+          sx={{
+            padding: 2
+          }}
         >
           <FormControl fullWidth>
             <InputLabel id='demo-simple-select-label'>Konvertera från</InputLabel>
@@ -242,64 +246,59 @@ export default function App (): JSX.Element {
             </Select>
           </FormControl>
         </Stack>
-        <Box
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={{ xs: 1, sm: 2 }}
           sx={{
-            paddingTop: 2
+            padding: 2
           }}
         >
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1, sm: 2 }}
-          >
-            <label for='contained-button-file'>
-              <FileInput
-                accept='.csv'
-                id='contained-button-file'
-                multiple
-                type='file'
-                onChange={parseFile}
-              />
-              <Button variant='contained' component='span' fullWidth>
-                Ladda upp .csv
-              </Button>
-            </label>
-            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
-              Ladda ned konverterad .csv
+          <label for='contained-button-file'>
+            <FileInput
+              accept='.csv'
+              id='contained-button-file'
+              multiple
+              type='file'
+              onChange={parseFile}
+            />
+            <Button variant='contained' component='span' fullWidth>
+              Ladda upp .csv
             </Button>
-            <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
-              {viewMap() ? 'Tabellvy' : 'Kartvy'}
-            </Button>
-          </Stack>
-        </Box>
-        <Box
-          sx={{
-            paddingTop: 2
+          </label>
+          <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
+            Ladda ned konverterad .csv
+          </Button>
+          <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
+            {viewMap() ? 'Tabellvy' : 'Kartvy'}
+          </Button>
+        </Stack>
+        <Stack
+          spacing={2} direction='column' sx={{
+            padding: 2
           }}
         >
-          <Stack
-            spacing={2} direction='column' sx={{
-              paddingBottom: 2
-            }}
-          >
+          <FormControl fullWidth>
             <TextField
               id='outlined-basic'
               label='Klistra in url till fil från server'
               variant='outlined'
               onInput={e => parseRemote(e)}
             />
+          </FormControl>
+          <FormControl fullWidth>
             <TextField
               id='outlined-basic'
-              label='Klistra in tabell med två kolumner med X o Y, N o E eller lat o lng'
+              label='Klistra in tabell med två kolumner'
               variant='outlined'
               multiline
               rows={6}
               onInput={e => parseString(e)}
               fullWidth
             />
-          </Stack>
-          {viewMap() && rows().length > 0 && <LeafletMap rows={rows} />}
-          {!viewMap() && rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
-        </Box>
+          </FormControl>
+        </Stack>
+        {viewMap() && rows().length > 0 && <LeafletMap rows={rows} />}
+        {!viewMap() && rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
       </div>
       <InfoDialog open={open} onClose={handleClickClose} />
     </div>

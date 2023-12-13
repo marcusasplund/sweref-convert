@@ -69,8 +69,8 @@ export const geodeticToGrid = (latitude, longitude, params) => {
     etaPrim + beta1 * Math.cos(2.0 * xiPrim) * Math.sinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * Math.sinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * Math.sinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * Math.sinh(8.0 * etaPrim)
   ) + params.falseEasting
   const coords = {
-    x: +x.toFixed(3),
-    y: +y.toFixed(3)
+    x: x.toFixed(3),
+    y: y.toFixed(3)
   }
   return coords
 }
