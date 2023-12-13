@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "numberOfRuns": 2,
-      "staticDistDir": "./release"
+      "staticDistDir": "./dist"
     },
     "assert": {
       "preset": "lighthouse:recommended",
