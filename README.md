@@ -26,7 +26,7 @@ Offline support with service worker
 
     $ yarn || npm install
 
-    $ yarn start || nepm run start
+    $ yarn start || npm run start
 ````
 
 ## build a release
