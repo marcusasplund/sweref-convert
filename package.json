@@ -22,9 +22,9 @@
     "@types/leaflet": "^1.9.8",
     "ts-standard": "^12.0.2",
     "typescript": "^5.3.3",
-    "vite": "^5.0.6",
+    "vite": "^4.5.1",
     "vite-plugin-pwa": "^0.17.4",
-    "vite-plugin-solid": "^2.7.2",
+    "vite-plugin-solid": "^2.8.0",
     "workbox-build": "^7.0.0",
     "workbox-window": "^7.0.0"
   },
