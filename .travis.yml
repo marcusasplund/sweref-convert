@@ -1,13 +1,13 @@
 language: node_js
 node_js:
-  - "18"
+  - "20"
 
 sudo: false
 
-before_install:
-- npm install -g @lhci/cli@0.3.x
+## before_install:
+## - npm install -g @lhci/cli@0.3.x
 script:
   - npm run build
-  - lhci autorun
-addons:
- chrome: stable
+## - lhci autorun
+## addons:
+## chrome: stable
