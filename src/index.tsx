@@ -1,6 +1,6 @@
 /* @refresh reload */
 import { render } from 'solid-js/web'
-import App from './App'
+import App from './index/App'
 import { ThemeProvider, createTheme } from '@suid/material/styles'
 import CssBaseline from '@suid/material/CssBaseline'
 

@@ -3,11 +3,11 @@ import { AppBar, Box, Toolbar, Typography, IconButton } from '@suid/material'
 
 import { JSX } from 'solid-js'
 
-interface Props {
+interface TopBarProps {
   handleClickOpen: () => void
 }
 
-export default function TopBar (props: Props): JSX.Element {
+export default function TopBar (props: TopBarProps): JSX.Element {
   const { handleClickOpen } = props
 
   const shareApp = async (): Promise<void> => {

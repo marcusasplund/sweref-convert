@@ -1,45 +1,40 @@
-import Papa from 'papaparse'
 import { createEffect, createSignal, JSX } from 'solid-js'
+
 import styled from '@suid/material/styles/styled'
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@suid/material'
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography
+} from '@suid/material'
 import { SelectChangeEvent } from '@suid/material/Select'
-import InfoDialog from './InfoDialog'
-import ResultTable from './ResultTable'
-import TopBar from './TopBar'
-import { LeafletMap } from './LeafletMap'
-import { geodeticToGrid } from './geo/geodeticToGrid'
-import { gridToGeodetic } from './geo/gridToGeodetic'
-import { latToDms, lngToDms } from './geo/latlngConvert'
-import { projectionParams } from './constants/projectionParams'
-import { selectParams } from './constants/selectParams'
-import './App.css'
+
+import Papa from 'papaparse'
+
+import InfoDialog from './App/InfoDialog'
+import ResultTable from './App/ResultTable'
+import TopBar from './App/TopBar'
+import { LeafletMap } from './App/LeafletMap'
+
+import { geodeticToGrid } from './App/geodeticToGrid'
+import { gridToGeodetic } from './App/gridToGeodetic'
+import { latToDms, lngToDms } from './App/latlngConvert'
+
+import { projectionParams } from './App/projectionParams'
+import { selectParams } from './App/selectParams'
+
+import { CsvData, ConvertedRow, PapaParseResult } from './types'
+
+import './App/App.css'
 
 const FileInput = styled('input')({
   display: 'none'
 })
-
-interface CsvData {
-  data: string | File
-  isFile: boolean
-}
-
-interface PapaParseResult {
-  data: {
-    x: number
-    y: number
-  }
-}
-
-export interface ConvertedRow {
-  x: number
-  y: number
-  lat: number
-  lng: number
-  x2: number
-  y2: number
-  latdms: number
-  lngdms: number
-}
 
 export default function App (): JSX.Element {
   const [open, setOpen] = createSignal(false)
@@ -201,82 +196,82 @@ export default function App (): JSX.Element {
   return (
     <div class='App'>
       <TopBar handleClickOpen={handleClickOpen} />
-      <div class='container'>
+      <Box sx={{
+        padding: 2,
+        maxWidth: '60rem',
+        margin: 'auto'
+      }}
+      >
         <Typography
           variant='h4' component='div' sx={{
-            padding: 2,
+            paddingTop: 2,
             paddingBottom: 5
           }}
         >
           Konvertera mellan SWEREF99, RT90, WGS84
         </Typography>
         <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={{ xs: 1, sm: 2 }}
+          spacing={2} direction='column'
           sx={{
-            padding: 2
+            paddingBottom: 2
           }}
         >
-          <FormControl fullWidth>
-            <InputLabel id='demo-simple-select-label'>Konvertera från</InputLabel>
-            <Select
-              value={from()}
-              label='Konvertera från'
-              onChange={handleChangeFrom}
-            >
-              {
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+          >
+            <FormControl fullWidth>
+              <InputLabel id='demo-simple-select-label'>Konvertera från</InputLabel>
+              <Select
+                value={from()}
+                label='Konvertera från'
+                onChange={handleChangeFrom}
+              >
+                {
             selectParams.map((p: any) => (
               <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>)
             )
           }
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id='demo-simple-select-label'>Konvertera till</InputLabel>
-            <Select
-              value={to()}
-              label='Konvertera till'
-              onChange={handleChangeTo}
-            >
-              {
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id='demo-simple-select-label'>Konvertera till</InputLabel>
+              <Select
+                value={to()}
+                label='Konvertera till'
+                onChange={handleChangeTo}
+              >
+                {
             selectParams.map((p: any) => (
               <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>
             ))
             }
-            </Select>
-          </FormControl>
-        </Stack>
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={{ xs: 1, sm: 2 }}
-          sx={{
-            padding: 2
-          }}
-        >
-          <label for='contained-button-file'>
-            <FileInput
-              accept='.csv'
-              id='contained-button-file'
-              multiple
-              type='file'
-              onChange={parseFile}
-            />
-            <Button variant='contained' component='span' fullWidth>
-              Ladda upp .csv
+              </Select>
+            </FormControl>
+          </Stack>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+          >
+            <label for='contained-button-file'>
+              <FileInput
+                accept='.csv'
+                id='contained-button-file'
+                multiple
+                type='file'
+                onChange={parseFile}
+              />
+              <Button variant='contained' component='span' fullWidth>
+                Ladda upp .csv
+              </Button>
+            </label>
+            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
+              Ladda ned konverterad .csv
             </Button>
-          </label>
-          <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
-            Ladda ned konverterad .csv
-          </Button>
-          <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
-            {viewMap() ? 'Tabellvy' : 'Kartvy'}
-          </Button>
-        </Stack>
-        <Stack
-          spacing={2} direction='column' sx={{
-            padding: 2
-          }}
-        >
+            <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
+              {viewMap() ? 'Tabellvy' : 'Kartvy'}
+            </Button>
+          </Stack>
           <FormControl fullWidth>
             <TextField
               id='outlined-basic'
@@ -299,7 +294,7 @@ export default function App (): JSX.Element {
         </Stack>
         {viewMap() && rows().length > 0 && <LeafletMap rows={rows} />}
         {!viewMap() && rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
-      </div>
+      </Box>
       <InfoDialog open={open} onClose={handleClickClose} />
     </div>
   )

@@ -1,13 +1,19 @@
-
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@suid/material'
 import { JSX } from 'solid-js'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from '@suid/material'
 
-interface Props {
+interface InfoDialogProps {
   onClose: () => void
   open: () => boolean
 }
 
-export default function InfoDialog (props: Props): JSX.Element {
+export default function InfoDialog (props: InfoDialogProps): JSX.Element {
   const { onClose, open } = props
 
   const handleClose = (): void => {
@@ -16,7 +22,7 @@ export default function InfoDialog (props: Props): JSX.Element {
 
   return (
     <Dialog onClose={handleClose} open={open()}>
-      <DialogTitle>Help</DialogTitle>
+      <DialogTitle>Hjälp</DialogTitle>
       <DialogContent>
         <DialogContentText>
           <p>

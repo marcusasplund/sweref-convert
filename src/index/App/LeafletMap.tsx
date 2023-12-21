@@ -1,12 +1,12 @@
-import { SolidLeafletMap } from 'solidjs-leaflet'
 import { JSX } from 'solid-js'
-import { ConvertedRow } from './App'
+import { SolidLeafletMap } from 'solidjs-leaflet'
+import { ConvertedRow } from '../types'
 
-interface Props {
+interface LeafletMapProps {
   rows: () => ConvertedRow[]
 }
 
-export function LeafletMap (props: Props): JSX.Element {
+export function LeafletMap (props: LeafletMapProps): JSX.Element {
   const { rows } = props
   const center: [number, number] = [rows()[0].lat, rows()[0].lng]
   return (

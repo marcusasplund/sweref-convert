@@ -1,24 +1,24 @@
+import { createSignal, mapArray, JSX } from 'solid-js'
 import {
+  FormControlLabel,
   Paper,
   Stack,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  FormControlLabel,
-  Switch
+  TableRow
 } from '@suid/material'
-import { createSignal, mapArray, JSX } from 'solid-js'
-import { ConvertedRow } from './App'
+import { ConvertedRow } from '../types'
 
-interface Props {
+interface ResultTableProps {
   rows: () => ConvertedRow[]
   twoWay: () => boolean
 }
 
-export default function ResultTable (props: Props): JSX.Element {
+export default function ResultTable (props: ResultTableProps): JSX.Element {
   const { rows, twoWay } = props
   const [showAll, setShowAll] = createSignal(false)
 
