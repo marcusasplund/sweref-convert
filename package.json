@@ -29,7 +29,7 @@
     "workbox-window": "^7.0.0"
   },
   "dependencies": {
-    "@suid/icons-material": "^0.6.11",
+    "@suid/icons-material": "^0.7.0",
     "@suid/material": "^0.15.1",
     "leaflet": "^1.9.4",
     "papaparse": "^5.4.1",
