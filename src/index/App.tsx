@@ -14,23 +14,17 @@ import {
 } from '@suid/material'
 import { SelectChangeEvent } from '@suid/material/Select'
 
-import Papa from 'papaparse'
-
 import InfoDialog from './App/InfoDialog'
 import ResultTable from './App/ResultTable'
 import TopBar from './App/TopBar'
 import { LeafletMap } from './App/LeafletMap'
-
-import { geodeticToGrid } from './App/geodeticToGrid'
-import { gridToGeodetic } from './App/gridToGeodetic'
-import { latToDms, lngToDms } from './App/latlngConvert'
-
-import { projectionParams } from './App/projectionParams'
 import { selectParams } from './App/selectParams'
 
-import { CsvData, ConvertedRow, PapaParseResult } from './types'
+import Papa from 'papaparse'
+import { CsvData, PapaParseResult } from './types'
 
 import './App/App.css'
+import { convertRow } from './App/conversionLogic'
 
 const FileInput = styled('input')({
   display: 'none'
@@ -69,66 +63,6 @@ export default function App (): JSX.Element {
     setViewMap(!viewMap())
   }
 
-  const downloadCSV = (e: Event): void => {
-    if ('preventDefault' in e) e.preventDefault()
-    const parsed: string = Papa.unparse(rows(), {
-      delimiter: ';'
-    })
-    const BOM: string = '\uFEFF'
-    const blob = new Blob([BOM + parsed], { type: 'text/csv;charset=utf-8;' })
-
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'converted.csv'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-  }
-
-  const convertRow = (x: number, y: number, currentFrom: string, currentTo: string): ConvertedRow => {
-    if (currentFrom !== 'wgs84' && currentTo !== 'wgs84') {
-      const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
-      const twoWayConverted = geodeticToGrid(converted.lat, converted.lng, projectionParams(currentTo))
-      return {
-        x,
-        y,
-        lat: converted.lat,
-        lng: converted.lng,
-        x2: twoWayConverted.x,
-        y2: twoWayConverted.y,
-        latdms: latToDms(+converted.lat),
-        lngdms: lngToDms(+converted.lat)
-      }
-    }
-    if (currentFrom === 'wgs84') {
-      const converted = geodeticToGrid(x, y, projectionParams(currentTo))
-      return {
-        x: converted.x,
-        y: converted.y,
-        lat: x,
-        lng: y,
-        x2: 0,
-        y2: 0,
-        latdms: latToDms(+x),
-        lngdms: lngToDms(+y)
-      }
-    } else {
-      const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
-      return {
-        x,
-        y,
-        lat: converted.lat,
-        lng: converted.lng,
-        x2: 0,
-        y2: 0,
-        latdms: latToDms(+converted.lat),
-        lngdms: lngToDms(+converted.lat)
-      }
-    }
-  }
-
   const processCsvData = (data: CsvData): void => {
     let headers: any = []
     Papa.parse(data.data, {
@@ -147,6 +81,24 @@ export default function App (): JSX.Element {
       },
       complete: () => setViewMap(false)
     })
+  }
+
+  const downloadCSV = (e: Event): void => {
+    if ('preventDefault' in e) e.preventDefault()
+    const parsed: string = Papa.unparse(rows(), {
+      delimiter: ';'
+    })
+    const BOM: string = '\uFEFF'
+    const blob = new Blob([BOM + parsed], { type: 'text/csv;charset=utf-8;' })
+
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'converted.csv'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
 
   createEffect(() => {
@@ -229,7 +181,7 @@ export default function App (): JSX.Element {
               >
                 {
             selectParams.map((p: any) => (
-              <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>)
+              <MenuItem value={p.value}>{p.text}</MenuItem>) // eslint-disable-line react/jsx-key
             )
           }
               </Select>
@@ -243,7 +195,7 @@ export default function App (): JSX.Element {
               >
                 {
             selectParams.map((p: any) => (
-              <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>
+              <MenuItem value={p.value}>{p.text}</MenuItem> // eslint-disable-line react/jsx-key
             ))
             }
               </Select>
@@ -265,11 +217,11 @@ export default function App (): JSX.Element {
                 Ladda upp .csv
               </Button>
             </label>
-            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
-              Ladda ned konverterad .csv
-            </Button>
             <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
               {viewMap() ? 'Tabellvy' : 'Kartvy'}
+            </Button>
+            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
+              Ladda ned konverterad .csv
             </Button>
           </Stack>
           <FormControl fullWidth>
