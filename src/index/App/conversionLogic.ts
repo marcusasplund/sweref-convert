@@ -1,10 +1,10 @@
 import { geodeticToGrid } from './geodeticToGrid'
 import { gridToGeodetic } from './gridToGeodetic'
 import { latToDms, lngToDms } from './latlngConvert'
-import { projectionParams } from './projectionParams'
+import {ProjectionKey, projectionParams} from './projectionParams'
 import { ConvertedRow } from '../types'
 
-export const convertRow = (x: number, y: number, currentFrom: string, currentTo: string): ConvertedRow => {
+export const convertRow = (x: number, y: number, currentFrom: ProjectionKey, currentTo: ProjectionKey): ConvertedRow => {
   if (currentFrom !== 'wgs84' && currentTo !== 'wgs84') {
     const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
     const twoWayConverted = geodeticToGrid(converted.lat, converted.lng, projectionParams(currentTo))

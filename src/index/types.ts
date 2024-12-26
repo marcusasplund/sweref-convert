@@ -17,8 +17,8 @@ export interface ConvertedRow {
   lng: number
   x2: number
   y2: number
-  latdms: number
-  lngdms: number
+  latdms: string
+  lngdms: string
 }
 
 export interface ProjectionParams {
@@ -32,8 +32,8 @@ export interface ProjectionParams {
 }
 
 export interface GridCoordinates {
-  x: string
-  y: string
+  x: number
+  y: number
 }
 
 export interface GeodeticCoordinates {

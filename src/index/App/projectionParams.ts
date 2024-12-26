@@ -240,7 +240,7 @@ const params = {
   testCase
 }
 
-type ProjectionKey = keyof typeof params
+export type ProjectionKey = keyof typeof params | 'wgs84'
 
 // example usage: projectionParams('rt9075gonV')
 export const projectionParams = (projection: ProjectionKey): ProjectionParams => {

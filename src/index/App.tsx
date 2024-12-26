@@ -12,7 +12,6 @@ import {
   TextField,
   Typography
 } from '@suid/material'
-import { SelectChangeEvent } from '@suid/material/Select'
 
 import InfoDialog from './App/InfoDialog'
 import ResultTable from './App/ResultTable'
@@ -25,6 +24,7 @@ import { CsvData, PapaParseResult } from './types'
 
 import './App/App.css'
 import { convertRow } from './App/conversionLogic'
+import {ProjectionKey} from "./App/projectionParams";
 
 const FileInput = styled('input')({
   display: 'none'
@@ -32,8 +32,8 @@ const FileInput = styled('input')({
 
 export default function App (): JSX.Element {
   const [open, setOpen] = createSignal(false)
-  const [from, setFrom] = createSignal('rt9025gonV')
-  const [to, setTo] = createSignal('wgs84')
+  const [from, setFrom] = createSignal<ProjectionKey>('rt9025gonV')
+  const [to, setTo] = createSignal<ProjectionKey>('wgs84')
   const [rows, setRows] = createSignal<any[]>([])
   const [viewMap, setViewMap] = createSignal(false)
   const [csvData, setCsvData] = createSignal<CsvData | null>(null)
@@ -41,13 +41,13 @@ export default function App (): JSX.Element {
   const [twoWay, setTwoWay] = createSignal(false)
   const [conversionChanged, setConversionChanged] = createSignal(false)
 
-  const handleChangeFrom = (event: SelectChangeEvent): void => {
-    setFrom(event.target.value)
+  const handleChangeFrom = (value: ProjectionKey): void => {
+    setFrom(value)
     setConversionChanged(true)
   }
 
-  const handleChangeTo = (event: SelectChangeEvent): void => {
-    setTo(event.target.value)
+  const handleChangeTo = (value: ProjectionKey): void => {
+    setTo(value)
     setConversionChanged(true)
   }
 
@@ -65,6 +65,7 @@ export default function App (): JSX.Element {
 
   const processCsvData = (data: CsvData): void => {
     let headers: any = []
+    // @ts-ignore
     Papa.parse(data.data, {
       download: data.isFile,
       header: true,
@@ -177,7 +178,7 @@ export default function App (): JSX.Element {
               <Select
                 value={from()}
                 label='Konvertera från'
-                onChange={handleChangeFrom}
+                onChange={({target}) => handleChangeFrom(target.value)}
               >
                 {
             selectParams.map((p: any) => (
@@ -191,7 +192,7 @@ export default function App (): JSX.Element {
               <Select
                 value={to()}
                 label='Konvertera till'
-                onChange={handleChangeTo}
+                onChange={({target}) => handleChangeTo(target.value)}
               >
                 {
             selectParams.map((p: any) => (

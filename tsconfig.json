@@ -8,10 +8,12 @@
       "jsx": "preserve",
       "jsxImportSource": "solid-js",
       "types": [
-        "vite/client"
+        "vite/client",
+        "@testing-library/jest-dom/vitest"
       ],
       "noEmit": true,
       "isolatedModules": true,
-      "strictNullChecks": true
-    }
+      "strictNullChecks": true,
+    },
+      "include": ["src", "test/vitest.setup.ts"]
   }
