@@ -12,25 +12,19 @@ import {
   TextField,
   Typography
 } from '@suid/material'
-import { SelectChangeEvent } from '@suid/material/Select'
-
-import Papa from 'papaparse'
 
 import InfoDialog from './App/InfoDialog'
 import ResultTable from './App/ResultTable'
 import TopBar from './App/TopBar'
 import { LeafletMap } from './App/LeafletMap'
-
-import { geodeticToGrid } from './App/geodeticToGrid'
-import { gridToGeodetic } from './App/gridToGeodetic'
-import { latToDms, lngToDms } from './App/latlngConvert'
-
-import { projectionParams } from './App/projectionParams'
 import { selectParams } from './App/selectParams'
 
-import { CsvData, ConvertedRow, PapaParseResult } from './types'
+import Papa from 'papaparse'
+import { CsvData, PapaParseResult } from './types'
 
 import './App/App.css'
+import { convertRow } from './App/conversionLogic'
+import {ProjectionKey} from "./App/projectionParams";
 
 const FileInput = styled('input')({
   display: 'none'
@@ -38,8 +32,8 @@ const FileInput = styled('input')({
 
 export default function App (): JSX.Element {
   const [open, setOpen] = createSignal(false)
-  const [from, setFrom] = createSignal('rt9025gonV')
-  const [to, setTo] = createSignal('wgs84')
+  const [from, setFrom] = createSignal<ProjectionKey>('rt9025gonV')
+  const [to, setTo] = createSignal<ProjectionKey>('wgs84')
   const [rows, setRows] = createSignal<any[]>([])
   const [viewMap, setViewMap] = createSignal(false)
   const [csvData, setCsvData] = createSignal<CsvData | null>(null)
@@ -47,13 +41,13 @@ export default function App (): JSX.Element {
   const [twoWay, setTwoWay] = createSignal(false)
   const [conversionChanged, setConversionChanged] = createSignal(false)
 
-  const handleChangeFrom = (event: SelectChangeEvent): void => {
-    setFrom(event.target.value)
+  const handleChangeFrom = (value: ProjectionKey): void => {
+    setFrom(value)
     setConversionChanged(true)
   }
 
-  const handleChangeTo = (event: SelectChangeEvent): void => {
-    setTo(event.target.value)
+  const handleChangeTo = (value: ProjectionKey): void => {
+    setTo(value)
     setConversionChanged(true)
   }
 
@@ -67,6 +61,27 @@ export default function App (): JSX.Element {
 
   const toggleMap = (): void => {
     setViewMap(!viewMap())
+  }
+
+  const processCsvData = (data: CsvData): void => {
+    let headers: any = []
+    // @ts-ignore
+    Papa.parse(data.data, {
+      download: data.isFile,
+      header: true,
+      step: (results: PapaParseResult) => {
+        if (headers.length === 0) {
+          headers = Object.keys(results.data)
+          if (headers.length < 2) {
+            console.error('CSV does not have enough columns')
+            return
+          }
+        }
+        const convertedRow = convertRow(results.data[headers[0]], results.data[headers[1]], from(), to())
+        setRows((prevRows) => [...prevRows, convertedRow])
+      },
+      complete: () => setViewMap(false)
+    })
   }
 
   const downloadCSV = (e: Event): void => {
@@ -85,68 +100,6 @@ export default function App (): JSX.Element {
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-  }
-
-  const convertRow = (x: number, y: number, currentFrom: string, currentTo: string): ConvertedRow => {
-    if (currentFrom !== 'wgs84' && currentTo !== 'wgs84') {
-      const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
-      const twoWayConverted = geodeticToGrid(converted.lat, converted.lng, projectionParams(currentTo))
-      return {
-        x,
-        y,
-        lat: converted.lat,
-        lng: converted.lng,
-        x2: twoWayConverted.x,
-        y2: twoWayConverted.y,
-        latdms: latToDms(+converted.lat),
-        lngdms: lngToDms(+converted.lat)
-      }
-    }
-    if (currentFrom === 'wgs84') {
-      const converted = geodeticToGrid(x, y, projectionParams(currentTo))
-      return {
-        x: converted.x,
-        y: converted.y,
-        lat: x,
-        lng: y,
-        x2: 0,
-        y2: 0,
-        latdms: latToDms(+x),
-        lngdms: lngToDms(+y)
-      }
-    } else {
-      const converted = gridToGeodetic(x, y, projectionParams(currentFrom))
-      return {
-        x,
-        y,
-        lat: converted.lat,
-        lng: converted.lng,
-        x2: 0,
-        y2: 0,
-        latdms: latToDms(+converted.lat),
-        lngdms: lngToDms(+converted.lat)
-      }
-    }
-  }
-
-  const processCsvData = (data: CsvData): void => {
-    let headers: any = []
-    Papa.parse(data.data, {
-      download: data.isFile,
-      header: true,
-      step: (results: PapaParseResult) => {
-        if (headers.length === 0) {
-          headers = Object.keys(results.data)
-          if (headers.length < 2) {
-            console.error('CSV does not have enough columns')
-            return
-          }
-        }
-        const convertedRow = convertRow(results.data[headers[0]], results.data[headers[1]], from(), to())
-        setRows((prevRows) => [...prevRows, convertedRow])
-      },
-      complete: () => setViewMap(false)
-    })
   }
 
   createEffect(() => {
@@ -225,11 +178,11 @@ export default function App (): JSX.Element {
               <Select
                 value={from()}
                 label='Konvertera från'
-                onChange={handleChangeFrom}
+                onChange={({target}) => handleChangeFrom(target.value)}
               >
                 {
             selectParams.map((p: any) => (
-              <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>)
+              <MenuItem value={p.value}>{p.text}</MenuItem>) // eslint-disable-line react/jsx-key
             )
           }
               </Select>
@@ -239,11 +192,11 @@ export default function App (): JSX.Element {
               <Select
                 value={to()}
                 label='Konvertera till'
-                onChange={handleChangeTo}
+                onChange={({target}) => handleChangeTo(target.value)}
               >
                 {
             selectParams.map((p: any) => (
-              <MenuItem key={p.value} value={p.value}>{p.text}</MenuItem>
+              <MenuItem value={p.value}>{p.text}</MenuItem> // eslint-disable-line react/jsx-key
             ))
             }
               </Select>
@@ -265,11 +218,11 @@ export default function App (): JSX.Element {
                 Ladda upp .csv
               </Button>
             </label>
-            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
-              Ladda ned konverterad .csv
-            </Button>
             <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
               {viewMap() ? 'Tabellvy' : 'Kartvy'}
+            </Button>
+            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
+              Ladda ned konverterad .csv
             </Button>
           </Stack>
           <FormControl fullWidth>

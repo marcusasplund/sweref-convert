@@ -31,6 +31,8 @@
 //   coordinates (RT90 and SWEREF99 are used in Swedish maps).
 // Source: http://www.lantmateriet.se/geodesi/
 
+import { ProjectionParams } from '../types'
+
 const defaultParams = {
   axis: null, // Semi-major axis of the ellipsoid.
   flattening: null, // Flattening of the ellipsoid.
@@ -238,7 +240,9 @@ const params = {
   testCase
 }
 
+export type ProjectionKey = keyof typeof params | 'wgs84'
+
 // example usage: projectionParams('rt9075gonV')
-export const projectionParams = (projection) => {
+export const projectionParams = (projection: ProjectionKey): ProjectionParams => {
   return { ...defaultParams, ...params[projection] }
 }

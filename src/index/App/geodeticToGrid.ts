@@ -32,11 +32,13 @@
 
 // Conversion from geodetic coordinates to grid coordinates.
 
-export const geodeticToGrid = (latitude, longitude, params) => {
-  if (params.centralMeridian === null) {
+import { GridCoordinates, ProjectionParams } from '../types'
+
+export const geodeticToGrid = (latitude: number, longitude: number, params: ProjectionParams): GridCoordinates => {
+  if (!params.centralMeridian) {
     return {
-      x: null,
-      y: null
+      x: 0,
+      y: 0
     }
   }
   // Prepare ellipsoid-based stuff.
@@ -68,9 +70,8 @@ export const geodeticToGrid = (latitude, longitude, params) => {
   const y = params.scale * aRoof * (
     etaPrim + beta1 * Math.cos(2.0 * xiPrim) * Math.sinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * Math.sinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * Math.sinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * Math.sinh(8.0 * etaPrim)
   ) + params.falseEasting
-  const coords = {
-    x: x.toFixed(3),
-    y: y.toFixed(3)
+  return {
+    x: parseFloat(x.toFixed(3)),
+    y: parseFloat(y.toFixed(3))
   }
-  return coords
 }
