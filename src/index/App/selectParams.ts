@@ -1,4 +1,11 @@
-export const selectParams = [
+import {ProjectionKey} from "./projectionParams";
+
+interface selectParamsType {
+  value: ProjectionKey,
+  text: string
+}
+
+export const selectParams: selectParamsType[] = [
   {
     value: 'wgs84',
     text: 'WGS84'

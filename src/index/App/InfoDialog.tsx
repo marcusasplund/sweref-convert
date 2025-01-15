@@ -49,7 +49,7 @@ export default function InfoDialog (props: InfoDialogProps): JSX.Element {
             Maila mig gärna på <a href='mailto:&#114;&#111;&#111;&#116;&#102;&#111;&#111;&#100;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;'>&#114;&#111;&#111;&#116;&#102;&#111;&#111;&#100;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a>
           </p>
           <p>
-            Beräkningsalgoritmerna kommer från <a href='http://latlong.mellifica.se'>latlong.mellifica.se</a>{' '}
+            Beräkningsalgoritmerna kommer från <a href='https://latlong.mellifica.se'>latlong.mellifica.se</a>{' '}
             där finns lite mer info. Källkoden till denna app hittar ni{' '}
             <a href='https://github.com/marcusasplund/sweref-convert'>här</a>
           </p>

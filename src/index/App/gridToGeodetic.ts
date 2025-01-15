@@ -31,11 +31,13 @@
 // Source: http://www.lantmateriet.se/geodesi/
 
 // Conversion from grid coordinates to geodetic coordinates.
-export const gridToGeodetic = (x, y, params) => {
+import { GeodeticCoordinates, ProjectionParams } from '../types'
+
+export const gridToGeodetic = (x: number, y: number, params: ProjectionParams): GeodeticCoordinates => {
   if (params.centralMeridian === null) {
     return {
-      lat: null,
-      lng: null
+      lat: 0,
+      lng: 0
     }
   }
   // Prepare ellipsoid-based stuff.
@@ -69,9 +71,8 @@ export const gridToGeodetic = (x, y, params) => {
   const latRadian = phiStar + Math.sin(phiStar) * Math.cos(phiStar) * (
     Astar + Bstar * Math.pow(Math.sin(phiStar), 2) + Cstar * Math.pow(Math.sin(phiStar), 4) + Dstar * Math.pow(Math.sin(phiStar), 6)
   )
-  const coords = {
+  return {
     lat: latRadian * 180.0 / Math.PI,
     lng: lngRadian * 180.0 / Math.PI
   }
-  return coords
 }

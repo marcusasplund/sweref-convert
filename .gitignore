@@ -24,3 +24,5 @@ dist
 release
 .cache
 build
+
+.idea
