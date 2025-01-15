@@ -1,6 +1,6 @@
 # sweref-convert
 
-ES2015 port of http://latlong.mellifica.se
+ES2015 port of https://latlong.mellifica.se
 
 For batch conversion of geodetic coordinates between [Swedish Grid RT 90](https://en.wikipedia.org/wiki/Swedish_grid), [SWEREF99](https://sv.wikipedia.org/wiki/SWEREF_99) and [WGS84](https://en.wikipedia.org/wiki/World_Geodetic_System) lat, lng
 
