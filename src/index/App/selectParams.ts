@@ -1,7 +1,7 @@
-import {ProjectionKey} from "./projectionParams";
+import { ProjectionKey } from './projectionParams'
 
 interface selectParamsType {
-  value: ProjectionKey,
+  value: ProjectionKey
   text: string
 }
 

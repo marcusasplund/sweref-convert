@@ -24,7 +24,7 @@ import { CsvData, PapaParseResult } from './types'
 
 import './App/App.css'
 import { convertRow } from './App/conversionLogic'
-import {ProjectionKey} from "./App/projectionParams";
+import { ProjectionKey } from './App/projectionParams'
 
 const FileInput = styled('input')({
   display: 'none'
@@ -65,7 +65,7 @@ export default function App (): JSX.Element {
 
   const processCsvData = (data: CsvData): void => {
     let headers: any = []
-    // @ts-ignore
+    // @ts-expect-error
     Papa.parse(data.data, {
       download: data.isFile,
       header: true,
@@ -178,7 +178,7 @@ export default function App (): JSX.Element {
               <Select
                 value={from()}
                 label='Konvertera från'
-                onChange={({target}) => handleChangeFrom(target.value)}
+                onChange={({ target }) => handleChangeFrom(target.value)}
               >
                 {
             selectParams.map((p: any) => (
@@ -192,7 +192,7 @@ export default function App (): JSX.Element {
               <Select
                 value={to()}
                 label='Konvertera till'
-                onChange={({target}) => handleChangeTo(target.value)}
+                onChange={({ target }) => handleChangeTo(target.value)}
               >
                 {
             selectParams.map((p: any) => (
