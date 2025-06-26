@@ -1,4 +1,4 @@
-import { JSX } from 'solid-js'
+import { JSXElement } from 'solid-js'
 import {
   Button,
   Dialog,
@@ -13,7 +13,7 @@ interface InfoDialogProps {
   open: () => boolean
 }
 
-export default function InfoDialog (props: InfoDialogProps): JSX.Element {
+export default function InfoDialog (props: InfoDialogProps): JSXElement {
   const { onClose, open } = props
 
   const handleClose = (): void => {
@@ -27,7 +27,7 @@ export default function InfoDialog (props: InfoDialogProps): JSX.Element {
         <DialogContentText>
           <p>
             Denna app är till för att snabbt konvertera stora mängder koordinater mellan RT90, SWEREF och WGS84.
-            Det enklaste är att ladda upp ett .csv-dokument med två kolumner; en x- o en y-kolumn. Klicka gärna på knappen "visa karta" för att kontrollera så att konverteringen ser ut att ha gått rätt till.
+            Det enklaste är att ladda upp ett .csv-dokument med två kolumner; en x- o en y-kolumn. Klicka gärna på knappen "Kartvy" för att kontrollera så att konverteringen ser ut att ha gått rätt till.
             Om den ser heltokig ut så kan du försöka att byta plats på kolumnerna x o y i din ursprungsdata innan du laddar upp.
           </p>
           <p>Du kan även klistra in data direkt i textfältet, alternativt klistra in en länk i det mindre fältet om du har ett dokument på nån server nånstans. </p>

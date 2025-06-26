@@ -1,4 +1,4 @@
-import { createEffect, createSignal, JSX } from 'solid-js'
+import { createEffect, createSignal, JSXElement } from 'solid-js'
 
 import styled from '@suid/material/styles/styled'
 import {
@@ -30,7 +30,7 @@ const FileInput = styled('input')({
   display: 'none'
 })
 
-export default function App (): JSX.Element {
+export default function App (): JSXElement {
   const [open, setOpen] = createSignal(false)
   const [from, setFrom] = createSignal<ProjectionKey>('rt9025gonV')
   const [to, setTo] = createSignal<ProjectionKey>('wgs84')
@@ -227,7 +227,6 @@ export default function App (): JSX.Element {
           </Stack>
           <FormControl fullWidth>
             <TextField
-              id='outlined-basic'
               label='Klistra in url till fil från server'
               variant='outlined'
               onInput={e => parseRemote(e)}
@@ -235,7 +234,6 @@ export default function App (): JSX.Element {
           </FormControl>
           <FormControl fullWidth>
             <TextField
-              id='outlined-basic'
               label='Klistra in tabell med två kolumner'
               variant='outlined'
               multiline
