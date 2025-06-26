@@ -22,8 +22,8 @@ export const convertRow = (
       lng: y,
       x2: 0,
       y2: 0,
-      latdms: latToDms(x),
-      lngdms: lngToDms(y)
+      latdms: latToDms(+x),
+      lngdms: lngToDms(+y)
     }
   }
 
@@ -56,8 +56,8 @@ export const convertRow = (
       lng: y,
       x2: 0,
       y2: 0,
-      latdms: latToDms(x),
-      lngdms: lngToDms(y)
+      latdms: latToDms(+x),
+      lngdms: lngToDms(+y)
     }
   }
 
