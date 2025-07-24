@@ -83,4 +83,32 @@ describe('<App />', () => {
     fireEvent.click(mapBtn)
     expect(screen.getByRole('table')).toBeDefined()
   })
+
+    it('parses remote file URL as download', () => {
+    renderApp()
+    const remoteField = screen.getByLabelText('Klistra in url till fil från server')
+    fireEvent.input(remoteField, { target: { value: 'https://example.com/points.csv' } })
+    expect(papaparse.parse).toHaveBeenCalledWith('https://example.com/points.csv', expect.objectContaining({ download: true }))
+  })
+  it('parses pasted CSV string', () => {
+    renderApp()
+    const textField = screen.getByLabelText('Klistra in tabell med två kolumner')
+    fireEvent.input(textField, { target: { value: 'x,y\n5,6' } })
+    expect(papaparse.parse).toHaveBeenCalledWith('x,y\n5,6', expect.any(Object))
+  })
+
+  it('parses remote file URL as download', () => {
+    renderApp()
+    const remoteField = screen.getByLabelText('Klistra in url till fil från server')
+    fireEvent.input(remoteField, { target: { value: 'https://example.com/points.csv' } })
+    expect(papaparse.parse).toHaveBeenCalledWith('https://example.com/points.csv', expect.objectContaining({ download: true }))
+  })
+
+  it('parses uploaded file', () => {
+    renderApp()
+    const fileInput = screen.getByLabelText('Ladda upp .csv')
+    const file = new File(['x,y\n7,8'], 'test.csv', { type: 'text/csv' })
+    fireEvent.change(fileInput, { target: { files: [file] } })
+    expect(papaparse.parse).toHaveBeenCalledWith(file, expect.any(Object))
+  })
 })
