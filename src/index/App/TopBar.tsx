@@ -18,19 +18,15 @@ export default function TopBar (props: TopBarProps): JSX.Element {
   })
 
   const shareApp = async (): Promise<void> => {
-    if (canShare()) {
-      try {
-        await window.navigator.share({
-          title: 'Sweref convert',
-          text: 'Konvertera mellan SWEREF, RT90 och lat, lon',
-          url: `https://pap.as${location.pathname}`
-        })
-      } catch (err) {
-        console.log(err)
-        alert('Sharing failed. Please try again or check your browser support.')
-      }
-    } else {
-      alert('Sharing is not supported in this environment.')
+    try {
+      await window.navigator.share({
+        title: 'Sweref convert',
+        text: 'Konvertera mellan SWEREF, RT90 och lat, lon',
+        url: `https://pap.as${location.pathname}`
+      })
+    } catch (err) {
+      console.log(err)
+      alert('Sharing failed. Please try again or check your browser support.')
     }
   }
 
@@ -48,7 +44,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
               color='inherit'
               aria-label='share'
               sx={{ mr: 2 }}
-              onClick={async () => await shareApp()}
+              onClick={() => { shareApp().catch(err => console.error(err)) }}
             >
               <Share />
             </IconButton>

@@ -35,7 +35,7 @@
 import { GridCoordinates, ProjectionParams } from '../types'
 
 export const geodeticToGrid = (latitude: number, longitude: number, params: ProjectionParams): GridCoordinates => {
-  if (!params.centralMeridian) {
+  if (params.centralMeridian == null) {
     return {
       x: 0,
       y: 0

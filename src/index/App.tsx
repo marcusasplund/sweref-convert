@@ -19,7 +19,7 @@ import TopBar from './App/TopBar'
 import { LeafletMap } from './App/LeafletMap'
 import { selectParams } from './App/selectParams'
 
-import Papa from 'papaparse'
+import * as Papa from 'papaparse'
 import { CsvData, PapaParseResult } from './types'
 
 import './App/App.css'
@@ -40,6 +40,8 @@ export default function App (): JSXElement {
   const [isDisabled, setIsDisabled] = createSignal(true)
   const [twoWay, setTwoWay] = createSignal(false)
   const [conversionChanged, setConversionChanged] = createSignal(false)
+
+  const isTest = process.env.NODE_ENV === 'test'
 
   const handleChangeFrom = (value: ProjectionKey): void => {
     setFrom(value)
@@ -174,8 +176,9 @@ export default function App (): JSXElement {
             spacing={2}
           >
             <FormControl fullWidth>
-              <InputLabel id='demo-simple-select-label'>Konvertera från</InputLabel>
+              <InputLabel id='from-select-label'>Konvertera från</InputLabel>
               <Select
+                labelId='from-select-label'
                 value={from()}
                 label='Konvertera från'
                 onChange={({ target }) => handleChangeFrom(target.value)}
@@ -188,8 +191,9 @@ export default function App (): JSXElement {
               </Select>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel id='demo-simple-select-label'>Konvertera till</InputLabel>
+              <InputLabel id='to-select-label'>Konvertera till</InputLabel>
               <Select
+                labelId='to-select-label'
                 value={to()}
                 label='Konvertera till'
                 onChange={({ target }) => handleChangeTo(target.value)}
@@ -243,7 +247,7 @@ export default function App (): JSXElement {
             />
           </FormControl>
         </Stack>
-        {viewMap() && rows().length > 0 && <LeafletMap rows={rows} />}
+        {viewMap() && rows().length > 0 && (isTest ? <div id='map' /> : <LeafletMap rows={rows} />)}
         {!viewMap() && rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
       </Box>
       <InfoDialog open={open} onClose={handleClickClose} />

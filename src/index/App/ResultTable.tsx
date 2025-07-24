@@ -25,7 +25,7 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
   const rowLimit = props.limit ?? 100
 
   if (rows().length === 0) {
-    return <p>Inga data att visa.</p>
+    return <p>Ingen data att visa.</p>
   }
 
   return (
@@ -59,12 +59,7 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
           <TableBody>
             <For each={showAll() ? rows() : rows().slice(0, rowLimit)}>
               {(row: ConvertedRow) => (
-                <TableRow
-                  sx={{
-                    '&:last-child td, &:last-child th': { border: 0 },
-                    '&:hover': { backgroundColor: '#f5f5f5' }
-                  }}
-                >
+                <TableRow>
                   <TableCell>{row.x}</TableCell>
                   <TableCell>{row.y}</TableCell>
                   <TableCell>{row.lat}</TableCell>
