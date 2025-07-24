@@ -9,7 +9,7 @@
       "jsxImportSource": "solid-js",
       "types": [
         "vite/client",
-        "@testing-library/jest-dom/vitest"
+        "@testing-library/jest-dom"
       ],
       "noEmit": true,
       "isolatedModules": true,
