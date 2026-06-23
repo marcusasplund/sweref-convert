@@ -1,8 +1,8 @@
 import { createSignal, JSX, For } from 'solid-js'
 import {
+  Box,
   FormControlLabel,
   Paper,
-  Stack,
   Switch,
   Table,
   TableBody,
@@ -30,22 +30,38 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
   }
 
   return (
-    <Stack spacing={2} direction='column'>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {rows().length > rowLimit && (
-        <Stack spacing={1.5} direction={{ xs: 'column', sm: 'row' }} alignItems={{ xs: 'stretch', sm: 'center' }} justifyContent='space-between'>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            alignItems: { xs: 'stretch', sm: 'center' },
+            justifyContent: 'space-between',
+            gap: 1.5
+          }}
+        >
           <FormControlLabel
             control={
               <Switch
                 checked={showAll()}
                 onChange={(_, value) => setShowAll(value)}
               />
-                  }
+            }
             label={showAll() ? 'Visa alla rader' : 'Visa endast de 100 första raderna'}
           />
           <div>{showAll() ? `${rows().length} rader visas` : 'Nu visas endast de 100 första raderna här nedan'}</div>
-        </Stack>
+        </Box>
       )}
-      <TableContainer component={Paper} elevation={0}>
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        sx={{
+          border: '1px solid rgba(15, 23, 42, 0.08)',
+          borderRadius: 2,
+          overflow: 'hidden'
+        }}
+      >
         <Table sx={{ minWidth: 650, whiteSpace: 'nowrap' }} aria-label='simple table'>
           <TableHead>
             <TableRow>
@@ -73,6 +89,6 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
           </TableBody>
         </Table>
       </TableContainer>
-    </Stack>
+    </Box>
   )
 }

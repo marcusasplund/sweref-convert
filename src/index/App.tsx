@@ -5,10 +5,11 @@ import {
   Box,
   Button,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
-  Stack,
   TextField,
   Typography
 } from '@suid/material'
@@ -21,7 +22,6 @@ import { selectParams } from './App/selectParams'
 import * as Papa from 'papaparse'
 import { CsvData, PapaParseResult } from './types'
 
-import './App/App.css'
 import { convertRow } from './App/conversionLogic'
 import { ProjectionKey } from './App/projectionParams'
 
@@ -157,119 +157,154 @@ export default function App (): JSXElement {
   const rowCount = rows().length
 
   return (
-    <div class='App'>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f7fb' }}>
       <TopBar handleClickOpen={handleClickOpen} />
-      <div class='AppShell'>
-        <Box class='AppFrame'>
-          <section class='AppHero'>
-            <div>
-              <Typography class='AppTitle' variant='h4' component='h1'>
+      <Box
+        sx={{
+          minHeight: 'calc(100vh - 64px)',
+          px: { xs: 1, sm: 2 },
+          py: { xs: 1, sm: 2 },
+          background:
+            'radial-gradient(circle at top left, rgba(29, 78, 216, 0.08), transparent 28%), radial-gradient(circle at 92% 12%, rgba(15, 118, 110, 0.06), transparent 20%), #f5f7fb'
+        }}
+      >
+        <Box sx={{ maxWidth: '76rem', mx: 'auto' }}>
+          <Grid container alignItems='end' spacing={2} sx={{ pb: { xs: 1, sm: 1.5 } }}>
+            <Grid item xs={12} sm={8}>
+              <Typography component='h1' variant='h4' sx={{ m: 0, textWrap: 'balance' }}>
                 Konvertera mellan SWEREF99, RT90, WGS84
               </Typography>
-              <Typography class='AppLead' variant='body1'>
+              <Typography variant='body1' sx={{ mt: 1, maxWidth: '68ch', color: '#475569', textWrap: 'pretty' }}>
                 Klistra in data, ladda upp en CSV eller peka på en fil på servern. Växla mellan tabell och karta när du vill kontrollera resultatet.
               </Typography>
-            </div>
-            <Typography class='AppMeta' variant='body2'>
-              {rowCount > 0 ? `${rowCount} rader inlästa` : 'CSV · karta · export'}
-            </Typography>
-          </section>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Typography variant='body2' sx={{ color: '#64748b', textAlign: { xs: 'left', sm: 'right' } }}>
+                {rowCount > 0 ? `${rowCount} rader inlästa` : 'CSV · karta · export'}
+              </Typography>
+            </Grid>
+          </Grid>
 
-          <section class='AppPanel'>
-            <Stack spacing={2.5} direction='column' class='AppControls'>
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                <FormControl fullWidth>
-                  <InputLabel id='from-select-label'>Konvertera från</InputLabel>
-                  <Select
-                    labelId='from-select-label'
-                    value={from()}
-                    label='Konvertera från'
-                    onChange={({ target }) => handleChangeFrom(target.value)}
-                  >
-                    {
-                      selectParams.map((p: any) => (
-                        <MenuItem value={p.value}>{p.text}</MenuItem>) // eslint-disable-line react/jsx-key
-                      )
-                    }
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth>
-                  <InputLabel id='to-select-label'>Konvertera till</InputLabel>
-                  <Select
-                    labelId='to-select-label'
-                    value={to()}
-                    label='Konvertera till'
-                    onChange={({ target }) => handleChangeTo(target.value)}
-                  >
-                    {
-                      selectParams.map((p: any) => (
-                        <MenuItem value={p.value}>{p.text}</MenuItem> // eslint-disable-line react/jsx-key
-                      ))
-                    }
-                  </Select>
-                </FormControl>
-              </Stack>
+          <Paper
+            elevation={0}
+            sx={{
+              p: { xs: 1.25, sm: 2 },
+              borderRadius: { xs: 2, sm: 2.5 },
+              border: '1px solid rgba(15, 23, 42, 0.08)',
+              backgroundColor: 'rgba(255, 255, 255, 0.94)',
+              overflow: 'hidden'
+            }}
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 2.5 } }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id='from-select-label'>Konvertera från</InputLabel>
+                    <Select
+                      labelId='from-select-label'
+                      value={from()}
+                      label='Konvertera från'
+                      onChange={({ target }) => handleChangeFrom(target.value)}
+                    >
+                      {
+                        selectParams.map((p: any) => (
+                          <MenuItem value={p.value}>{p.text}</MenuItem>) // eslint-disable-line react/jsx-key
+                        )
+                      }
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id='to-select-label'>Konvertera till</InputLabel>
+                    <Select
+                      labelId='to-select-label'
+                      value={to()}
+                      label='Konvertera till'
+                      onChange={({ target }) => handleChangeTo(target.value)}
+                    >
+                      {
+                        selectParams.map((p: any) => (
+                          <MenuItem value={p.value}>{p.text}</MenuItem> // eslint-disable-line react/jsx-key
+                        ))
+                      }
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-              <div class='AppButtonRow'>
-                <label for='contained-button-file'>
-                  <FileInput
-                    accept='.csv'
-                    id='contained-button-file'
-                    multiple
-                    type='file'
-                    onChange={parseFile}
-                  />
-                  <Button variant='contained' component='span' fullWidth>
-                    Ladda upp .csv
+                <Grid item xs={12} md={4}>
+                  <Box component='label' sx={{ display: 'block', width: '100%' }}>
+                    <FileInput
+                      accept='.csv'
+                      id='contained-button-file'
+                      multiple
+                      type='file'
+                      onChange={parseFile}
+                    />
+                    <Button variant='contained' component='span' fullWidth>
+                      Ladda upp .csv
+                    </Button>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined' fullWidth>
+                    {viewMap() ? 'Tabellvy' : 'Kartvy'}
                   </Button>
-                </label>
-                <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
-                  {viewMap() ? 'Tabellvy' : 'Kartvy'}
-                </Button>
-                <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
-                  Ladda ned konverterad .csv
-                </Button>
-              </div>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained' fullWidth>
+                    Ladda ned konverterad .csv
+                  </Button>
+                </Grid>
 
-              <FormControl fullWidth>
-                <TextField
-                  label='Klistra in url till fil från server'
-                  variant='outlined'
-                  onInput={e => parseRemote(e)}
-                />
-              </FormControl>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label='Klistra in url till fil från server'
+                      variant='outlined'
+                      onInput={e => parseRemote(e)}
+                    />
+                  </FormControl>
+                </Grid>
 
-              <FormControl fullWidth>
-                <TextField
-                  label='Klistra in tabell med två kolumner'
-                  variant='outlined'
-                  multiline
-                  rows={6}
-                  onInput={e => parseString(e)}
-                  fullWidth
-                />
-              </FormControl>
-            </Stack>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <TextField
+                      label='Klistra in tabell med två kolumner'
+                      variant='outlined'
+                      multiline
+                      rows={6}
+                      onInput={e => parseString(e)}
+                      fullWidth
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
 
-            {viewMap() && rows().length > 0 && (isTest ? <div id='map' class='AppMap' /> : (
-              <div class='AppMap'>
-                <Suspense fallback={<div id='map' class='AppMap' />}>
-                  <LeafletMap rows={rows} />
-                </Suspense>
-              </div>
-            ))}
-            {!viewMap() && rows().length > 0 && <div class='AppTable'><ResultTable twoWay={twoWay} rows={rows} /></div>}
-            {rows().length === 0 && (
-              <div class='empty-state'>
-                <Typography variant='body1'>
-                  Resultatet visas här så snart du har laddat in data.
-                </Typography>
-              </div>
-            )}
-          </section>
+              {viewMap() && rows().length > 0 && (isTest ? <Box id='map' sx={{ mt: 2 }} /> : (
+                <Box sx={{ mt: 2 }}>
+                  <Suspense fallback={<Box id='map' sx={{ height: '300px' }} />}>
+                    <LeafletMap rows={rows} />
+                  </Suspense>
+                </Box>
+              ))}
+              {!viewMap() && rows().length > 0 && (
+                <Box sx={{ mt: 2 }}>
+                  <ResultTable twoWay={twoWay} rows={rows} />
+                </Box>
+              )}
+              {rows().length === 0 && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant='body1'>
+                    Resultatet visas här så snart du har laddat in data.
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Paper>
         </Box>
-      </div>
+      </Box>
       <InfoDialog open={open} onClose={handleClickClose} />
-    </div>
+    </Box>
   )
 }

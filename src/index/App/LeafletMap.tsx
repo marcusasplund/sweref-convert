@@ -24,7 +24,10 @@ export function LeafletMap (props: LeafletMapProps): JSX.Element {
       id='map'
       zoom={zoom}
       onMapReady={(l, m) => {
-        const mapIcon = l.divIcon({ className: 'map-icon' })
+        const mapIcon = l.divIcon({
+          className: '',
+          html: '<span style="display:block;width:1rem;height:1rem;border-radius:999px;background:#1d4ed8;border:3px solid rgba(255,255,255,0.95);box-shadow:0 0 0 4px rgba(29,78,216,0.15)"></span>'
+        })
         rows()
           .slice(0, limit)
           .forEach((location: ConvertedRow) => {

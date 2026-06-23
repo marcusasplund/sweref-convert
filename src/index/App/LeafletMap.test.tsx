@@ -85,7 +85,10 @@ describe('<LeafletMap />', () => {
 
     render(() => <LeafletMap rows={mockRows} />)
 
-    expect(divIconMock).toHaveBeenCalledWith({ className: 'map-icon' })
+    expect(divIconMock).toHaveBeenCalledWith({
+      className: '',
+      html: '<span style="display:block;width:1rem;height:1rem;border-radius:999px;background:#1d4ed8;border:3px solid rgba(255,255,255,0.95);box-shadow:0 0 0 4px rgba(29,78,216,0.15)"></span>'
+    })
     expect(markerMock).toHaveBeenCalledWith([57.7, 12.0], { icon: 'mock-icon' })
     expect(addToMock).toHaveBeenCalledWith(mMock)
     expect(bindPopupMock).toHaveBeenCalledWith('57.7, 12')
