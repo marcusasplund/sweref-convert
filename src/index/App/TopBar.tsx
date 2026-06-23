@@ -32,8 +32,8 @@ export default function TopBar (props: TopBarProps): JSX.Element {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
-        <Toolbar>
+      <AppBar position='static' elevation={0}>
+        <Toolbar sx={{ minHeight: 64, gap: 1.5, px: { xs: 2, sm: 3 } }}>
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             Sweref convert
           </Typography>
@@ -43,7 +43,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
               edge='start'
               color='inherit'
               aria-label='share'
-              sx={{ mr: 2 }}
+              sx={{ mr: 0.5 }}
               onClick={() => { shareApp().catch(err => console.error(err)) }}
             >
               <Share2 />
@@ -54,7 +54,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
             edge='start'
             color='inherit'
             aria-label='help'
-            sx={{ mr: 2 }}
+            sx={{ mr: 0 }}
             onClick={handleClickOpen}
           >
             <HelpCircle />

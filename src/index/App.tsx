@@ -70,7 +70,7 @@ export default function App (): JSXElement {
   }
 
   const processCsvData = (data: CsvData): void => {
-    let headers: any = []
+    let headers: string[] = []
     // @ts-expect-error
     Papa.parse(data.data, {
       download: data.isFile,
@@ -83,7 +83,8 @@ export default function App (): JSXElement {
             return
           }
         }
-        const convertedRow = convertRow(results.data[headers[0]], results.data[headers[1]], from(), to())
+        const rowData = results.data as Record<string, unknown>
+        const convertedRow = convertRow(rowData[headers[0]] as number, rowData[headers[1]] as number, from(), to())
         setRows((prevRows) => [...prevRows, convertedRow])
       },
       complete: () => setViewMap(false)
@@ -135,6 +136,7 @@ export default function App (): JSXElement {
     const istwoWay = from() !== 'wgs84' && to() !== 'wgs84'
     setTwoWay(istwoWay)
   })
+
   const parseFile = (e: Event): void => {
     const target = e.target as HTMLInputElement
     if ((target.files != null) && target.files.length > 0) {
@@ -152,112 +154,121 @@ export default function App (): JSXElement {
     setCsvData({ data: target.value, isFile: true })
   }
 
+  const rowCount = rows().length
+
   return (
     <div class='App'>
       <TopBar handleClickOpen={handleClickOpen} />
-      <Box sx={{
-        padding: 2,
-        maxWidth: '60rem',
-        margin: 'auto'
-      }}
-      >
-        <Typography
-          variant='h4' component='div' sx={{
-            paddingTop: 2,
-            paddingBottom: 5
-          }}
-        >
-          Konvertera mellan SWEREF99, RT90, WGS84
-        </Typography>
-        <Stack
-          spacing={2} direction='column'
-          sx={{
-            paddingBottom: 2
-          }}
-        >
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={2}
-          >
-            <FormControl fullWidth>
-              <InputLabel id='from-select-label'>Konvertera från</InputLabel>
-              <Select
-                labelId='from-select-label'
-                value={from()}
-                label='Konvertera från'
-                onChange={({ target }) => handleChangeFrom(target.value)}
-              >
-                {
-            selectParams.map((p: any) => (
-              <MenuItem value={p.value}>{p.text}</MenuItem>) // eslint-disable-line react/jsx-key
-            )
-          }
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel id='to-select-label'>Konvertera till</InputLabel>
-              <Select
-                labelId='to-select-label'
-                value={to()}
-                label='Konvertera till'
-                onChange={({ target }) => handleChangeTo(target.value)}
-              >
-                {
-            selectParams.map((p: any) => (
-              <MenuItem value={p.value}>{p.text}</MenuItem> // eslint-disable-line react/jsx-key
-            ))
-            }
-              </Select>
-            </FormControl>
-          </Stack>
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={2}
-          >
-            <label for='contained-button-file'>
-              <FileInput
-                accept='.csv'
-                id='contained-button-file'
-                multiple
-                type='file'
-                onChange={parseFile}
-              />
-              <Button variant='contained' component='span' fullWidth>
-                Ladda upp .csv
-              </Button>
-            </label>
-            <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
-              {viewMap() ? 'Tabellvy' : 'Kartvy'}
-            </Button>
-            <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
-              Ladda ned konverterad .csv
-            </Button>
-          </Stack>
-          <FormControl fullWidth>
-            <TextField
-              label='Klistra in url till fil från server'
-              variant='outlined'
-              onInput={e => parseRemote(e)}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <TextField
-              label='Klistra in tabell med två kolumner'
-              variant='outlined'
-              multiline
-              rows={6}
-              onInput={e => parseString(e)}
-              fullWidth
-            />
-          </FormControl>
-        </Stack>
-        {viewMap() && rows().length > 0 && (isTest ? <div id='map' /> : (
-          <Suspense fallback={<div id='map' />}>
-            <LeafletMap rows={rows} />
-          </Suspense>
-        ))}
-        {!viewMap() && rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
-      </Box>
+      <div class='AppShell'>
+        <Box class='AppFrame'>
+          <section class='AppHero'>
+            <div>
+              <Typography class='AppTitle' variant='h4' component='h1'>
+                Konvertera mellan SWEREF99, RT90, WGS84
+              </Typography>
+              <Typography class='AppLead' variant='body1'>
+                Klistra in data, ladda upp en CSV eller peka på en fil på servern. Växla mellan tabell och karta när du vill kontrollera resultatet.
+              </Typography>
+            </div>
+            <Typography class='AppMeta' variant='body2'>
+              {rowCount > 0 ? `${rowCount} rader inlästa` : 'CSV · karta · export'}
+            </Typography>
+          </section>
+
+          <section class='AppPanel'>
+            <Stack spacing={2.5} direction='column' class='AppControls'>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <FormControl fullWidth>
+                  <InputLabel id='from-select-label'>Konvertera från</InputLabel>
+                  <Select
+                    labelId='from-select-label'
+                    value={from()}
+                    label='Konvertera från'
+                    onChange={({ target }) => handleChangeFrom(target.value)}
+                  >
+                    {
+                      selectParams.map((p: any) => (
+                        <MenuItem value={p.value}>{p.text}</MenuItem>) // eslint-disable-line react/jsx-key
+                      )
+                    }
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel id='to-select-label'>Konvertera till</InputLabel>
+                  <Select
+                    labelId='to-select-label'
+                    value={to()}
+                    label='Konvertera till'
+                    onChange={({ target }) => handleChangeTo(target.value)}
+                  >
+                    {
+                      selectParams.map((p: any) => (
+                        <MenuItem value={p.value}>{p.text}</MenuItem> // eslint-disable-line react/jsx-key
+                      ))
+                    }
+                  </Select>
+                </FormControl>
+              </Stack>
+
+              <div class='AppButtonRow'>
+                <label for='contained-button-file'>
+                  <FileInput
+                    accept='.csv'
+                    id='contained-button-file'
+                    multiple
+                    type='file'
+                    onChange={parseFile}
+                  />
+                  <Button variant='contained' component='span' fullWidth>
+                    Ladda upp .csv
+                  </Button>
+                </label>
+                <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined'>
+                  {viewMap() ? 'Tabellvy' : 'Kartvy'}
+                </Button>
+                <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained'>
+                  Ladda ned konverterad .csv
+                </Button>
+              </div>
+
+              <FormControl fullWidth>
+                <TextField
+                  label='Klistra in url till fil från server'
+                  variant='outlined'
+                  onInput={e => parseRemote(e)}
+                />
+              </FormControl>
+
+              <FormControl fullWidth>
+                <TextField
+                  label='Klistra in tabell med två kolumner'
+                  variant='outlined'
+                  multiline
+                  rows={6}
+                  onInput={e => parseString(e)}
+                  fullWidth
+                />
+              </FormControl>
+            </Stack>
+
+            {viewMap() && rows().length > 0 && (isTest ? <div id='map' class='AppMap' /> : (
+              <div class='AppMap'>
+                <Suspense fallback={<div id='map' class='AppMap' />}>
+                  <LeafletMap rows={rows} />
+                </Suspense>
+              </div>
+            ))}
+            {!viewMap() && rows().length > 0 && <div class='AppTable'><ResultTable twoWay={twoWay} rows={rows} /></div>}
+            {rows().length === 0 && (
+              <div class='empty-state'>
+                <Typography variant='body1'>
+                  Resultatet visas här så snart du har laddat in data.
+                </Typography>
+              </div>
+            )}
+          </section>
+        </Box>
+      </div>
       <InfoDialog open={open} onClose={handleClickClose} />
     </div>
   )

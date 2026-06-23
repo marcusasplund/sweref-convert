@@ -23,6 +23,7 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
   const { rows, twoWay } = props
   const [showAll, setShowAll] = createSignal(false)
   const rowLimit = props.limit ?? 100
+  const visibleRows = (): ConvertedRow[] => (showAll() ? rows() : rows().slice(0, rowLimit))
 
   if (rows().length === 0) {
     return <p>Ingen data att visa.</p>
@@ -31,7 +32,7 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
   return (
     <Stack spacing={2} direction='column'>
       {rows().length > rowLimit && (
-        <Stack spacing={2} direction='row' alignItems='center' justifyContent='space-between'>
+        <Stack spacing={1.5} direction={{ xs: 'column', sm: 'row' }} alignItems={{ xs: 'stretch', sm: 'center' }} justifyContent='space-between'>
           <FormControlLabel
             control={
               <Switch
@@ -41,10 +42,10 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
                   }
             label={showAll() ? 'Visa alla rader' : 'Visa endast de 100 första raderna'}
           />
-          {!showAll() && 'Nu visas endast de 100 första raderna här nedan'}
+          <div>{showAll() ? `${rows().length} rader visas` : 'Nu visas endast de 100 första raderna här nedan'}</div>
         </Stack>
       )}
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} elevation={0}>
         <Table sx={{ minWidth: 650, whiteSpace: 'nowrap' }} aria-label='simple table'>
           <TableHead>
             <TableRow>
@@ -57,7 +58,7 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
             </TableRow>
           </TableHead>
           <TableBody>
-            <For each={showAll() ? rows() : rows().slice(0, rowLimit)}>
+            <For each={visibleRows()}>
               {(row: ConvertedRow) => (
                 <TableRow>
                   <TableCell>{row.x}</TableCell>
