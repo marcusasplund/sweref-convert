@@ -4,7 +4,7 @@
   "author": "Marcus Asplund <rootfood@gmail.com> (@marcusasplund)",
   "license": "MIT",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build --base=/sweref/",
     "start": "vite",
     "test": "vitest",
     "coverage": "vitest run --coverage",
