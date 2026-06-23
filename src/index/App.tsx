@@ -1,4 +1,4 @@
-import { createEffect, createSignal, JSXElement } from 'solid-js'
+import { createEffect, createSignal, JSXElement, lazy, Suspense } from 'solid-js'
 
 import styled from '@suid/material/styles/styled'
 import {
@@ -16,7 +16,6 @@ import {
 import InfoDialog from './App/InfoDialog'
 import ResultTable from './App/ResultTable'
 import TopBar from './App/TopBar'
-import { LeafletMap } from './App/LeafletMap'
 import { selectParams } from './App/selectParams'
 
 import * as Papa from 'papaparse'
@@ -25,6 +24,11 @@ import { CsvData, PapaParseResult } from './types'
 import './App/App.css'
 import { convertRow } from './App/conversionLogic'
 import { ProjectionKey } from './App/projectionParams'
+
+const LeafletMap = lazy(async () => {
+  const module = await import('./App/LeafletMap')
+  return { default: module.LeafletMap }
+})
 
 const FileInput = styled('input')({
   display: 'none'
@@ -247,7 +251,11 @@ export default function App (): JSXElement {
             />
           </FormControl>
         </Stack>
-        {viewMap() && rows().length > 0 && (isTest ? <div id='map' /> : <LeafletMap rows={rows} />)}
+        {viewMap() && rows().length > 0 && (isTest ? <div id='map' /> : (
+          <Suspense fallback={<div id='map' />}>
+            <LeafletMap rows={rows} />
+          </Suspense>
+        ))}
         {!viewMap() && rows().length > 0 && <ResultTable twoWay={twoWay} rows={rows} />}
       </Box>
       <InfoDialog open={open} onClose={handleClickClose} />

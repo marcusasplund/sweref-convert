@@ -1,6 +1,6 @@
-import { Help, Share } from '@suid/icons-material'
 import { AppBar, Box, Toolbar, Typography, IconButton } from '@suid/material'
 import { JSX, createSignal, Show, onMount } from 'solid-js'
+import { HelpCircle, Share2 } from 'lucide-solid'
 
 interface TopBarProps {
   handleClickOpen: () => void
@@ -46,7 +46,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
               sx={{ mr: 2 }}
               onClick={() => { shareApp().catch(err => console.error(err)) }}
             >
-              <Share />
+              <Share2 />
             </IconButton>
           </Show>
           <IconButton
@@ -57,7 +57,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
             sx={{ mr: 2 }}
             onClick={handleClickOpen}
           >
-            <Help />
+            <HelpCircle />
           </IconButton>
         </Toolbar>
       </AppBar>
