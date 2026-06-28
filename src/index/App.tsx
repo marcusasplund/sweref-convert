@@ -4,11 +4,12 @@ import styled from '@suid/material/styles/styled'
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   TextField,
   Typography
@@ -185,18 +186,10 @@ export default function App (): JSXElement {
             </Grid>
           </Grid>
 
-          <Paper
-            elevation={0}
-            sx={{
-              p: { xs: 1.25, sm: 2 },
-              borderRadius: { xs: 2, sm: 2.5 },
-              border: '1px solid rgba(15, 23, 42, 0.08)',
-              backgroundColor: 'rgba(255, 255, 255, 0.94)',
-              overflow: 'hidden'
-            }}
-          >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 2.5 } }}>
-              <Grid container spacing={2}>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 2.5 } }}>
+                <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel id='from-select-label'>Konvertera från</InputLabel>
@@ -300,8 +293,9 @@ export default function App (): JSXElement {
                   </Typography>
                 </Box>
               )}
-            </Box>
-          </Paper>
+              </Box>
+            </CardContent>
+          </Card>
         </Box>
       </Box>
       <InfoDialog open={open} onClose={handleClickClose} />
