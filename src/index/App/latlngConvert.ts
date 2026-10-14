@@ -29,212 +29,68 @@
 //
 // Converts from input format.
 
-const latFromDd = (value: string): number | null => {
-  let latitude: number | null = null
-  value = value.replace(/[N]/gi, 'N').replace(/[S]/gi, 'S')
-  const result = value.match(/^\s*([NS\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([NS]?)\s*$/)
+type Axis = 'latitude' | 'longitude'
+type Format = 'dd' | 'dm' | 'dms'
 
-  if (result !== null) {
-    const hemispherePrefix = result[1] ?? ''
-    const degrees = result[2] ?? ''
-    const decimal = result[3] ?? ''
-    const hemisphereSuffix = result[4] ?? ''
+const patterns = {
+  dd: /^\s*([NSEW+-]?)\s*(\d{1,3}(?:[.,]\d+)?)\s*([NSEW]?)\s*$/,
+  dm: /^\s*([NSEW+-]?)\s*(\d{1,3})°?\s*(\d{1,2}(?:[.,]\d+)?)['′]?\s*([NSEW]?)\s*$/,
+  dms: /^\s*([NSEW+-]?)\s*(\d{1,3})°?\s*(\d{1,2})['′]?\s*(\d{1,2}(?:[.,]\d+)?)['″"]?\s*([NSEW]?)\s*$/
+}
 
-    if (degrees !== '') latitude = parseFloat(degrees)
-    if (latitude !== null && decimal !== '' && decimal.replace(',', '.') !== '.') {
-      latitude += parseFloat(decimal.replace(',', '.'))
-    }
-    if (latitude !== null && latitude > 90) return null
-    if (latitude !== null && (hemispherePrefix === 'S' || hemispherePrefix === '-')) latitude *= -1
-    else if (latitude !== null && hemisphereSuffix === 'S') latitude *= -1
+const parseCoordinate = (value: string, axis: Axis, format: Format): number | null => {
+  const normalized = value.toUpperCase().replace(/Ö/g, 'E').replace(/V/g, 'W')
+  const match = normalized.match(patterns[format])
+  if (match === null) return null
+  const prefix = match[1]
+  const suffix = match[match.length - 1]
+  const positive = axis === 'latitude' ? 'N' : 'E'
+  const negative = axis === 'latitude' ? 'S' : 'W'
+  if (prefix !== '' && !['+', '-', positive, negative].includes(prefix)) return null
+  if (suffix !== '' && suffix !== positive && suffix !== negative) return null
+  const prefixSign = prefix === '-' || prefix === negative ? -1 : 1
+  const suffixSign = suffix === negative ? -1 : 1
+  if (prefix !== '' && suffix !== '' && prefixSign !== suffixSign) return null
+  const degrees = Number(match[2].replace(',', '.'))
+  const minutes = format === 'dd' ? 0 : Number(match[3].replace(',', '.'))
+  const seconds = format === 'dms' ? Number(match[4].replace(',', '.')) : 0
+  if (minutes >= 60 || seconds >= 60) return null
+  const magnitude = degrees + minutes / 60 + seconds / 3600
+  if (magnitude > (axis === 'latitude' ? 90 : 180)) return null
+  return magnitude * (prefix !== '' ? prefixSign : suffixSign)
+}
+
+const formatCoordinate = (value: number | null, axis: Axis, format: Format): string => {
+  if (value === null || !Number.isFinite(value) || Math.abs(value) > (axis === 'latitude' ? 90 : 180)) return ''
+  if (format === 'dd') return value.toFixed(6)
+  const hemisphere = axis === 'latitude' ? (value >= 0 ? 'N' : 'S') : (value >= 0 ? 'E' : 'W')
+  if (format === 'dm') {
+    const units = Math.round(Math.abs(value) * 60 * 10000)
+    const degrees = Math.floor(units / 600000)
+    const minutes = ((units % 600000) / 10000).toFixed(4)
+    return `${hemisphere} ${degrees}° ${minutes}′`
   }
-
-  return latitude
+  const units = Math.round(Math.abs(value) * 3600 * 100)
+  const degrees = Math.floor(units / 360000)
+  const minutes = Math.floor((units % 360000) / 6000)
+  const seconds = ((units % 6000) / 100).toFixed(2)
+  return `${hemisphere} ${degrees}° ${minutes}′ ${seconds}″`
 }
 
-const lngFromDd = (value: string): number | null => {
-  let longitude: number | null = null
-  value = value.replace(/[EÖ]/gi, 'E').replace(/[WV]/gi, 'W')
-  const result = value.match(/^\s*([EW\-+]?)\s*(\d{1,3})([.,]\d*)?\s*([EW]?)\s*$/)
-
-  if (result !== null) {
-    const hemispherePrefix = result[1] ?? ''
-    const degrees = result[2] ?? ''
-    const decimal = result[3] ?? ''
-    const hemisphereSuffix = result[4] ?? ''
-
-    if (degrees !== '') longitude = parseFloat(degrees)
-    if (longitude !== null && decimal !== '' && decimal.replace(',', '.') !== '.') {
-      longitude += parseFloat(decimal.replace(',', '.'))
-    }
-    if (longitude !== null && longitude > 180) return null
-    if (longitude !== null && (hemispherePrefix === 'W' || hemispherePrefix === '-')) longitude *= -1
-    else if (longitude !== null && hemisphereSuffix === 'W') longitude *= -1
-  }
-
-  return longitude
-}
-
-const latFromDm = (value: string): number | null => {
-  let latitude: number | null = null
-  value = value.replace(/[NS]/gi, m => m)
-  const result = value.match(/^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?['′]?\s*([NS]?)\s*$/)
-
-  if (result !== null) {
-    const hemispherePrefix = result[1] ?? ''
-    const degrees = result[2] ?? ''
-    const minutes = result[3] ?? ''
-    const decimals = result[4] ?? ''
-    const hemisphereSuffix = result[5] ?? ''
-
-    if (degrees !== '') latitude = parseFloat(degrees)
-    if (latitude !== null && minutes !== '') latitude += parseFloat(minutes) / 60
-    if (latitude !== null && decimals !== '' && decimals.replace(',', '.') !== '.') {
-      latitude += parseFloat(decimals.replace(',', '.')) / 60
-    }
-    if (latitude !== null && latitude > 90) return null
-    if (latitude !== null && (hemispherePrefix === 'S' || hemispherePrefix === '-')) latitude *= -1
-    else if (latitude !== null && hemisphereSuffix === 'S') latitude *= -1
-  }
-
-  return latitude
-}
-
-const lngFromDm = (value: string): number | null => {
-  let longitude: number | null = null
-  value = value.replace(/[EÖ]/gi, 'E').replace(/[WV]/gi, 'W')
-  const result = value.match(/^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?([.,]\d*)?['′]?\s*([EW]?)\s*$/)
-
-  if (result !== null) {
-    const hemispherePrefix = result[1] ?? ''
-    const degrees = result[2] ?? ''
-    const minutes = result[3] ?? ''
-    const decimals = result[4] ?? ''
-    const hemisphereSuffix = result[5] ?? ''
-
-    if (degrees !== '') longitude = parseFloat(degrees)
-    if (longitude !== null && minutes !== '') longitude += parseFloat(minutes) / 60
-    if (longitude !== null && decimals !== '' && decimals.replace(',', '.') !== '.') {
-      longitude += parseFloat(decimals.replace(',', '.')) / 60
-    }
-    if (longitude !== null && longitude > 180) return null
-    if (longitude !== null && (hemispherePrefix === 'W' || hemispherePrefix === '-')) longitude *= -1
-    else if (longitude !== null && hemisphereSuffix === 'W') longitude *= -1
-  }
-
-  return longitude
-}
-
-const latFromDms = (value: string): number | null => {
-  let latitude: number | null = null
-  value = value.replace(/[NS]/gi, m => m)
-  const result = value.match(/^\s*([NS\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?['′]?\s*([0-5]?[0-9])?([.,]\d*)?['″"]?\s*([NS]?)\s*$/)
-
-  if (result !== null) {
-    const hemispherePrefix = result[1] ?? ''
-    const degrees = result[2] ?? ''
-    const minutes = result[3] ?? ''
-    const seconds = result[4] ?? ''
-    const decimals = result[5] ?? ''
-    const hemisphereSuffix = result[6] ?? ''
-
-    if (degrees !== '') latitude = parseFloat(degrees)
-    if (latitude !== null && minutes !== '') latitude += parseFloat(minutes) / 60
-    if (latitude !== null && seconds !== '') latitude += parseFloat(seconds) / 3600
-    if (latitude !== null && decimals !== '' && decimals.replace(',', '.') !== '.') {
-      latitude += parseFloat(decimals.replace(',', '.')) / 3600
-    }
-    if (latitude !== null && latitude > 90) return null
-    if (latitude !== null && (hemispherePrefix === 'S' || hemispherePrefix === '-')) latitude *= -1
-    else if (latitude !== null && hemisphereSuffix === 'S') latitude *= -1
-  }
-
-  return latitude
-}
-
-const lngFromDms = (value: string): number | null => {
-  let longitude: number | null = null
-  value = value.replace(/[EÖ]/gi, 'E').replace(/[WV]/gi, 'W')
-  const result = value.match(/^\s*([EW\-+]?)\s*(\d{1,3})°?\s*([0-5]?[0-9])?['′]?\s*([0-5]?[0-9])?([.,]\d*)?['″"]?\s*([EW]?)\s*$/)
-
-  if (result !== null) {
-    const hemispherePrefix = result[1] ?? ''
-    const degrees = result[2] ?? ''
-    const minutes = result[3] ?? ''
-    const seconds = result[4] ?? ''
-    const decimals = result[5] ?? ''
-    const hemisphereSuffix = result[6] ?? ''
-
-    if (degrees !== '') longitude = parseFloat(degrees)
-    if (longitude !== null && minutes !== '') longitude += parseFloat(minutes) / 60
-    if (longitude !== null && seconds !== '') longitude += parseFloat(seconds) / 3600
-    if (longitude !== null && decimals !== '' && decimals.replace(',', '.') !== '.') {
-      longitude += parseFloat(decimals.replace(',', '.')) / 3600
-    }
-    if (longitude !== null && longitude > 180) return null
-    if (longitude !== null && (hemispherePrefix === 'W' || hemispherePrefix === '-')) longitude *= -1
-    else if (longitude !== null && hemisphereSuffix === 'W') longitude *= -1
-  }
-
-  return longitude
-}
-
-const latToDd = (value: number | null): string => value === null ? '' : value.toFixed(6)
-const lngToDd = (value: number | null): string => value === null ? '' : value.toFixed(6)
-
-const latToDm = (value: number | null): string => {
-  if (value === null) return ''
-  const hemisphere = value >= 0 ? 'N' : 'S'
-  const totalMinutes = Math.abs(value) * 60
-  const rounded = Math.round(totalMinutes * 10000) / 10000
-  const degrees = Math.floor(rounded / 60)
-  const minutes = (rounded - degrees * 60).toFixed(4)
-  return `${hemisphere} ${degrees}° ${minutes}′`
-}
-
-const lngToDm = (value: number | null): string => {
-  if (value === null) return ''
-  const hemisphere = value >= 0 ? 'E' : 'W'
-  const totalMinutes = Math.abs(value) * 60
-  const rounded = Math.round(totalMinutes * 10000) / 10000
-  const degrees = Math.floor(rounded / 60)
-  const minutes = (rounded - degrees * 60).toFixed(4)
-  return `${hemisphere} ${degrees}° ${minutes}′`
-}
-
-const latToDms = (value: number | null): string => {
-  if (value === null) return ''
-  const hemisphere = value >= 0 ? 'N' : 'S'
-  const absValue = Math.abs(value)
-  const degrees = Math.floor(absValue)
-  const minutes = Math.floor((absValue - degrees) * 60)
-  const seconds = ((absValue - degrees - minutes / 60) * 3600)
-  const rounded = (Math.round(seconds * 100) / 100).toFixed(2)
-  return `${hemisphere} ${degrees}° ${minutes}′ ${rounded}″`
-}
-
-const lngToDms = (value: number | null): string => {
-  if (value === null) return ''
-  const hemisphere = value >= 0 ? 'E' : 'W'
-  const absValue = Math.abs(value)
-  const degrees = Math.floor(absValue)
-  const minutes = Math.floor((absValue - degrees) * 60)
-  const seconds = ((absValue - degrees - minutes / 60) * 3600)
-  const rounded = (Math.round(seconds * 100) / 100).toFixed(2)
-  return `${hemisphere} ${degrees}° ${minutes}′ ${rounded}″`
-}
+const latFromDd = (value: string) => parseCoordinate(value, 'latitude', 'dd')
+const lngFromDd = (value: string) => parseCoordinate(value, 'longitude', 'dd')
+const latFromDm = (value: string) => parseCoordinate(value, 'latitude', 'dm')
+const lngFromDm = (value: string) => parseCoordinate(value, 'longitude', 'dm')
+const latFromDms = (value: string) => parseCoordinate(value, 'latitude', 'dms')
+const lngFromDms = (value: string) => parseCoordinate(value, 'longitude', 'dms')
+const latToDd = (value: number | null) => formatCoordinate(value, 'latitude', 'dd')
+const lngToDd = (value: number | null) => formatCoordinate(value, 'longitude', 'dd')
+const latToDm = (value: number | null) => formatCoordinate(value, 'latitude', 'dm')
+const lngToDm = (value: number | null) => formatCoordinate(value, 'longitude', 'dm')
+const latToDms = (value: number | null) => formatCoordinate(value, 'latitude', 'dms')
+const lngToDms = (value: number | null) => formatCoordinate(value, 'longitude', 'dms')
 
 export {
-  latFromDd,
-  lngFromDd,
-  latFromDm,
-  lngFromDm,
-  latFromDms,
-  lngFromDms,
-  latToDd,
-  lngToDd,
-  latToDm,
-  lngToDm,
-  latToDms,
-  lngToDms
+  latFromDd, lngFromDd, latFromDm, lngFromDm, latFromDms, lngFromDms,
+  latToDd, lngToDd, latToDm, lngToDm, latToDms, lngToDms
 }

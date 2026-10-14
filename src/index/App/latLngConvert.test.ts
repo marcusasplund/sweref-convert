@@ -110,3 +110,40 @@ describe('Coordinate conversion', () => {
     })
   })
 })
+
+describe('coordinate validation and rounding', () => {
+  it('rejects conflicting hemispheres and signs in every format', () => {
+    for (const [parse, inputs] of [
+      [latFromDd, ['N 57.7 S', '-57.7 N', '+57.7 S']],
+      [lngFromDd, ['E 11.9 W', '-11.9 E', '+11.9 W']],
+      [latFromDm, ['N 57°30′ S', '-57°30′ N']],
+      [lngFromDm, ['E 11°30′ W', '-11°30′ E']],
+      [latFromDms, ['N 57°30′0″ S', '-57°30′0″ N']],
+      [lngFromDms, ['E 11°30′0″ W', '-11°30′0″ E']]
+    ] as const) {
+      for (const input of inputs) expect(parse(input), input).toBeNull()
+    }
+  })
+
+  it('accepts matching signs, repeated hemispheres, and lowercase aliases', () => {
+    expect(latFromDd('-57.7 S')).toBe(-57.7)
+    expect(latFromDd('n 57.7 n')).toBe(57.7)
+    expect(latFromDm('s 57°30′')).toBe(-57.5)
+    expect(lngFromDms('ö 11°30′0″')).toBe(11.5)
+    expect(lngFromDms('v 11°30′0″')).toBe(-11.5)
+  })
+
+  it('carries rounded seconds through minutes and degrees', () => {
+    expect(latToDms(57 + 59 / 60 + 59.999 / 3600)).toBe('N 58° 0′ 0.00″')
+    expect(lngToDms(-(11 + 30 / 60 + 59.999 / 3600))).toBe('W 11° 31′ 0.00″')
+    expect(latToDms(89 + 59 / 60 + 59.999 / 3600)).toBe('N 90° 0′ 0.00″')
+    expect(lngToDms(179 + 59 / 60 + 59.999 / 3600)).toBe('E 180° 0′ 0.00″')
+  })
+
+  it('rejects minutes and seconds outside their ranges', () => {
+    expect(latFromDm('57°60′')).toBeNull()
+    expect(latFromDms('57°30′60″')).toBeNull()
+    expect(lngFromDms('180°0′0.01″')).toBeNull()
+    expect(latFromDd('57.')).toBeNull()
+  })
+})
