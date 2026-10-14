@@ -17,6 +17,8 @@ const swedenSamplePoints = [
   { name: 'Kiruna', lat: 67.8558, lng: 20.2253 }
 ]
 
+const rounded = (grid: { x: number, y: number }) => ({ x: Number(grid.x.toFixed(3)), y: Number(grid.y.toFixed(3)) })
+
 describe('Coordinate regression', () => {
   it('keeps grid roundtrip precision across supported grid projections', () => {
     const decimals = 5
@@ -37,9 +39,9 @@ describe('Coordinate regression', () => {
   it('matches golden grid outputs for selected projections and points', () => {
     const golden = swedenSamplePoints.map(point => ({
       name: point.name,
-      sweref99tm: geodeticToGrid(point.lat, point.lng, projectionParams('sweref99tm')),
-      rt9025gonV: geodeticToGrid(point.lat, point.lng, projectionParams('rt9025gonV')),
-      rt9050gonV: geodeticToGrid(point.lat, point.lng, projectionParams('rt9050gonV'))
+      sweref99tm: rounded(geodeticToGrid(point.lat, point.lng, projectionParams('sweref99tm'))),
+      rt9025gonV: rounded(geodeticToGrid(point.lat, point.lng, projectionParams('rt9025gonV'))),
+      rt9050gonV: rounded(geodeticToGrid(point.lat, point.lng, projectionParams('rt9050gonV')))
     }))
 
     expect(golden).toMatchInlineSnapshot(`

@@ -31,3 +31,10 @@ describe('geodeticToGrid', () => {
     expect(y).toBeCloseTo(555304.017, 3)
   })
 })
+
+it('retains sub-millimetre precision for intermediate calculations', () => {
+  const result = geodeticToGrid(66, 24, projectionParams('testCase'))
+  expect(result.x).toBeCloseTo(1135809.413803, 4)
+  expect(result.y).toBeCloseTo(555304.016555, 4)
+  expect(result.x).not.toBe(Number(result.x.toFixed(3)))
+})

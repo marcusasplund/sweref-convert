@@ -70,7 +70,7 @@ export const geodeticToGrid = (latitude: number, longitude: number, params: Proj
   ) + params.falseEasting
   if (!Number.isFinite(x) || !Number.isFinite(y)) throw new RangeError('Coordinates are outside the projection domain')
   return {
-    x: parseFloat(x.toFixed(3)),
-    y: parseFloat(y.toFixed(3))
+    x,
+    y
   }
 }

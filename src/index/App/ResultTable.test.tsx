@@ -57,3 +57,18 @@ describe('<ResultTable />', () => {
     expect(screen.getByText('200')).toBeDefined()
   })
 })
+
+it('rounds grid coordinates for display while preserving geographic decimals', () => {
+  const row = { ...createRows(1)[0], x: 6580743.00849, y: 674571.86649, x2: 6580908.64949, y2: 1628832.52649 }
+  render(() => <ResultTable rows={() => [row]} twoWay={() => true} />)
+  expect(screen.getByText('6580743.008')).toBeDefined()
+  expect(screen.getByText('6580908.649')).toBeDefined()
+  expect(row.x).toBe(6580743.00849)
+})
+
+it('does not round WGS84 coordinates to three decimal places', () => {
+  const row = { ...createRows(1)[0], x: 59.3293, y: 18.0686 }
+  render(() => <ResultTable geographicCoordinates={() => true} rows={() => [row]} twoWay={() => false} />)
+  expect(screen.getByText('59.3293')).toBeDefined()
+  expect(screen.getByText('18.0686')).toBeDefined()
+})

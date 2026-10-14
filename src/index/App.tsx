@@ -121,7 +121,14 @@ export default function App (): JSXElement {
 
   const downloadCSV = (e: Event): void => {
     if ('preventDefault' in e) e.preventDefault()
-    const parsed: string = Papa.unparse(rows(), {
+    const exportRows = rows().map(row => ({
+      ...row,
+      x: from() === 'wgs84' && to() === 'wgs84' ? row.x : Number(row.x.toFixed(3)),
+      x2: Number(row.x2.toFixed(3)),
+      y: from() === 'wgs84' && to() === 'wgs84' ? row.y : Number(row.y.toFixed(3)),
+      y2: Number(row.y2.toFixed(3))
+    }))
+    const parsed: string = Papa.unparse(exportRows, {
       delimiter: ';'
     })
     const BOM: string = '\uFEFF'
@@ -304,7 +311,7 @@ export default function App (): JSXElement {
               ))}
               {!viewMap() && rows().length > 0 && (
                 <Box sx={{ mt: 2 }}>
-                  <ResultTable twoWay={twoWay} rows={rows} />
+                  <ResultTable geographicCoordinates={() => from() === 'wgs84' && to() === 'wgs84'} twoWay={twoWay} rows={rows} />
                 </Box>
               )}
               {rows().length === 0 && (

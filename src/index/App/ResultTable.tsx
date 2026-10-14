@@ -18,6 +18,7 @@ interface ResultTableProps {
   limit?: number
   twoWay: () => boolean
   rows: () => ConvertedRow[]
+  geographicCoordinates?: () => boolean
 }
 
 export default function ResultTable (props: ResultTableProps): JSX.Element {
@@ -80,12 +81,12 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
             <For each={visibleRows()}>
               {(row: ConvertedRow) => (
                 <TableRow>
-                  <TableCell>{row.x}</TableCell>
-                  <TableCell>{row.y}</TableCell>
+                  <TableCell>{props.geographicCoordinates?.() ? row.x : Number(row.x.toFixed(3))}</TableCell>
+                  <TableCell>{props.geographicCoordinates?.() ? row.y : Number(row.y.toFixed(3))}</TableCell>
                   <TableCell>{row.lat}</TableCell>
                   <TableCell>{row.lng}</TableCell>
-                  <TableCell>{twoWay() ? row.x2 : row.latdms}</TableCell>
-                  <TableCell>{twoWay() ? row.y2 : row.lngdms}</TableCell>
+                  <TableCell>{twoWay() ? Number(row.x2.toFixed(3)) : row.latdms}</TableCell>
+                  <TableCell>{twoWay() ? Number(row.y2.toFixed(3)) : row.lngdms}</TableCell>
                 </TableRow>
               )}
             </For>
