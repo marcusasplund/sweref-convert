@@ -1,3 +1,4 @@
+import { useTransContext } from '@jellybrick/solid-i18next'
 import { createEffect, createSignal, JSXElement, lazy, Suspense } from 'solid-js'
 
 import styled from '@suid/material/styles/styled'
@@ -36,6 +37,7 @@ const FileInput = styled('input')({
 })
 
 export default function App (): JSXElement {
+  const [t] = useTransContext()
   const [open, setOpen] = createSignal(false)
   const [from, setFrom] = createSignal<ProjectionKey>('rt9025gonV')
   const [to, setTo] = createSignal<ProjectionKey>('wgs84')
@@ -155,7 +157,7 @@ export default function App (): JSXElement {
     setCsvData({ data: target.value, isFile: true })
   }
 
-  const rowCount = rows().length
+  const rowCount = () => rows().length
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -174,15 +176,15 @@ export default function App (): JSXElement {
           <Grid container alignItems='end' spacing={2} sx={{ pb: { sm: 1.5, xs: 1 } }}>
             <Grid item xs={12} sm={8}>
               <Typography component='h1' variant='h4' sx={{ m: 0, textWrap: 'balance' }}>
-                Konvertera mellan SWEREF99, RT90, WGS84
+                {t('heading')}
               </Typography>
               <Typography variant='body1' sx={{ color: 'text.secondary', maxWidth: '68ch', mt: 1, textWrap: 'pretty' }}>
-                Klistra in data, ladda upp en CSV eller peka på en fil på servern. Växla mellan tabell och karta när du vill kontrollera resultatet.
+                {t('intro')}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant='body2' sx={{ color: 'text.secondary', textAlign: { sm: 'right', xs: 'left' } }}>
-                {rowCount > 0 ? `${rowCount} rader inlästa` : 'CSV · karta · export'}
+                {rowCount() > 0 ? t('rowsLoaded', { count: rowCount() }) : t('summary')}
               </Typography>
             </Grid>
           </Grid>
@@ -197,12 +199,12 @@ export default function App (): JSXElement {
                     <Select
                       labelId='from-select-label'
                       value={from()}
-                      label='Konvertera från'
+                      label={t('from')}
                       onChange={({ target }) => handleChangeFrom(target.value)}
                     >
                       {
                         selectParams.map((p) => (
-                          <MenuItem value={p.value}>{p.text}</MenuItem>)
+                          <MenuItem value={p.value}>{p.value === 'rt9025gonV' ? t('nationalProjection') : p.text}</MenuItem>)
                         )
                       }
                     </Select>
@@ -214,12 +216,12 @@ export default function App (): JSXElement {
                     <Select
                       labelId='to-select-label'
                       value={to()}
-                      label='Konvertera till'
+                      label={t('to')}
                       onChange={({ target }) => handleChangeTo(target.value)}
                     >
                       {
                         selectParams.map((p) => (
-                          <MenuItem value={p.value}>{p.text}</MenuItem>
+                          <MenuItem value={p.value}>{p.value === 'rt9025gonV' ? t('nationalProjection') : p.text}</MenuItem>
                         ))
                       }
                     </Select>
@@ -236,25 +238,25 @@ export default function App (): JSXElement {
                       onChange={parseFile}
                     />
                     <Button variant='contained' component='span' fullWidth>
-                      Ladda upp .csv
+                      {t('upload')}
                     </Button>
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Button onClick={toggleMap} disabled={isDisabled()} variant='outlined' fullWidth>
-                    {viewMap() ? 'Tabellvy' : 'Kartvy'}
+                    {viewMap() ? t('tableView') : t('mapView')}
                   </Button>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Button onClick={downloadCSV} disabled={isDisabled()} variant='contained' fullWidth>
-                    Ladda ned konverterad .csv
+                    {t('download')}
                   </Button>
                 </Grid>
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
                     <TextField
-                      label='Klistra in url till fil från server'
+                      label={t('url')}
                       variant='outlined'
                       onInput={e => parseRemote(e)}
                     />
@@ -264,7 +266,7 @@ export default function App (): JSXElement {
                 <Grid item xs={12}>
                   <FormControl fullWidth>
                     <TextField
-                      label='Klistra in tabell med två kolumner'
+                      label={t('paste')}
                       variant='outlined'
                       multiline
                       rows={6}
@@ -290,7 +292,7 @@ export default function App (): JSXElement {
               {rows().length === 0 && (
                 <Box sx={{ mt: 2 }}>
                   <Typography variant='body1'>
-                    Resultatet visas här så snart du har laddat in data.
+                    {t('emptyResult')}
                   </Typography>
                 </Box>
               )}

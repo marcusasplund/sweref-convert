@@ -1,3 +1,5 @@
+import { useTransContext } from '@jellybrick/solid-i18next'
+import LanguageSwitcher from './LanguageSwitcher'
 import { AppBar, Box, Toolbar, Typography, IconButton } from '@suid/material'
 import { JSX, createSignal, Show, onMount } from 'solid-js'
 import { HelpCircle, Share2, Sun, Moon } from 'lucide-solid'
@@ -8,6 +10,7 @@ interface TopBarProps {
 }
 
 export default function TopBar (props: TopBarProps): JSX.Element {
+  const [t] = useTransContext()
   const { handleClickOpen } = props
   const { mode, toggle } = useColorMode()
 
@@ -22,28 +25,29 @@ export default function TopBar (props: TopBarProps): JSX.Element {
   const shareApp = async (): Promise<void> => {
     try {
       await window.navigator.share({
-        text: 'Konvertera mellan SWEREF, RT90 och lat, lon',
+        text: t('description'),
         title: 'Sweref convert',
         url: `https://pap.as${location.pathname}`
       })
     } catch (err) {
       console.log(err)
-      alert('Sharing failed. Please try again or check your browser support.')
+      alert(t('shareError'))
     }
   }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static' elevation={0} sx={{ bgcolor: mode() === 'dark' ? 'background.paper' : 'primary.main', color: '#fff' }}>
-        <Toolbar sx={{ gap: 1.5, minHeight: 64, px: { sm: 3, xs: 2 } }}>
-          <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+        <Toolbar sx={{ gap: { sm: 1.5, xs: 0.5 }, minHeight: 64, px: { sm: 3, xs: 2 } }}>
+          <Typography variant='h6' component='div' sx={{ flexGrow: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             Sweref convert
           </Typography>
+          <LanguageSwitcher />
           <IconButton
             size='large'
             color='inherit'
-            aria-label={mode() === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
-            title={mode() === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
+            aria-label={mode() === 'dark' ? t('lightMode') : t('darkMode')}
+            title={mode() === 'dark' ? t('lightMode') : t('darkMode')}
             onClick={toggle}
           >
             <Show when={mode() === 'dark'} fallback={<Sun aria-hidden='true' />}>
@@ -55,7 +59,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
               size='large'
               edge='start'
               color='inherit'
-              aria-label='share'
+              aria-label={t('share')}
               sx={{ mr: 0.5 }}
               onClick={() => { shareApp().catch(err => console.error(err)) }}
             >
@@ -66,7 +70,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
             size='large'
             edge='start'
             color='inherit'
-            aria-label='help'
+            aria-label={t('help')}
             sx={{ mr: 0 }}
             onClick={handleClickOpen}
           >

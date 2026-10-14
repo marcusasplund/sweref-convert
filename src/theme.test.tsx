@@ -1,5 +1,6 @@
+import { render } from './test-render'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, fireEvent, render, screen } from '@solidjs/testing-library'
+import { cleanup, fireEvent, screen } from '@solidjs/testing-library'
 import { AppThemeProvider } from './theme'
 import TopBar from './index/App/TopBar'
 

@@ -1,3 +1,4 @@
+import { useTransContext } from '@jellybrick/solid-i18next'
 import { createSignal, JSX, For } from 'solid-js'
 import {
   Box,
@@ -20,13 +21,14 @@ interface ResultTableProps {
 }
 
 export default function ResultTable (props: ResultTableProps): JSX.Element {
+  const [t] = useTransContext()
   const { rows, twoWay } = props
   const [showAll, setShowAll] = createSignal(false)
   const rowLimit = props.limit ?? 100
   const visibleRows = (): ConvertedRow[] => (showAll() ? rows() : rows().slice(0, rowLimit))
 
   if (rows().length === 0) {
-    return <p>Ingen data att visa.</p>
+    return <p>{t('emptyTable')}</p>
   }
 
   return (
@@ -48,9 +50,9 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
                 onChange={(_, value) => setShowAll(value)}
               />
             }
-            label={showAll() ? 'Visa alla rader' : 'Visa endast de 100 första raderna'}
+            label={showAll() ? t('showAll') : t('showFirst', { count: rowLimit })}
           />
-          <div>{showAll() ? `${rows().length} rader visas` : 'Nu visas endast de 100 första raderna här nedan'}</div>
+          <div>{showAll() ? t('rowsShown', { count: rows().length }) : t('firstShown', { count: rowLimit })}</div>
         </Box>
       )}
       <TableContainer
@@ -63,7 +65,7 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
           overflow: 'hidden'
         }}
       >
-        <Table sx={{ minWidth: 650, whiteSpace: 'nowrap' }} aria-label='simple table'>
+        <Table sx={{ minWidth: 650, whiteSpace: 'nowrap' }} aria-label={t('resultsTable')}>
           <TableHead>
             <TableRow>
               <TableCell scope='col'>X</TableCell>

@@ -1,5 +1,6 @@
+import { render } from '../../test-render'
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, screen, fireEvent, cleanup } from '@solidjs/testing-library'
+import { screen, fireEvent, cleanup } from '@solidjs/testing-library'
 import InfoDialog from './InfoDialog'
 
 vi.mock('@suid/material/Portal', () => ({

@@ -1,3 +1,4 @@
+import { useTransContext } from '@jellybrick/solid-i18next'
 import { JSXElement } from 'solid-js'
 import {
   Button,
@@ -5,7 +6,8 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Typography
 } from '@suid/material'
 
 interface InfoDialogProps {
@@ -14,6 +16,7 @@ interface InfoDialogProps {
 }
 
 export default function InfoDialog (props: InfoDialogProps): JSXElement {
+  const [t] = useTransContext()
   const { onClose, open } = props
 
   const handleClose = (): void => {
@@ -22,42 +25,44 @@ export default function InfoDialog (props: InfoDialogProps): JSXElement {
 
   return (
     <Dialog onClose={handleClose} open={open()}>
-      <DialogTitle>Hjälp</DialogTitle>
+      <DialogTitle>{t('help')}</DialogTitle>
       <DialogContent>
-        <DialogContentText sx={{ '& a': { color: 'primary.main' } }}>
+        <DialogContentText component='div' sx={{ '& a': { color: 'primary.main' }, '& li': { mb: 1 }, '& pre': { overflowX: 'auto' } }}>
+          <p>{t('helpIntro')}</p>
+          <ol>
+            <li>{t('helpChoose')}</li>
+            <li>{t('helpUpload')} {t('helpPaste')}</li>
+            <li>{t('helpVerify')}</li>
+            <li>{t('helpExport')}</li>
+          </ol>
+          <p>{t('helpSwap')}</p>
+          <Typography component='h3' variant='subtitle1' sx={{ fontWeight: 600 }}>
+            {t('exampleData')}
+          </Typography>
+          <pre><code>{'x,y\n6373105,1316400\n6371176,1312784\n6371447,1318751'}</code></pre>
           <p>
-            Denna app är till för att snabbt konvertera stora mängder koordinater mellan RT90, SWEREF och WGS84.
-            Det enklaste är att ladda upp ett .csv-dokument med två kolumner; en x- o en y-kolumn. Klicka gärna på knappen "Kartvy" för att kontrollera så att konverteringen ser ut att ha gått rätt till.
-            Om den ser heltokig ut så kan du försöka att byta plats på kolumnerna x o y i din ursprungsdata innan du laddar upp.
+            <a download='rt90.csv' target='_blank' rel='noopener noreferrer' href='https://pap.as/sweref/rt90.csv'>{t('exampleFile')}</a>
           </p>
-          <p>Du kan även klistra in data direkt i textfältet, alternativt klistra in en länk i det mindre fältet om du har ett dokument på nån server nånstans. </p>
+          <Typography component='h3' variant='subtitle1' sx={{ fontWeight: 600 }}>
+            {t('contact')}
+          </Typography>
           <p>
-            <b>Exempeldata, så här bör den se ut:</b><br />
-            x,y<br />
-            6373105,1316400<br />
-            6371176,1312784<br />
-            6371447,1318751<br />
-          </p>
-          <p>
-            <b>Exempelfil:</b><br />
-            <a download='rt90.csv' target='_blank' rel='noopener noreferrer' href='https://pap.as/sweref/rt90.csv'>https://pap.as/sweref/rt90.csv</a>
-          </p>
-          <p>
-            Jag tar tacksamt emot synpunkter o önskemål på funktioner till appen.
-          </p>
-          <p>
-            Maila mig gärna på <a href='mailto:&#114;&#111;&#111;&#116;&#102;&#111;&#111;&#100;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;'>&#114;&#111;&#111;&#116;&#102;&#111;&#111;&#100;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a>
+            {t('feedback')}
           </p>
           <p>
-            Beräkningsalgoritmerna kommer från <a href='https://latlong.mellifica.se'>latlong.mellifica.se</a>{' '}
-            där finns lite mer info. Källkoden till denna app hittar ni{' '}
-            <a href='https://github.com/marcusasplund/sweref-convert'>här</a>
+            {t('email')} <a href='mailto:&#114;&#111;&#111;&#116;&#102;&#111;&#111;&#100;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;'>&#114;&#111;&#111;&#116;&#102;&#111;&#111;&#100;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a>
+          </p>
+          <p>
+            {t('algorithms')} <a href='https://latlong.mellifica.se'>latlong.mellifica.se</a>{' '}
+          </p>
+          <p>
+            <a href='https://github.com/marcusasplund/sweref-convert'>{t('sourceCode')}</a>
           </p>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color='primary'>
-          Stäng
+          {t('close')}
         </Button>
       </DialogActions>
     </Dialog>

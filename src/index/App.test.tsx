@@ -1,5 +1,6 @@
+import { render } from '../test-render'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, cleanup } from '@solidjs/testing-library'
+import { screen, fireEvent, cleanup } from '@solidjs/testing-library'
 import { ThemeProvider, createTheme } from '@suid/material/styles'
 import CssBaseline from '@suid/material/CssBaseline'
 import App from './App'
@@ -64,7 +65,7 @@ describe('<App />', () => {
   it('enables buttons after data input and toggles views', async () => {
     renderApp()
     // Simulate pasting CSV string
-    const textField = screen.getByLabelText('Klistra in tabell med två kolumner')
+    const textField = screen.getByLabelText('Klistra in koordinater i två kolumner')
     const data = 'x,y\n1,2'
     fireEvent.input(textField, { target: { value: data } })
     // Mock Papa.parse step callback
@@ -86,27 +87,27 @@ describe('<App />', () => {
 
     it('parses remote file URL as download', () => {
     renderApp()
-    const remoteField = screen.getByLabelText('Klistra in url till fil från server')
+    const remoteField = screen.getByLabelText('Länk till CSV-fil')
     fireEvent.input(remoteField, { target: { value: 'https://example.com/points.csv' } })
     expect(papaparse.parse).toHaveBeenCalledWith('https://example.com/points.csv', expect.objectContaining({ download: true }))
   })
   it('parses pasted CSV string', () => {
     renderApp()
-    const textField = screen.getByLabelText('Klistra in tabell med två kolumner')
+    const textField = screen.getByLabelText('Klistra in koordinater i två kolumner')
     fireEvent.input(textField, { target: { value: 'x,y\n5,6' } })
     expect(papaparse.parse).toHaveBeenCalledWith('x,y\n5,6', expect.any(Object))
   })
 
   it('parses remote file URL as download', () => {
     renderApp()
-    const remoteField = screen.getByLabelText('Klistra in url till fil från server')
+    const remoteField = screen.getByLabelText('Länk till CSV-fil')
     fireEvent.input(remoteField, { target: { value: 'https://example.com/points.csv' } })
     expect(papaparse.parse).toHaveBeenCalledWith('https://example.com/points.csv', expect.objectContaining({ download: true }))
   })
 
   it('parses uploaded file', () => {
     renderApp()
-    const fileInput = screen.getByLabelText('Ladda upp .csv')
+    const fileInput = screen.getByLabelText('Ladda upp CSV-fil')
     const file = new File(['x,y\n7,8'], 'test.csv', { type: 'text/csv' })
     fireEvent.change(fileInput, { target: { files: [file] } })
     expect(papaparse.parse).toHaveBeenCalledWith(file, expect.any(Object))

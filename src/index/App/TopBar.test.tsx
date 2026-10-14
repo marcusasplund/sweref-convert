@@ -1,5 +1,6 @@
+import { render } from '../../test-render'
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@solidjs/testing-library'
+import { screen, fireEvent } from '@solidjs/testing-library'
 import TopBar from './TopBar'
 
 describe('<TopBar />', () => {
@@ -17,12 +18,12 @@ describe('<TopBar />', () => {
 
     render(() => <TopBar handleClickOpen={() => {}} />)
 
-    const shareBtn = await screen.findByRole('button', { name: /share/i })
+    const shareBtn = await screen.findByRole('button', { name: /dela/i })
     await fireEvent.click(shareBtn)
 
     expect(mockShare).toHaveBeenCalled()
     expect(alertSpy).toHaveBeenCalledWith(
-      'Sharing failed. Please try again or check your browser support.'
+      'Det gick inte att dela länken. Försök igen eller kopiera länken från adressfältet.'
     )
   })
 })

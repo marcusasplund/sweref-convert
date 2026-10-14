@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, cleanup } from '@solidjs/testing-library'
+import { render } from '../../test-render'
+import { screen, fireEvent, cleanup } from '@solidjs/testing-library'
 import { describe, it, expect, afterEach } from 'vitest'
 import ResultTable from './ResultTable'
 import type { ConvertedRow } from '../types'
