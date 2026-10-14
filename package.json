@@ -37,14 +37,14 @@
     "vite": "^8.3.2",
     "vite-plugin-pwa": "^2.0.0",
     "vite-plugin-solid": "^2.11.14",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.4"
   },
   "dependencies": {
     "@suid/material": "^0.19.0",
     "leaflet": "^1.9.4",
-    "lucide-solid": "^1.52.0",
+    "lucide-solid": "^1.57.0",
     "papaparse": "^5.7.0",
-    "solid-js": "^1.9.15",
+    "solid-js": "^1.9.17",
     "solidjs-leaflet": "^1.0.2"
   },
   "allowScripts": {

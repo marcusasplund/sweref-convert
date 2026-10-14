@@ -24,7 +24,7 @@ export default function InfoDialog (props: InfoDialogProps): JSXElement {
     <Dialog onClose={handleClose} open={open()}>
       <DialogTitle>Hjälp</DialogTitle>
       <DialogContent>
-        <DialogContentText>
+        <DialogContentText sx={{ '& a': { color: 'primary.main' } }}>
           <p>
             Denna app är till för att snabbt konvertera stora mängder koordinater mellan RT90, SWEREF och WGS84.
             Det enklaste är att ladda upp ett .csv-dokument med två kolumner; en x- o en y-kolumn. Klicka gärna på knappen "Kartvy" för att kontrollera så att konverteringen ser ut att ha gått rätt till.

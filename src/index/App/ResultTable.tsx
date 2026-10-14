@@ -57,7 +57,8 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
         component={Paper}
         elevation={0}
         sx={{
-          border: '1px solid rgba(15, 23, 42, 0.08)',
+          border: '1px solid',
+          borderColor: 'divider',
           borderRadius: 2,
           overflow: 'hidden'
         }}

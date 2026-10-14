@@ -1,6 +1,7 @@
 import { AppBar, Box, Toolbar, Typography, IconButton } from '@suid/material'
 import { JSX, createSignal, Show, onMount } from 'solid-js'
-import { HelpCircle, Share2 } from 'lucide-solid'
+import { HelpCircle, Share2, Sun, Moon } from 'lucide-solid'
+import { useColorMode } from '../../theme'
 
 interface TopBarProps {
   handleClickOpen: () => void
@@ -8,6 +9,7 @@ interface TopBarProps {
 
 export default function TopBar (props: TopBarProps): JSX.Element {
   const { handleClickOpen } = props
+  const { mode, toggle } = useColorMode()
 
   // Signal to determine if `navigator.share` is available
   const [canShare, setCanShare] = createSignal(false)
@@ -32,11 +34,22 @@ export default function TopBar (props: TopBarProps): JSX.Element {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static' elevation={0}>
+      <AppBar position='static' elevation={0} sx={{ bgcolor: mode() === 'dark' ? 'background.paper' : 'primary.main', color: '#fff' }}>
         <Toolbar sx={{ gap: 1.5, minHeight: 64, px: { sm: 3, xs: 2 } }}>
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             Sweref convert
           </Typography>
+          <IconButton
+            size='large'
+            color='inherit'
+            aria-label={mode() === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
+            title={mode() === 'dark' ? 'Byt till ljust läge' : 'Byt till mörkt läge'}
+            onClick={toggle}
+          >
+            <Show when={mode() === 'dark'} fallback={<Sun aria-hidden='true' />}>
+              <Moon aria-hidden='true' />
+            </Show>
+          </IconButton>
           <Show when={canShare()}>
             <IconButton
               size='large'

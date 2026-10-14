@@ -158,12 +158,13 @@ export default function App (): JSXElement {
   const rowCount = rows().length
 
   return (
-    <Box sx={{ bgcolor: '#f5f7fb', minHeight: '100vh' }}>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       <TopBar handleClickOpen={handleClickOpen} />
       <Box
         sx={{
-          background:
-            'radial-gradient(circle at top left, rgba(29, 78, 216, 0.08), transparent 28%), radial-gradient(circle at 92% 12%, rgba(15, 118, 110, 0.06), transparent 20%), #f5f7fb',
+          backgroundImage:
+            'radial-gradient(circle at top left, rgba(29, 78, 216, 0.08), transparent 28%), radial-gradient(circle at 92% 12%, rgba(15, 118, 110, 0.06), transparent 20%)',
+          bgcolor: 'background.default',
           minHeight: 'calc(100vh - 64px)',
           px: { sm: 2, xs: 1 },
           py: { sm: 2, xs: 1 }
@@ -175,12 +176,12 @@ export default function App (): JSXElement {
               <Typography component='h1' variant='h4' sx={{ m: 0, textWrap: 'balance' }}>
                 Konvertera mellan SWEREF99, RT90, WGS84
               </Typography>
-              <Typography variant='body1' sx={{ color: '#475569', maxWidth: '68ch', mt: 1, textWrap: 'pretty' }}>
+              <Typography variant='body1' sx={{ color: 'text.secondary', maxWidth: '68ch', mt: 1, textWrap: 'pretty' }}>
                 Klistra in data, ladda upp en CSV eller peka på en fil på servern. Växla mellan tabell och karta när du vill kontrollera resultatet.
               </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Typography variant='body2' sx={{ color: '#64748b', textAlign: { sm: 'right', xs: 'left' } }}>
+              <Typography variant='body2' sx={{ color: 'text.secondary', textAlign: { sm: 'right', xs: 'left' } }}>
                 {rowCount > 0 ? `${rowCount} rader inlästa` : 'CSV · karta · export'}
               </Typography>
             </Grid>
