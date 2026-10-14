@@ -9,7 +9,8 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "test:types": "tsc --noEmit"
   },
   "type": "module",
   "main": "src/index.js",
