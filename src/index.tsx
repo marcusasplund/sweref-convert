@@ -6,16 +6,16 @@ import CssBaseline from '@suid/material/CssBaseline'
 
 const theme = createTheme({
   palette: {
+    background: {
+      default: '#f5f7fb',
+      paper: '#ffffff'
+    },
     mode: 'light',
     primary: {
       main: '#1d4ed8'
     },
     secondary: {
       main: '#0f766e'
-    },
-    background: {
-      default: '#f5f7fb',
-      paper: '#ffffff'
     },
     text: {
       primary: '#0f172a',
@@ -26,6 +26,10 @@ const theme = createTheme({
     borderRadius: 12
   },
   typography: {
+    button: {
+      fontWeight: 600,
+      textTransform: 'none'
+    },
     fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     h4: {
       fontWeight: 700,
@@ -34,10 +38,6 @@ const theme = createTheme({
     h6: {
       fontWeight: 700,
       letterSpacing: '-0.02em'
-    },
-    button: {
-      textTransform: 'none',
-      fontWeight: 600
     }
   }
 })

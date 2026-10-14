@@ -3,10 +3,10 @@ import { SolidLeafletMap } from 'solidjs-leaflet'
 import { ConvertedRow } from '../types'
 
 interface LeafletMapProps {
-  rows: () => ConvertedRow[]
-  center?: [number, number]
   zoom?: number
   limit?: number
+  center?: [number, number]
+  rows: () => ConvertedRow[]
 }
 
 export function LeafletMap (props: LeafletMapProps): JSX.Element {

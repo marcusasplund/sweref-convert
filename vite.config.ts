@@ -4,8 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   base: '/sweref/',
-  plugins: [solidPlugin(), VitePWA({ registerType: 'autoUpdate' })],
   build: {
     target: 'esnext'
-  }
+  },
+  plugins: [solidPlugin(), VitePWA({ registerType: 'autoUpdate' })]
 })

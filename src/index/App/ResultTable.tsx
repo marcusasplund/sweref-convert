@@ -14,9 +14,9 @@ import {
 import { ConvertedRow } from '../types'
 
 interface ResultTableProps {
-  rows: () => ConvertedRow[]
-  twoWay: () => boolean
   limit?: number
+  twoWay: () => boolean
+  rows: () => ConvertedRow[]
 }
 
 export default function ResultTable (props: ResultTableProps): JSX.Element {
@@ -34,11 +34,11 @@ export default function ResultTable (props: ResultTableProps): JSX.Element {
       {rows().length > rowLimit && (
         <Box
           sx={{
+            alignItems: { sm: 'center', xs: 'stretch' },
             display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: { xs: 'stretch', sm: 'center' },
-            justifyContent: 'space-between',
-            gap: 1.5
+            flexDirection: { sm: 'row', xs: 'column' },
+            gap: 1.5,
+            justifyContent: 'space-between'
           }}
         >
           <FormControlLabel

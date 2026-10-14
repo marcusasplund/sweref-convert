@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 // Author: Marcus Asplund
 // Copyright (c) 2017 Marcus Asplund, marcus@greatname.se
 // License: MIT License as follows:

@@ -1,6 +1,6 @@
 export interface CsvData {
-  data: string | File
   isFile: boolean
+  data: string | File
 }
 
 export interface PapaParseResult {
@@ -13,22 +13,22 @@ export interface PapaParseResult {
 export interface ConvertedRow {
   x: number
   y: number
-  lat: number
-  lng: number
   x2: number
   y2: number
+  lat: number
+  lng: number
   latdms: string
   lngdms: string
 }
 
 export interface ProjectionParams {
   axis: number
-  flattening: number
-  centralMeridian: number | null
-  latOfOrigin: number
   scale: number
-  falseNorthing: number
+  flattening: number
+  latOfOrigin: number
   falseEasting: number
+  falseNorthing: number
+  centralMeridian: number | null
 }
 
 export interface GridCoordinates {

@@ -20,8 +20,8 @@ export default function TopBar (props: TopBarProps): JSX.Element {
   const shareApp = async (): Promise<void> => {
     try {
       await window.navigator.share({
-        title: 'Sweref convert',
         text: 'Konvertera mellan SWEREF, RT90 och lat, lon',
+        title: 'Sweref convert',
         url: `https://pap.as${location.pathname}`
       })
     } catch (err) {
@@ -33,7 +33,7 @@ export default function TopBar (props: TopBarProps): JSX.Element {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static' elevation={0}>
-        <Toolbar sx={{ minHeight: 64, gap: 1.5, px: { xs: 2, sm: 3 } }}>
+        <Toolbar sx={{ gap: 1.5, minHeight: 64, px: { sm: 3, xs: 2 } }}>
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             Sweref convert
           </Typography>

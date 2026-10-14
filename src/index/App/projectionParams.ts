@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 // Author: Marcus Asplund
 // Copyright (c) 2017 Marcus Asplund, marcus@greatname.se
 // License: MIT License as follows:
@@ -35,12 +33,12 @@ import { ProjectionParams } from '../types'
 
 const defaultParams = {
   axis: null, // Semi-major axis of the ellipsoid.
-  flattening: null, // Flattening of the ellipsoid.
   centralMeridian: null, // Central meridian for the projection.
-  latOfOrigin: null, // Latitude of origin.
-  scale: null, // Scale on central meridian.
+  falseEasting: null, // Offset for origo.
   falseNorthing: null, // Offset for origo.
-  falseEasting: null // Offset for origo.
+  flattening: null, // Flattening of the ellipsoid.
+  latOfOrigin: null, // Latitude of origin.
+  scale: null // Scale on central meridian.
 }
 
 // Parameters for RT90 and SWEREF99TM.
@@ -50,72 +48,72 @@ const defaultParams = {
 // if-statement.
 const grs80Params = {
   axis: 6378137.0, // GRS 80.
-  flattening: 1.0 / 298.257222101, // GRS 80.
   centralMeridian: null,
+  flattening: 1.0 / 298.257222101, // GRS 80.
   latOfOrigin: 0.0
 }
 
 // Sets of default parameters.
 const besselParams = {
   axis: 6377397.155, // Bessel 1841.
-  flattening: 1.0 / 299.1528128, // Bessel 1841.
   centralMeridian: null,
-  latOfOrigin: 0.0,
-  scale: 1.0,
+  falseEasting: 1500000.0,
   falseNorthing: 0.0,
-  falseEasting: 1500000.0
+  flattening: 1.0 / 299.1528128, // Bessel 1841.
+  latOfOrigin: 0.0,
+  scale: 1.0
 }
 
 const sweref99Params = {
   axis: 6378137.0, // const 80.
-  flattening: 1.0 / 298.257222101, // GRS 80.
   centralMeridian: null,
-  latOfOrigin: 0.0,
-  scale: 1.0,
+  falseEasting: 150000.0,
   falseNorthing: 0.0,
-  falseEasting: 150000.0
+  flattening: 1.0 / 298.257222101, // GRS 80.
+  latOfOrigin: 0.0,
+  scale: 1.0
 }
 
 const rt9075gonV = {
   centralMeridian: 11.0 + 18.375 / 60.0,
-  scale: 1.000006000000,
+  falseEasting: 1500025.141,
   falseNorthing: -667.282,
-  falseEasting: 1500025.141
+  scale: 1.000006000000
 }
 
 const rt9050gonV = {
   centralMeridian: 13.0 + 33.376 / 60.0,
-  scale: 1.000005800000,
+  falseEasting: 1500044.695,
   falseNorthing: -667.130,
-  falseEasting: 1500044.695
+  scale: 1.000005800000
 }
 
 const rt9025gonV = {
   centralMeridian: 15.0 + 48.0 / 60.0 + 22.624306 / 3600.0,
-  scale: 1.00000561024,
+  falseEasting: 1500064.274,
   falseNorthing: -667.711,
-  falseEasting: 1500064.274
+  scale: 1.00000561024
 }
 
 const rt9000gonV = {
   centralMeridian: 18.0 + 3.378 / 60.0,
-  scale: 1.000005400000,
+  falseEasting: 1500083.521,
   falseNorthing: -668.844,
-  falseEasting: 1500083.521
+  scale: 1.000005400000
 }
 
 const rt9025gonO = {
   centralMeridian: 20.0 + 18.379 / 60.0,
-  scale: 1.000005200000,
+  falseEasting: 1500102.765,
   falseNorthing: -670.706,
-  falseEasting: 1500102.765
+  scale: 1.000005200000
 }
 
 const rt9050gonO = {
   centralMeridian: 22.0 + 33.380 / 60.0,
-  scale: 1.000004900000,
+  falseEasting: 1500121.846,
   falseNorthing: -672.557,
-  falseEasting: 1500121.846
+  scale: 1.000004900000
 }
 
 const besselRt9075gonV = {
@@ -144,10 +142,10 @@ const besselRt9050gonO = {
 
 const sweref99tm = {
   centralMeridian: 15.00,
-  latOfOrigin: 0.0,
-  scale: 0.9996,
+  falseEasting: 500000.0,
   falseNorthing: 0.0,
-  falseEasting: 500000.0
+  latOfOrigin: 0.0,
+  scale: 0.9996
 }
 
 const sweref991200 = {
@@ -203,40 +201,40 @@ const sweref992315 = {
 // X:1135809.413803 Y:555304.016555.
 const testCase = {
   axis: 6378137.0,
-  flattening: 1.0 / 298.257222101,
   centralMeridian: 13.0 + 35.0 / 60.0 + 7.692000 / 3600.0,
-  latOfOrigin: 0.0,
-  scale: 1.000002540000,
+  falseEasting: 84182.8790,
   falseNorthing: -6226307.8640,
-  falseEasting: 84182.8790
+  flattening: 1.0 / 298.257222101,
+  latOfOrigin: 0.0,
+  scale: 1.000002540000
 }
 
 const params = {
-  rt9075gonV: { ...grs80Params, ...rt9075gonV },
-  rt9050gonV: { ...grs80Params, ...rt9050gonV },
-  rt9025gonV: { ...grs80Params, ...rt9025gonV },
-  rt9000gonV: { ...grs80Params, ...rt9000gonV },
-  rt9025gonO: { ...grs80Params, ...rt9025gonO },
-  rt9050gonO: { ...grs80Params, ...rt9050gonO },
-  besselRt9075gonV: { ...besselParams, ...besselRt9075gonV },
-  besselRt9050gonV: { ...besselParams, ...besselRt9050gonV },
-  besselRt9025gonV: { ...besselParams, ...besselRt9025gonV },
   besselRt9000gonV: { ...besselParams, ...besselRt9000gonV },
   besselRt9025gonO: { ...besselParams, ...besselRt9025gonO },
+  besselRt9025gonV: { ...besselParams, ...besselRt9025gonV },
   besselRt9050gonO: { ...besselParams, ...besselRt9050gonO },
-  sweref99tm: { ...sweref99Params, ...sweref99tm },
+  besselRt9050gonV: { ...besselParams, ...besselRt9050gonV },
+  besselRt9075gonV: { ...besselParams, ...besselRt9075gonV },
+  rt9000gonV: { ...grs80Params, ...rt9000gonV },
+  rt9025gonO: { ...grs80Params, ...rt9025gonO },
+  rt9025gonV: { ...grs80Params, ...rt9025gonV },
+  rt9050gonO: { ...grs80Params, ...rt9050gonO },
+  rt9050gonV: { ...grs80Params, ...rt9050gonV },
+  rt9075gonV: { ...grs80Params, ...rt9075gonV },
   sweref991200: { ...sweref99Params, ...sweref991200 },
   sweref991330: { ...sweref99Params, ...sweref991330 },
-  sweref991500: { ...sweref99Params, ...sweref991500 },
-  sweref991630: { ...sweref99Params, ...sweref991630 },
-  sweref991800: { ...sweref99Params, ...sweref991800 },
   sweref991415: { ...sweref99Params, ...sweref991415 },
+  sweref991500: { ...sweref99Params, ...sweref991500 },
   sweref991545: { ...sweref99Params, ...sweref991545 },
+  sweref991630: { ...sweref99Params, ...sweref991630 },
   sweref991715: { ...sweref99Params, ...sweref991715 },
+  sweref991800: { ...sweref99Params, ...sweref991800 },
   sweref991845: { ...sweref99Params, ...sweref991845 },
   sweref992015: { ...sweref99Params, ...sweref992015 },
   sweref992145: { ...sweref99Params, ...sweref992145 },
   sweref992315: { ...sweref99Params, ...sweref992315 },
+  sweref99tm: { ...sweref99Params, ...sweref99tm },
   testCase
 }
 

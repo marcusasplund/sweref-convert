@@ -21,7 +21,7 @@ import TopBar from './App/TopBar'
 import { selectParams } from './App/selectParams'
 
 import * as Papa from 'papaparse'
-import { CsvData, PapaParseResult } from './types'
+import { ConvertedRow, CsvData, PapaParseResult } from './types'
 
 import { convertRow } from './App/conversionLogic'
 import { ProjectionKey } from './App/projectionParams'
@@ -39,7 +39,7 @@ export default function App (): JSXElement {
   const [open, setOpen] = createSignal(false)
   const [from, setFrom] = createSignal<ProjectionKey>('rt9025gonV')
   const [to, setTo] = createSignal<ProjectionKey>('wgs84')
-  const [rows, setRows] = createSignal<any[]>([])
+  const [rows, setRows] = createSignal<ConvertedRow[]>([])
   const [viewMap, setViewMap] = createSignal(false)
   const [csvData, setCsvData] = createSignal<CsvData | null>(null)
   const [isDisabled, setIsDisabled] = createSignal(true)
@@ -72,8 +72,9 @@ export default function App (): JSXElement {
 
   const processCsvData = (data: CsvData): void => {
     let headers: string[] = []
-    // @ts-expect-error
+    // @ts-expect-error Papa.parse overloads cannot express a string-or-File input with a dynamic download flag.
     Papa.parse(data.data, {
+      complete: () => setViewMap(false),
       download: data.isFile,
       header: true,
       step: (results: PapaParseResult) => {
@@ -87,8 +88,7 @@ export default function App (): JSXElement {
         const rowData = results.data as Record<string, unknown>
         const convertedRow = convertRow(rowData[headers[0]] as number, rowData[headers[1]] as number, from(), to())
         setRows((prevRows) => [...prevRows, convertedRow])
-      },
-      complete: () => setViewMap(false)
+      }
     })
   }
 
@@ -158,29 +158,29 @@ export default function App (): JSXElement {
   const rowCount = rows().length
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f7fb' }}>
+    <Box sx={{ bgcolor: '#f5f7fb', minHeight: '100vh' }}>
       <TopBar handleClickOpen={handleClickOpen} />
       <Box
         sx={{
-          minHeight: 'calc(100vh - 64px)',
-          px: { xs: 1, sm: 2 },
-          py: { xs: 1, sm: 2 },
           background:
-            'radial-gradient(circle at top left, rgba(29, 78, 216, 0.08), transparent 28%), radial-gradient(circle at 92% 12%, rgba(15, 118, 110, 0.06), transparent 20%), #f5f7fb'
+            'radial-gradient(circle at top left, rgba(29, 78, 216, 0.08), transparent 28%), radial-gradient(circle at 92% 12%, rgba(15, 118, 110, 0.06), transparent 20%), #f5f7fb',
+          minHeight: 'calc(100vh - 64px)',
+          px: { sm: 2, xs: 1 },
+          py: { sm: 2, xs: 1 }
         }}
       >
         <Box sx={{ maxWidth: '76rem', mx: 'auto' }}>
-          <Grid container alignItems='end' spacing={2} sx={{ pb: { xs: 1, sm: 1.5 } }}>
+          <Grid container alignItems='end' spacing={2} sx={{ pb: { sm: 1.5, xs: 1 } }}>
             <Grid item xs={12} sm={8}>
               <Typography component='h1' variant='h4' sx={{ m: 0, textWrap: 'balance' }}>
                 Konvertera mellan SWEREF99, RT90, WGS84
               </Typography>
-              <Typography variant='body1' sx={{ mt: 1, maxWidth: '68ch', color: '#475569', textWrap: 'pretty' }}>
+              <Typography variant='body1' sx={{ color: '#475569', maxWidth: '68ch', mt: 1, textWrap: 'pretty' }}>
                 Klistra in data, ladda upp en CSV eller peka på en fil på servern. Växla mellan tabell och karta när du vill kontrollera resultatet.
               </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Typography variant='body2' sx={{ color: '#64748b', textAlign: { xs: 'left', sm: 'right' } }}>
+              <Typography variant='body2' sx={{ color: '#64748b', textAlign: { sm: 'right', xs: 'left' } }}>
                 {rowCount > 0 ? `${rowCount} rader inlästa` : 'CSV · karta · export'}
               </Typography>
             </Grid>
@@ -188,7 +188,7 @@ export default function App (): JSXElement {
 
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 2.5 } }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { sm: 2.5, xs: 2 } }}>
                 <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
@@ -200,8 +200,8 @@ export default function App (): JSXElement {
                       onChange={({ target }) => handleChangeFrom(target.value)}
                     >
                       {
-                        selectParams.map((p: any) => (
-                          <MenuItem value={p.value}>{p.text}</MenuItem>) // eslint-disable-line react/jsx-key
+                        selectParams.map((p) => (
+                          <MenuItem value={p.value}>{p.text}</MenuItem>)
                         )
                       }
                     </Select>
@@ -217,8 +217,8 @@ export default function App (): JSXElement {
                       onChange={({ target }) => handleChangeTo(target.value)}
                     >
                       {
-                        selectParams.map((p: any) => (
-                          <MenuItem value={p.value}>{p.text}</MenuItem> // eslint-disable-line react/jsx-key
+                        selectParams.map((p) => (
+                          <MenuItem value={p.value}>{p.text}</MenuItem>
                         ))
                       }
                     </Select>

@@ -16,14 +16,14 @@ export const convertRow = (
   // No-op if same projection
   if (currentFrom === currentTo) {
     return {
-      x,
-      y,
       lat: x,
-      lng: y,
-      x2: 0,
-      y2: 0,
       latdms: latToDms(+x),
-      lngdms: lngToDms(+y)
+      lng: y,
+      lngdms: lngToDms(+y),
+      x,
+      x2: 0,
+      y,
+      y2: 0
     }
   }
 
@@ -35,14 +35,14 @@ export const convertRow = (
     const geo = gridToGeodetic(x, y, paramsFrom)
     const grid2 = geodeticToGrid(geo.lat, geo.lng, paramsTo)
     return {
-      x,
-      y,
       lat: geo.lat,
-      lng: geo.lng,
-      x2: grid2.x,
-      y2: grid2.y,
       latdms: latToDms(+geo.lat),
-      lngdms: lngToDms(+geo.lng)
+      lng: geo.lng,
+      lngdms: lngToDms(+geo.lng),
+      x,
+      x2: grid2.x,
+      y,
+      y2: grid2.y
     }
   }
 
@@ -50,27 +50,27 @@ export const convertRow = (
   if (currentFrom === 'wgs84') {
     const grid = geodeticToGrid(x, y, paramsTo)
     return {
-      x: grid.x,
-      y: grid.y,
       lat: x,
-      lng: y,
-      x2: 0,
-      y2: 0,
       latdms: latToDms(+x),
-      lngdms: lngToDms(+y)
+      lng: y,
+      lngdms: lngToDms(+y),
+      x: grid.x,
+      x2: 0,
+      y: grid.y,
+      y2: 0
     }
   }
 
   // Grid -> WGS84
   const geo = gridToGeodetic(x, y, paramsFrom)
   return {
-    x,
-    y,
     lat: geo.lat,
-    lng: geo.lng,
-    x2: 0,
-    y2: 0,
     latdms: latToDms(+geo.lat),
-    lngdms: lngToDms(+geo.lng)
+    lng: geo.lng,
+    lngdms: lngToDms(+geo.lng),
+    x,
+    x2: 0,
+    y,
+    y2: 0
   }
 }
