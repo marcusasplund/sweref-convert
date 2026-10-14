@@ -13,6 +13,10 @@ export const convertRow = (
   currentFrom: ProjectionKey,
   currentTo: ProjectionKey
 ): ConvertedRow => {
+  if (!Number.isFinite(x) || !Number.isFinite(y)) throw new RangeError('Coordinates must be finite')
+  if (currentFrom === 'wgs84' && (Math.abs(x) > 90 || Math.abs(y) > 180)) {
+    throw new RangeError('Geographic coordinates are outside latitude or longitude limits')
+  }
   // No-op if same projection
   if (currentFrom === 'wgs84' && currentTo === 'wgs84') {
     return {
@@ -27,13 +31,11 @@ export const convertRow = (
     }
   }
 
-  const paramsFrom = projectionParams(currentFrom)
-  const paramsTo = projectionParams(currentTo)
 
   // Grid -> Grid via WGS84
   if (currentFrom !== 'wgs84' && currentTo !== 'wgs84') {
-    const geo = gridToGeodetic(x, y, paramsFrom)
-    const grid2 = currentFrom === currentTo ? { x, y } : geodeticToGrid(geo.lat, geo.lng, paramsTo)
+    const geo = gridToGeodetic(x, y, projectionParams(currentFrom))
+    const grid2 = currentFrom === currentTo ? { x, y } : geodeticToGrid(geo.lat, geo.lng, projectionParams(currentTo))
     return {
       lat: geo.lat,
       latdms: latToDms(+geo.lat),
@@ -48,7 +50,7 @@ export const convertRow = (
 
   // WGS84 -> Grid
   if (currentFrom === 'wgs84') {
-    const grid = geodeticToGrid(x, y, paramsTo)
+    const grid = geodeticToGrid(x, y, projectionParams(currentTo))
     return {
       lat: x,
       latdms: latToDms(+x),
@@ -62,7 +64,7 @@ export const convertRow = (
   }
 
   // Grid -> WGS84
-  const geo = gridToGeodetic(x, y, paramsFrom)
+  const geo = gridToGeodetic(x, y, projectionParams(currentFrom))
   return {
     lat: geo.lat,
     latdms: latToDms(+geo.lat),

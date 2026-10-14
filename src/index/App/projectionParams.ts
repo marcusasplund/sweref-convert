@@ -242,5 +242,6 @@ export type ProjectionKey = keyof typeof params | 'wgs84'
 
 // example usage: projectionParams('rt9075gonV')
 export const projectionParams = (projection: ProjectionKey): ProjectionParams => {
+  if (projection === 'wgs84') throw new RangeError('WGS84 is geographic, not a grid projection')
   return { ...defaultParams, ...params[projection] }
 }

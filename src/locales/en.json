@@ -42,5 +42,7 @@
   "helpVerify": "Select \"Map view\" to check the coordinate locations.",
   "helpExport": "Select \"Download results as CSV\" to save the converted coordinates.",
   "sourceCode": "Source code on GitHub",
-  "contact": "Contact and source code"
+  "contact": "Contact and source code",
+  "csvError": "CSV data must have a header row and at least two columns of numeric coordinates. Check the file or link and try again.",
+  "conversionError": "The coordinates cannot be converted with the selected coordinate systems. Check the values, column order, and coordinate systems."
 }

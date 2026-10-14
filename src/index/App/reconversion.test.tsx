@@ -38,3 +38,18 @@ describe('source coordinates', () => {
     expect(screen.getAllByRole('row')).toHaveLength(101)
   })
 })
+
+it('reports invalid coordinates and recovers after correcting the input', () => {
+  render(() => <App />)
+  selectProjection('Konvertera från', 'WGS84')
+  selectProjection('Konvertera till', 'SWEREF 99 TM')
+  const input = screen.getByLabelText('Klistra in koordinater i två kolumner')
+  fireEvent.input(input, { target: { value: 'lat,lon\n100,18' } })
+  expect(screen.getByRole('alert').textContent).toContain('Koordinaterna kan inte konverteras')
+  expect(screen.getByRole('button', { name: /Ladda ned resultat/ })).toBeDisabled()
+  fireEvent.input(input, { target: { value: 'lat,lon\nwrong,18' } })
+  expect(screen.getByRole('alert').textContent).toContain('CSV-data måste')
+  fireEvent.input(input, { target: { value: 'lat,lon\n59.3293,18.0686' } })
+  expect(screen.queryByRole('alert')).toBeNull()
+  expect(screen.getByRole('button', { name: /Ladda ned resultat/ })).not.toBeDisabled()
+})

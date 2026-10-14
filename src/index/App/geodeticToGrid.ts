@@ -30,14 +30,14 @@
 
 // Conversion from geodetic coordinates to grid coordinates.
 
+import { validateProjection } from './validateProjection'
+
 import { GridCoordinates, ProjectionParams } from '../types'
 
 export const geodeticToGrid = (latitude: number, longitude: number, params: ProjectionParams): GridCoordinates => {
-  if (params.centralMeridian == null || params.centralMeridian === 0) {
-    return {
-      x: 0,
-      y: 0
-    }
+  const centralMeridian = validateProjection(params)
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || Math.abs(latitude) >= 90 || Math.abs(longitude) > 180) {
+    throw new RangeError('Invalid geographic coordinates for Transverse Mercator')
   }
   // Prepare ellipsoid-based stuff.
   const e2 = params.flattening * (2.0 - params.flattening)
@@ -54,7 +54,7 @@ export const geodeticToGrid = (latitude: number, longitude: number, params: Proj
   // Convert.
   const degToRad = Math.PI / 180.0
   const phi = +latitude * degToRad
-  const lambdaZero = params.centralMeridian * degToRad
+  const lambdaZero = centralMeridian * degToRad
   const lambda = +longitude * degToRad
   const phiStar = phi - Math.sin(phi) * Math.cos(phi) * (
     A + B * Math.pow(Math.sin(phi), 2) + C * Math.pow(Math.sin(phi), 4) + D * Math.pow(Math.sin(phi), 6)
@@ -68,6 +68,7 @@ export const geodeticToGrid = (latitude: number, longitude: number, params: Proj
   const y = params.scale * aRoof * (
     etaPrim + beta1 * Math.cos(2.0 * xiPrim) * Math.sinh(2.0 * etaPrim) + beta2 * Math.cos(4.0 * xiPrim) * Math.sinh(4.0 * etaPrim) + beta3 * Math.cos(6.0 * xiPrim) * Math.sinh(6.0 * etaPrim) + beta4 * Math.cos(8.0 * xiPrim) * Math.sinh(8.0 * etaPrim)
   ) + params.falseEasting
+  if (!Number.isFinite(x) || !Number.isFinite(y)) throw new RangeError('Coordinates are outside the projection domain')
   return {
     x: parseFloat(x.toFixed(3)),
     y: parseFloat(y.toFixed(3))

@@ -3,6 +3,7 @@ import { createEffect, createMemo, createSignal, JSXElement, lazy, Suspense } fr
 
 import styled from '@suid/material/styles/styled'
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -42,7 +43,18 @@ export default function App (): JSXElement {
   const [from, setFrom] = createSignal<ProjectionKey>('rt9025gonV')
   const [to, setTo] = createSignal<ProjectionKey>('wgs84')
   const [sourceRows, setSourceRows] = createSignal<GridCoordinates[]>([])
-  const rows = createMemo<ConvertedRow[]>(() => sourceRows().map(row => convertRow(row.x, row.y, from(), to())))
+  const [parseError, setParseError] = createSignal(false)
+  const conversion = createMemo<{ kind: 'success', rows: ConvertedRow[] } | { kind: 'error' }>(() => {
+    try {
+      return { kind: 'success', rows: sourceRows().map(row => convertRow(row.x, row.y, from(), to())) }
+    } catch {
+      return { kind: 'error' }
+    }
+  })
+  const rows = () => {
+    const result = conversion()
+    return result.kind === 'success' ? result.rows : []
+  }
   let parseVersion = 0
   const [viewMap, setViewMap] = createSignal(false)
   const [csvData, setCsvData] = createSignal<CsvData | null>(null)
@@ -74,18 +86,32 @@ export default function App (): JSXElement {
   const processCsvData = (data: CsvData): void => {
     const version = ++parseVersion
     const parsedRows: GridCoordinates[] = []
+    let invalid = false
+    setParseError(false)
     const options: Papa.ParseConfig<Record<string, string>> = {
       complete: () => {
         if (version !== parseVersion) return
-        setSourceRows(parsedRows)
+        setParseError(invalid)
+        setSourceRows(invalid ? [] : parsedRows)
         setViewMap(false)
+      },
+      error: () => {
+        if (version !== parseVersion) return
+        setSourceRows([])
+        setParseError(true)
       },
       header: true,
       skipEmptyLines: 'greedy',
-      step: ({ data: row, meta }) => {
+      step: ({ data: row, errors, meta }) => {
         const headers = meta.fields ?? Object.keys(row)
-        if (headers.length < 2) return
-        parsedRows.push({ x: Number(row[headers[0]]), y: Number(row[headers[1]]) })
+        const x = row[headers[0]]
+        const y = row[headers[1]]
+        if (headers.length < 2 || errors.length > 0 || x == null || y == null ||
+            String(x).trim() === '' || String(y).trim() === '' || !Number.isFinite(Number(x)) || !Number.isFinite(Number(y))) {
+          invalid = true
+          return
+        }
+        parsedRows.push({ x: Number(x), y: Number(y) })
       }
     }
     if (data.data instanceof File) Papa.parse(data.data, options)
@@ -266,6 +292,9 @@ export default function App (): JSXElement {
                 </Grid>
               </Grid>
 
+              {(parseError() || conversion().kind === 'error') && (
+                <Alert severity='error'>{t(parseError() ? 'csvError' : 'conversionError')}</Alert>
+              )}
               {viewMap() && rows().length > 0 && (isTest ? <Box id='map' sx={{ mt: 2 }} /> : (
                 <Box sx={{ mt: 2 }}>
                   <Suspense fallback={<Box id='map' sx={{ height: '300px' }} />}>

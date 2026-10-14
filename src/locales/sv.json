@@ -42,5 +42,7 @@
   "helpVerify": "Välj \"Kartvy\" för att kontrollera koordinaternas placering.",
   "helpExport": "Välj \"Ladda ned resultat som CSV\" för att spara de konverterade koordinaterna.",
   "sourceCode": "Källkod på GitHub",
-  "contact": "Kontakt och källkod"
+  "contact": "Kontakt och källkod",
+  "csvError": "CSV-data måste ha en rubrikrad och minst två kolumner med numeriska koordinater. Kontrollera filen eller länken och försök igen.",
+  "conversionError": "Koordinaterna kan inte konverteras med de valda koordinatsystemen. Kontrollera värdena, kolumnernas ordning och koordinatsystemen."
 }

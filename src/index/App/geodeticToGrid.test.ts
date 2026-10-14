@@ -9,16 +9,14 @@ const makeParams = (overrides: Partial<ProjectionParams>): ProjectionParams => {
 }
 
 describe('geodeticToGrid', () => {
-  it('returns zero coordinates when centralMeridian is null or zero', () => {
-    // centralMeridian null
-    const p1 = makeParams({ centralMeridian: null })
-    const result1 = geodeticToGrid(60, 18, p1)
-    expect(result1).toEqual({ x: 0, y: 0 })
+  it('rejects missing projection parameters instead of returning zero coordinates', () => {
+    expect(() => geodeticToGrid(60, 18, makeParams({ centralMeridian: null }))).toThrow(RangeError)
+    expect(() => geodeticToGrid(60, 18, makeParams({ axis: 0 }))).toThrow(RangeError)
+    expect(() => geodeticToGrid(NaN, 18, makeParams({}))).toThrow(RangeError)
+  })
 
-    // centralMeridian zero
-    const p2 = makeParams({ centralMeridian: 0 })
-    const result2 = geodeticToGrid(60, 18, p2)
-    expect(result2).toEqual({ x: 0, y: 0 })
+  it('accepts a central meridian of zero', () => {
+    expect(() => geodeticToGrid(60, 18, makeParams({ centralMeridian: 0 }))).not.toThrow()
   })
 
   it('calculates correct grid for known testCase parameters', () => {

@@ -29,15 +29,13 @@
 // Source: http://www.lantmateriet.se/geodesi/
 
 // Conversion from grid coordinates to geodetic coordinates.
+import { validateProjection } from './validateProjection'
+
 import { GeodeticCoordinates, ProjectionParams } from '../types'
 
 export const gridToGeodetic = (x: number, y: number, params: ProjectionParams): GeodeticCoordinates => {
-  if (params.centralMeridian === null) {
-    return {
-      lat: 0,
-      lng: 0
-    }
-  }
+  const centralMeridian = validateProjection(params)
+  if (!Number.isFinite(x) || !Number.isFinite(y)) throw new RangeError('Grid coordinates must be finite')
   // Prepare ellipsoid-based stuff.
   const e2 = params.flattening * (2.0 - params.flattening)
   const n = params.flattening / (2.0 - params.flattening)
@@ -52,7 +50,7 @@ export const gridToGeodetic = (x: number, y: number, params: ProjectionParams): 
   const Dstar = -(4279.0 * e2 ** 4) / 1260.0
   // Convert.
   const degToRad = Math.PI / 180
-  const lambdaZero = params.centralMeridian * degToRad
+  const lambdaZero = centralMeridian * degToRad
   const xi = (x - params.falseNorthing) / (params.scale * aRoof)
   const eta = (y - params.falseEasting) / (params.scale * aRoof)
   const xiPrim = xi - delta1 * Math.sin(2.0 * xi) * Math.cosh(2.0 * eta) - delta2 * Math.sin(4.0 * xi) * Math.cosh(
@@ -69,6 +67,7 @@ export const gridToGeodetic = (x: number, y: number, params: ProjectionParams): 
   const latRadian = phiStar + Math.sin(phiStar) * Math.cos(phiStar) * (
     Astar + Bstar * Math.pow(Math.sin(phiStar), 2) + Cstar * Math.pow(Math.sin(phiStar), 4) + Dstar * Math.pow(Math.sin(phiStar), 6)
   )
+  if (!Number.isFinite(latRadian) || !Number.isFinite(lngRadian)) throw new RangeError('Coordinates are outside the projection domain')
   return {
     lat: latRadian * 180.0 / Math.PI,
     lng: lngRadian * 180.0 / Math.PI
