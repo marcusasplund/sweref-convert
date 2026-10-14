@@ -70,7 +70,8 @@ describe('<App />', () => {
     fireEvent.input(textField, { target: { value: data } })
     // Mock Papa.parse step callback
     const step = (papaparse.parse as any).mock.calls[0][1].step
-    step({ data: { x: 1, y: 2 } })
+    step({ data: { x: 1, y: 2 }, meta: { fields: ['x', 'y'] } })
+    ;(papaparse.parse as any).mock.calls[0][1].complete()
     // After parse complete
     const mapBtn = screen.getByRole('button', { name: /kartvy/i })
     const downloadBtn = screen.getByRole('button', { name: /ladda ned/i })

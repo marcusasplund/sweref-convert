@@ -1,5 +1,5 @@
 import { useTransContext } from '@jellybrick/solid-i18next'
-import { createEffect, createSignal, JSXElement, lazy, Suspense } from 'solid-js'
+import { createEffect, createMemo, createSignal, JSXElement, lazy, Suspense } from 'solid-js'
 
 import styled from '@suid/material/styles/styled'
 import {
@@ -22,7 +22,7 @@ import TopBar from './App/TopBar'
 import { selectParams } from './App/selectParams'
 
 import * as Papa from 'papaparse'
-import { ConvertedRow, CsvData, PapaParseResult } from './types'
+import { ConvertedRow, CsvData, GridCoordinates } from './types'
 
 import { convertRow } from './App/conversionLogic'
 import { ProjectionKey } from './App/projectionParams'
@@ -41,23 +41,22 @@ export default function App (): JSXElement {
   const [open, setOpen] = createSignal(false)
   const [from, setFrom] = createSignal<ProjectionKey>('rt9025gonV')
   const [to, setTo] = createSignal<ProjectionKey>('wgs84')
-  const [rows, setRows] = createSignal<ConvertedRow[]>([])
+  const [sourceRows, setSourceRows] = createSignal<GridCoordinates[]>([])
+  const rows = createMemo<ConvertedRow[]>(() => sourceRows().map(row => convertRow(row.x, row.y, from(), to())))
+  let parseVersion = 0
   const [viewMap, setViewMap] = createSignal(false)
   const [csvData, setCsvData] = createSignal<CsvData | null>(null)
   const [isDisabled, setIsDisabled] = createSignal(true)
   const [twoWay, setTwoWay] = createSignal(false)
-  const [conversionChanged, setConversionChanged] = createSignal(false)
 
   const isTest = process.env.NODE_ENV === 'test'
 
   const handleChangeFrom = (value: ProjectionKey): void => {
     setFrom(value)
-    setConversionChanged(true)
   }
 
   const handleChangeTo = (value: ProjectionKey): void => {
     setTo(value)
-    setConversionChanged(true)
   }
 
   const handleClickOpen = (): void => {
@@ -73,25 +72,25 @@ export default function App (): JSXElement {
   }
 
   const processCsvData = (data: CsvData): void => {
-    let headers: string[] = []
-    // @ts-expect-error Papa.parse overloads cannot express a string-or-File input with a dynamic download flag.
-    Papa.parse(data.data, {
-      complete: () => setViewMap(false),
-      download: data.isFile,
+    const version = ++parseVersion
+    const parsedRows: GridCoordinates[] = []
+    const options: Papa.ParseConfig<Record<string, string>> = {
+      complete: () => {
+        if (version !== parseVersion) return
+        setSourceRows(parsedRows)
+        setViewMap(false)
+      },
       header: true,
-      step: (results: PapaParseResult) => {
-        if (headers.length === 0) {
-          headers = Object.keys(results.data)
-          if (headers.length < 2) {
-            console.error('CSV does not have enough columns')
-            return
-          }
-        }
-        const rowData = results.data as Record<string, unknown>
-        const convertedRow = convertRow(rowData[headers[0]] as number, rowData[headers[1]] as number, from(), to())
-        setRows((prevRows) => [...prevRows, convertedRow])
+      skipEmptyLines: 'greedy',
+      step: ({ data: row, meta }) => {
+        const headers = meta.fields ?? Object.keys(row)
+        if (headers.length < 2) return
+        parsedRows.push({ x: Number(row[headers[0]]), y: Number(row[headers[1]]) })
       }
-    })
+    }
+    if (data.data instanceof File) Papa.parse(data.data, options)
+    else if (data.isFile) Papa.parse(data.data, { ...options, download: true })
+    else Papa.parse(data.data, options)
   }
 
   const downloadCSV = (e: Event): void => {
@@ -115,18 +114,8 @@ export default function App (): JSXElement {
   createEffect(() => {
     const data = csvData()
     if (data != null) {
-      setRows([])
+      setSourceRows([])
       processCsvData(data)
-    }
-  })
-
-  createEffect(() => {
-    if (conversionChanged()) {
-      const currentFrom = from()
-      const currentTo = to()
-      const convertedData = rows().map(row => convertRow(+row.x, +row.y, currentFrom, currentTo))
-      setRows(convertedData)
-      setConversionChanged(false)
     }
   })
 
