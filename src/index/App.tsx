@@ -88,17 +88,17 @@ export default function App (): JSXElement {
     const parsedRows: GridCoordinates[] = []
     let invalid = false
     setParseError(false)
-    const options: Papa.ParseConfig<Record<string, string>> = {
+    const onError = () => {
+      if (version !== parseVersion) return
+      setSourceRows([])
+      setParseError(true)
+    }
+    const options = {
       complete: () => {
         if (version !== parseVersion) return
         setParseError(invalid)
         setSourceRows(invalid ? [] : parsedRows)
         setViewMap(false)
-      },
-      error: () => {
-        if (version !== parseVersion) return
-        setSourceRows([])
-        setParseError(true)
       },
       header: true,
       skipEmptyLines: 'greedy',
@@ -113,9 +113,9 @@ export default function App (): JSXElement {
         }
         parsedRows.push({ x: Number(x), y: Number(y) })
       }
-    }
-    if (data.data instanceof File) Papa.parse(data.data, options)
-    else if (data.isFile) Papa.parse(data.data, { ...options, download: true })
+    } satisfies Papa.ParseConfig<Record<string, string>>
+    if (data.data instanceof File) Papa.parse(data.data, { ...options, error: onError })
+    else if (data.isFile) Papa.parse(data.data, { ...options, download: true, error: onError })
     else Papa.parse(data.data, options)
   }
 
