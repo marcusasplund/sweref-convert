@@ -14,7 +14,7 @@ export const convertRow = (
   currentTo: ProjectionKey
 ): ConvertedRow => {
   // No-op if same projection
-  if (currentFrom === currentTo) {
+  if (currentFrom === 'wgs84' && currentTo === 'wgs84') {
     return {
       lat: x,
       latdms: latToDms(+x),
@@ -33,7 +33,7 @@ export const convertRow = (
   // Grid -> Grid via WGS84
   if (currentFrom !== 'wgs84' && currentTo !== 'wgs84') {
     const geo = gridToGeodetic(x, y, paramsFrom)
-    const grid2 = geodeticToGrid(geo.lat, geo.lng, paramsTo)
+    const grid2 = currentFrom === currentTo ? { x, y } : geodeticToGrid(geo.lat, geo.lng, paramsTo)
     return {
       lat: geo.lat,
       latdms: latToDms(+geo.lat),

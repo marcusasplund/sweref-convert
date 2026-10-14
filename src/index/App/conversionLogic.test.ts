@@ -32,6 +32,19 @@ describe('convertRow', () => {
     })
   })
 
+  it('preserves grid coordinates but calculates geographic coordinates for the same grid projection', () => {
+    vi.mocked(gridToGeodetic).mockReturnValue({ lat: 59.3293, lng: 18.0686 })
+    const result = convertRow(6580743.008, 674571.866, 'sweref99tm', 'sweref99tm')
+    expect(result.x).toBe(6580743.008)
+    expect(result.y).toBe(674571.866)
+    expect(result.x2).toBe(6580743.008)
+    expect(result.y2).toBe(674571.866)
+    expect(result.lat).toBe(59.3293)
+    expect(result.lng).toBe(18.0686)
+    expect(result.latdms).toBe('N 59° 19′ 45.48″')
+    expect(geodeticToGrid).not.toHaveBeenCalled()
+  })
+
   it('Grid -> Grid via WGS84 branch', () => {
     ;(gridToGeodetic as Mock).mockReturnValue({ lat: 12.34, lng: 56.78 })
     ;(geodeticToGrid as Mock).mockReturnValue({ x: 90, y: 123 })
