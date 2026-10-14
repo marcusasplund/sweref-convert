@@ -44,6 +44,14 @@ export default function InfoDialog (props: InfoDialogProps): JSXElement {
             <a download='rt90.csv' target='_blank' rel='noopener noreferrer' href='https://pap.as/sweref/rt90.csv'>{t('exampleFile')}</a>
           </p>
           <Typography component='h3' variant='subtitle1' sx={{ fontWeight: 600 }}>
+            {t('accuracyTitle')}
+          </Typography>
+          <p>{t('accuracyGeographic')}</p>
+          <p>{t('accuracyGrid')}</p>
+          <p>
+            <a href='https://www.lantmateriet.se/sv/geodata/gps-geodesi-och-swepos/Transformationer/RT-90---SWEREF-99/'>{t('accuracyLink')}</a>
+          </p>
+          <Typography component='h3' variant='subtitle1' sx={{ fontWeight: 600 }}>
             {t('contact')}
           </Typography>
           <p>

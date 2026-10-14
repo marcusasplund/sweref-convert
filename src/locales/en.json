@@ -44,5 +44,9 @@
   "sourceCode": "Source code on GitHub",
   "contact": "Contact and source code",
   "csvError": "CSV data must have a header row and at least two columns of numeric coordinates. Check the file or link and try again.",
-  "conversionError": "The coordinates cannot be converted with the selected coordinate systems. Check the values, column order, and coordinate systems."
+  "conversionError": "The coordinates cannot be converted with the selected coordinate systems. Check the values, column order, and coordinate systems.",
+  "accuracyTitle": "Reference systems and accuracy",
+  "accuracyGeographic": "WGS84 is treated as SWEREF 99 for projection calculations. This tool does not correct for reference epoch or height.",
+  "accuracyGrid": "RT90 uses direct projection on GRS80 without a residual correction model. Three decimal places in grid coordinates indicate rounding, not guaranteed accuracy.",
+  "accuracyLink": "Lantmäteriet guidance on RT90 and SWEREF 99"
 }

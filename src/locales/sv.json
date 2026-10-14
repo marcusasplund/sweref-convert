@@ -44,5 +44,9 @@
   "sourceCode": "Källkod på GitHub",
   "contact": "Kontakt och källkod",
   "csvError": "CSV-data måste ha en rubrikrad och minst två kolumner med numeriska koordinater. Kontrollera filen eller länken och försök igen.",
-  "conversionError": "Koordinaterna kan inte konverteras med de valda koordinatsystemen. Kontrollera värdena, kolumnernas ordning och koordinatsystemen."
+  "conversionError": "Koordinaterna kan inte konverteras med de valda koordinatsystemen. Kontrollera värdena, kolumnernas ordning och koordinatsystemen.",
+  "accuracyTitle": "Referenssystem och noggrannhet",
+  "accuracyGeographic": "WGS84 behandlas här som SWEREF 99 för projektionsberäkningen. Verktyget korrigerar inte för referensepok eller höjd.",
+  "accuracyGrid": "RT90 använder direktprojektion på GRS80 utan restfelsmodell. Tre decimaler i meterkoordinaterna anger avrundning, inte garanterad noggrannhet.",
+  "accuracyLink": "Lantmäteriets information om RT90 och SWEREF 99"
 }
